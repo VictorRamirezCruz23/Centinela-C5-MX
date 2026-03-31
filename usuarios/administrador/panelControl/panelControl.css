@@ -1,0 +1,656 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
+
+/* =============================================
+    ANIMACIONES - SE MANTIENEN IGUAL
+   ============================================= */
+@keyframes parpadeo {
+    0% {
+        opacity: 1;
+        box-shadow: 0 0 15px rgba(255, 77, 0, 0.5);
+        border-color: #ff4d00;
+    }
+
+    25% {
+        opacity: 0.9;
+        box-shadow: 0 0 25px rgba(255, 77, 0, 0.9);
+        border-color: #ff8c5a;
+    }
+
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 35px rgba(255, 77, 0, 1);
+        border-color: #ff4d00;
+    }
+
+    75% {
+        opacity: 0.9;
+        box-shadow: 0 0 25px rgba(255, 77, 0, 0.9);
+        border-color: #ff8c5a;
+    }
+
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 15px rgba(255, 77, 0, 0.5);
+        border-color: #ff4d00;
+    }
+}
+
+@keyframes latido {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes brilloIcono {
+    0% {
+        filter: drop-shadow(0 0 8px rgba(255, 77, 0, 0.8));
+        text-shadow: 0 0 8px rgba(255, 77, 0, 0.5);
+    }
+
+    50% {
+        filter: drop-shadow(0 0 15px rgba(255, 77, 0, 1));
+        text-shadow: 0 0 15px rgba(255, 77, 0, 0.9);
+    }
+
+    100% {
+        filter: drop-shadow(0 0 8px rgba(255, 77, 0, 0.8));
+        text-shadow: 0 0 8px rgba(255, 77, 0, 0.5);
+    }
+}
+
+/* =============================================
+    RESET Y BASE - USANDO VARIABLES DE PERSONALIZATION
+   ============================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    font-family: var(--font-family-secondary);
+    min-height: 100vh;
+    line-height: 1.4;
+}
+
+/* Canvas de partículas */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.right-layout {
+    position: relative;
+    z-index: 2;
+    padding: var(--spacing-lg, 1rem);
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .right-layout {
+        padding: var(--spacing-xl, 1.25rem) 1.5rem 1.5rem;
+    }
+}
+
+/* =============================================
+   SECCIÓN KPI - 6 TARJETAS
+   ============================================= */
+.kpi-section {
+    margin-bottom: var(--spacing-xl, 1.25rem);
+}
+
+.kpi-section h2 {
+    font-family: var(--font-family-primary);
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: var(--spacing-lg, 1rem);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm, 0.5rem);
+}
+
+.kpi-section h2 i {
+    color: var(--color-accent-primary);
+    filter: drop-shadow(0 0 5px var(--color-accent-primary));
+}
+
+/* Grid para 6 tarjetas */
+.kpi-row-6 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-md, 0.75rem);
+}
+
+@media (min-width: 640px) {
+    .kpi-row-6 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .kpi-row-6 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1200px) {
+    .kpi-row-6 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1400px) {
+    .kpi-row-6 {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+/* Tarjeta KPI base */
+.kpi-card {
+    background: linear-gradient(145deg, #151515, #0b0b0b);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    padding: var(--spacing-md, 0.75rem);
+    transition: var(--transition-default);
+    display: flex;
+    flex-direction: column;
+    min-height: 100px;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card:hover {
+    border-color: var(--color-accent-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-normal);
+}
+
+.kpi-card i {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xs, 0.25rem);
+}
+
+.kpi-number {
+    font-family: var(--font-family-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1;
+    margin-bottom: 0.125rem;
+}
+
+.kpi-card h3 {
+    font-family: var(--font-family-primary);
+    font-size: 0.7rem;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: auto;
+}
+
+.kpi-card p {
+    font-size: 0.6rem;
+    color: var(--color-text-secondary);
+}
+
+@media (min-width: 768px) {
+    .kpi-card {
+        min-height: 110px;
+        padding: var(--spacing-lg, 1rem);
+    }
+
+    .kpi-number {
+        font-size: 1.75rem;
+    }
+
+    .kpi-card h3 {
+        font-size: 0.75rem;
+    }
+
+    .kpi-card p {
+        font-size: 0.688rem;
+    }
+}
+
+/* =============================================
+   TARJETA INCIDENCIAS - BRILLO ROJO FIJO
+   ============================================= */
+#kpi-incidencias {
+    border: 1px solid #ff4d00;
+    box-shadow: 0 0 15px rgba(255, 77, 0, 0.5);
+    background: linear-gradient(145deg, #2a0a0a, #1a0505);
+    position: relative;
+    z-index: 2;
+}
+
+#kpi-incidencias i {
+    color: #ff4d00 !important;
+    filter: drop-shadow(0 0 8px rgba(255, 77, 0, 0.8));
+}
+
+#kpi-incidencias .kpi-number {
+    color: #ff4d00 !important;
+    text-shadow: 0 0 10px rgba(255, 77, 0, 0.8);
+}
+
+#kpi-incidencias:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(255, 77, 0, 0.8);
+}
+
+/* =============================================
+   TARJETA NUEVA INCIDENCIA - CON PARPADEO
+   ============================================= */
+#card-nueva-incidencia {
+    border: 1px solid #ff4d00;
+    background: linear-gradient(145deg, #2a0a0a, #1a0505);
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+    animation: parpadeo 1.5s ease-in-out infinite;
+}
+
+#card-nueva-incidencia .card-icon {
+    color: #ff4d00 !important;
+    animation: brilloIcono 1.5s ease-in-out infinite;
+    box-shadow: none !important;
+}
+
+#card-nueva-incidencia .card-text h3 {
+    color: #ff4d00 !important;
+    animation: brilloIcono 1.5s ease-in-out infinite;
+}
+
+#card-nueva-incidencia .card-arrow {
+    color: #ff4d00 !important;
+    animation: brilloIcono 1.5s ease-in-out infinite;
+}
+
+#card-nueva-incidencia:hover {
+    animation: parpadeo 0.8s ease-in-out infinite, latido 0.8s ease-in-out infinite;
+    background: linear-gradient(145deg, #3a0f0f, #250a0a);
+}
+
+#card-nueva-incidencia:hover .card-icon,
+#card-nueva-incidencia:hover .card-text h3,
+#card-nueva-incidencia:hover .card-arrow {
+    animation: brilloIcono 0.8s ease-in-out infinite;
+}
+
+/* =============================================
+   SECCIÓN REGISTRO - TARJETAS DINÁMICAS
+   ============================================= */
+.center-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl, 1.25rem);
+    width: 100%;
+}
+
+.side.full-width {
+    width: 100%;
+}
+
+/* Contenedor base - CON BRILLO PERMANENTE USANDO COLOR DEL SISTEMA */
+.section-container {
+    border: 1px solid var(--color-accent-primary);
+    border-radius: var(--border-radius-medium);
+    padding: var(--spacing-md, 0.75rem);
+    transition: var(--transition-default);
+    width: 100%;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 8px var(--color-accent-primary);
+}
+
+.section-header {
+    margin-bottom: var(--spacing-md, 0.75rem);
+    padding-bottom: var(--spacing-sm, 0.5rem);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.section-title {
+    font-family: var(--font-family-primary);
+    font-size: 0.813rem;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.125rem;
+}
+
+.section-title i {
+    color: var(--color-accent-primary);
+}
+
+.section-subtitle {
+    font-size: 0.688rem;
+    color: var(--color-text-secondary);
+}
+
+/* Grid para tarjetas - ALINEADAS A LA IZQUIERDA */
+.cards-grid-2 {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+    margin-top: var(--spacing-sm, 0.5rem);
+    justify-content: flex-start !important;
+    align-items: center;
+}
+
+/* Tarjetas base - VERSIÓN COMPACTA */
+/* Tarjetas base - VERSIÓN COMPACTA */
+.dashboard-card {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    height: 70px !important;
+    min-height: 70px !important;
+    width: auto !important;
+    min-width: 200px !important;
+    max-width: 350px !important;
+    /* ← CAMBIA ESTE VALOR */
+    padding: 0.5rem 0.75rem !important;
+    position: relative;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    transition: var(--transition-default);
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* Tarjeta oculta */
+.dashboard-card[style*="display: none"] {
+    display: none !important;
+}
+
+/* Hover general para tarjetas (excluyendo la de nueva incidencia) */
+.dashboard-card:not(#card-nueva-incidencia):hover {
+    border-color: var(--color-accent-primary);
+    background: var(--color-hover);
+    box-shadow: var(--shadow-normal);
+    transform: translateY(-3px);
+}
+
+.dashboard-card:not(#card-nueva-incidencia):hover .card-icon {
+    transform: scale(1.05);
+}
+
+.dashboard-card:not(#card-nueva-incidencia):hover .card-arrow {
+    color: var(--color-text-primary);
+    transform: translateX(3px);
+}
+
+/* Iconos más pequeños */
+.card-icon {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-small);
+    transition: var(--transition-default);
+    box-shadow: none !important;
+}
+
+/* Colores de iconos */
+.card-icon.blue {
+    color: #2f8cff;
+}
+
+.card-icon.cyan {
+    color: #00cfff;
+}
+
+.card-icon.yellow {
+    color: #ffcc00;
+}
+
+.card-icon.purple {
+    color: #b16bff;
+}
+
+.card-icon.green {
+    color: #28a745;
+}
+
+.card-icon.orange {
+    color: #fd7e14;
+}
+
+/* Texto truncado para no desbordar */
+.card-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.card-text h3 {
+    font-family: var(--font-family-primary);
+    font-size: 0.7rem !important;
+    color: var(--color-text-primary);
+    margin-bottom: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.card-text p {
+    font-size: 0.55rem !important;
+    color: var(--color-text-secondary);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+/* Flecha más pequeña */
+.card-arrow {
+    position: static !important;
+    font-size: 0.8rem !important;
+    margin-left: 0.25rem;
+    color: var(--color-text-secondary);
+    transition: var(--transition-default);
+}
+
+/* Estilo para tarjeta de Bitácora */
+#card-bitacora .card-icon {
+    color: #9caba4;
+}
+
+/* =============================================
+   RESPONSIVE - VERSIÓN COMPACTA PEGADA A LA IZQUIERDA
+   ============================================= */
+@media (max-width: 600px) {
+    .cards-grid-2 {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.75rem !important;
+    }
+
+    .dashboard-card {
+        width: 100% !important;
+        max-width: 300px !important;
+        height: 65px !important;
+        min-height: 65px !important;
+    }
+}
+
+@media (max-width: 500px) {
+    .dashboard-card {
+        max-width: 280px !important;
+        height: 60px !important;
+        min-height: 60px !important;
+        padding: 0.4rem 0.6rem !important;
+        gap: 0.4rem;
+    }
+
+    .card-icon {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .card-text h3 {
+        font-size: 0.65rem !important;
+    }
+
+    .card-text p {
+        font-size: 0.5rem !important;
+    }
+
+    .kpi-row-6 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+
+    .kpi-card {
+        min-height: 90px;
+        padding: 0.5rem;
+    }
+
+    .kpi-number {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 350px) {
+    .kpi-row-6 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    #card-nueva-incidencia,
+    #card-nueva-incidencia .card-icon,
+    #card-nueva-incidencia .card-text h3,
+    #card-nueva-incidencia .card-arrow {
+        animation: none;
+    }
+
+    .kpi-card,
+    .dashboard-card,
+    .section-container {
+        transition: none;
+    }
+}
+
+@media print {
+    .right-layout {
+        padding: 0.5rem;
+    }
+
+    .kpi-card,
+    .dashboard-card {
+        break-inside: avoid;
+        border: 1px solid #ccc;
+        box-shadow: none !important;
+    }
+
+    .card-arrow {
+        display: none;
+    }
+
+    #particle-canvas {
+        display: none;
+    }
+}
+
+/* =============================================
+   MÓDULOS DE ACCESO - GRID DE 3 COLUMNAS
+   ============================================= */
+.modulos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.modulo-columna {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--border-radius-medium);
+    padding: 1rem;
+    border: 1px solid var(--color-border-light);
+    transition: var(--transition-default);
+    box-shadow: 0 0 5px var(--color-accent-primary);
+}
+
+.modulo-columna:hover {
+    border-color: var(--color-accent-primary);
+    transform: translateY(-2px);
+}
+
+.modulo-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.modulo-header i {
+    font-size: 1.2rem;
+}
+
+.modulo-header h3 {
+    font-family: var(--font-family-primary);
+    font-size: 0.85rem;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modulo-tarjetas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.modulo-tarjetas .dashboard-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: auto !important;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .modulos-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Sucursal | Centinela</title>
+
+    <!-- PRIMERO: Leaflet CSS (OBLIGATORIO) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- SEGUNDO: Estilos personalizados -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+
+    <!-- TERCERO: Fuentes -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CUARTO: Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- QUINTO: Icono y PWA -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- SEXTO: Estilos del módulo (DESPUÉS de Leaflet) -->
+    <link rel="stylesheet" href="/usuarios/administrador/editarSucursales/editarSucursales.css">
+
+    <!-- SÉPTIMO: SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <br>
+
+    <!-- Contenedor principal -->
+    <div class="custom-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1 class="main-title">
+                    <i class="fas fa-store-alt"></i>
+                    Editar Sucursal
+                </h1>
+                <div class="header-description-text">
+                    <i class="fas fa-pen"></i>
+                    "Modifique los datos de la sucursal seleccionada"
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- FORMULARIO DE EDICIÓN DE SUCURSAL -->
+        <!-- ============================================= -->
+        <div class="form-row">
+            <div class="full-width">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-store"></i>Información de la Sucursal</h5>
+                        <button id="btnVolverLista" class="btn-volver">
+                            <i class="fas fa-arrow-left"></i>Volver a la lista
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <form id="formEditarSucursal">
+                            <!-- ============================================= -->
+                            <!-- INFORMACIÓN BÁSICA -->
+                            <!-- ============================================= -->
+                            <h6 class="section-title"><i class="fas fa-info-circle"></i>Información Básica</h6>
+
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label for="nombreSucursal" class="form-label">Nombre de la sucursal
+                                        <span>*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-store"></i></span>
+                                        <input type="text" class="form-control" id="nombreSucursal"
+                                            placeholder="Ej: Sucursal Centro, Matriz Principal" required>
+                                    </div>
+                                    <div class="form-help-text">Nombre único para identificar la sucursal</div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="tipoSucursal" class="form-label">Tipo de sucursal <span>*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-tag"></i></span>
+                                        <input type="text" class="form-control" id="tipoSucursal"
+                                            placeholder="Ej: Matriz, Sucursal, Oficina, Bodega" required>
+                                    </div>
+                                    <div class="form-help-text">Clasificación de la sucursal</div>
+                                </div>
+                            </div>
+
+                            <!-- ============================================= -->
+                            <!-- UBICACIÓN -->
+                            <!-- ============================================= -->
+                            <h6 class="section-title" style="margin-top: 25px;">
+                                <i class="fas fa-map-marker-alt"></i>Ubicación
+                            </h6>
+
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label for="regionSucursal" class="form-label">Región <span>*</span></label>
+                                    <select class="form-control" id="regionSucursal" required>
+                                        <option value="">-- Seleccione una región --</option>
+                                    </select>
+                                    <div class="form-help-text">Región a la que pertenece</div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="zonaSucursal" class="form-label">Zona <span
+                                            class="optional">(opcional)</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-layer-group"></i></span>
+                                        <input type="text" class="form-control" id="zonaSucursal"
+                                            placeholder="Ej: Norte, Sur, Centro">
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="estadoSucursal" class="form-label">Estado <span>*</span></label>
+                                    <select class="form-control" id="estadoSucursal" required>
+                                        <option value="">-- Seleccione un estado --</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="ciudadSucursal" class="form-label">Ciudad <span>*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-city"></i></span>
+                                        <input type="text" class="form-control" id="ciudadSucursal"
+                                            placeholder="Ej: Monterrey, Guadalajara, CDMX" required>
+                                    </div>
+                                </div>
+
+                                <div class="full-width">
+                                    <label for="direccionSucursal" class="form-label">Dirección completa
+                                        <span>*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-road"></i></span>
+                                        <input type="text" class="form-control" id="direccionSucursal"
+                                            placeholder="Calle, número, colonia, código postal" required>
+                                    </div>
+                                    <div class="form-help-text">Dirección física completa de la sucursal</div><br>
+                                </div>
+                            </div>
+
+                            <!-- ============================================= -->
+                            <!-- CONTACTO -->
+                            <!-- ============================================= -->
+                            <h6 class="section-title" style="margin-top: 25px;">
+                                <i class="fas fa-phone-alt"></i>Contacto
+                            </h6>
+
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label for="contactoSucursal" class="form-label">Teléfono de contacto <span
+                                            class="optional">(opcional)</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-phone"></i></span>
+                                        <input type="tel" class="form-control" id="contactoSucursal"
+                                            placeholder="Ej: 8112345678">
+                                    </div>
+                                    <div class="form-help-text">10 dígitos, solo números</div>
+                                </div>
+                            </div>
+
+                            <!-- ============================================= -->
+                            <!-- COORDENADAS -->
+                            <!-- ============================================= -->
+                            <h6 class="section-title" style="margin-top: 25px;">
+                                <i class="fas fa-map-pin"></i>Coordenadas
+                            </h6>
+
+                            <div class="coordenadas-container">
+                                <div class="coordenadas-grid">
+                                    <div class="form-field">
+                                        <label for="latitudSucursal" class="form-label">Latitud <span>*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-icon"><i class="fas fa-arrow-up"></i></span>
+                                            <input type="number" step="any" class="form-control" id="latitudSucursal"
+                                                placeholder="Ej: 25.686614" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-field">
+                                        <label for="longitudSucursal" class="form-label">Longitud <span>*</span></label>
+                                        <div class="input-group">
+                                            <span class="input-group-icon"><i class="fas fa-arrow-left"></i></span>
+                                            <input type="number" step="any" class="form-control" id="longitudSucursal"
+                                                placeholder="Ej: -100.316112" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="coordenadas-preview">
+                                    <i class="fas fa-info-circle"></i>
+                                    Formato decimal (grados). Ejemplo: <strong>25.686614, -100.316112</strong>
+                                </div>
+                            </div>
+
+                            <!-- Campos ocultos -->
+                            <input type="hidden" id="sucursalId">
+                            <input type="hidden" id="organizacionCamelCase">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- MAPA CON BOTONES DENTRO DEL CONTENEDOR -->
+        <!-- ============================================= -->
+        <div class="map-container">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-map-marked-alt"></i>Ubicación en el Mapa</h5>
+                    <div class="map-status">
+                        <i class="fas fa-circle"></i>
+                        <span>Haz clic en el mapa para ajustar la ubicación</span>
+                    </div>
+                </div>
+                <div class="card-body" style="padding: 0;">
+                    <div class="map-wrapper">
+                        <div id="sucursalMap"></div>
+
+                        <!-- Overlay con botones de control -->
+                        <div class="map-overlay">
+                            <button class="map-button" id="btnCentrarMapa" title="Centrar en ubicación actual">
+                                <i class="fas fa-crosshairs"></i>
+                                <span>Centrar</span>
+                            </button>
+                            <button class="map-button" id="btnBuscarDireccion" title="Buscar dirección en el mapa">
+                                <i class="fas fa-search-location"></i>
+                                <span>Buscar</span>
+                            </button>
+                            <button class="map-button" id="btnObtenerUbicacion" title="Usar mi ubicación actual">
+                                <i class="fas fa-location-arrow"></i>
+                                <span>Mi ubicación</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Panel de coordenadas en tiempo real -->
+                    <div class="map-coordinates-panel">
+                        <div class="coordinates-display">
+                            <div class="coord-item">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Latitud:</span>
+                                <span class="coord-value" id="mapLatitud">25.686614</span>
+                            </div>
+                            <div class="coord-item">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Longitud:</span>
+                                <span class="coord-value" id="mapLongitud">-100.316112</span>
+                            </div>
+                        </div>
+                        <div class="map-status">
+                            <i class="fas fa-mouse-pointer"></i>
+                            <span>Arrastra el marcador para ajustar</span>
+                        </div>
+                    </div>
+
+                    <!-- ============================================= -->
+                    <!-- BOTONES DE ACCIÓN DENTRO DEL MAPA (ABAJO) -->
+                    <!-- ============================================= -->
+                    <div class="map-footer-buttons">
+                        <button type="button" class="btn btn-success" id="btnActualizarSucursal">
+                            <i class="fas fa-save"></i>Actualizar Sucursal
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="btnCancelar">
+                            <i class="fas fa-times"></i>Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script src="/components/navbarColaborador.js"></script>
+    <script src="/components/footerColaborador.js"></script>
+    <script type="module" src="/usuarios/administrador/editarSucursales/editarSucursales.js"></script>
+
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/colaborador/incidencias/mis-incidencias.html -->
+    <script src="/components/protector-colaborador.js" data-modulo="sucursales">
+    </script>
+</body>
+
+</html>

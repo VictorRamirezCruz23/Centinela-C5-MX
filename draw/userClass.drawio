@@ -1,0 +1,129 @@
+<mxfile host="65bd71144e">
+    <diagram id="LuKyYqlG77vrQvMrnp8h" name="Page-1">
+        <mxGraphModel dx="509" dy="633" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="2000" background="#FFFFFF" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="User" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="300" height="730" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value=" ATRIBUTOS&#xa;- id: String (UID Firebase Auth)&#xa;- organizacion: String&#xa;- organizacionCamelCase: String&#xa;- nombreCompleto: String&#xa;- correoElectronico: String&#xa;- status: boolean&#xa;- idAuth: String&#xa;- fotoUsuario: String&#xa;- fotoOrganizacion: String&#xa;- rol: String (master/admin/colaborador)&#xa;- cargo: Object | null&#xa;- areaAsignadaId: String | null&#xa;- fechaActualizacion: Date&#xa;- fechaCreacion: Date&#xa;- ultimoLogin: Date | null&#xa;- theme: String&#xa;- permisosPersonalizados: Object&#xa;- plan: String (gratis/basico/premium/empresa)&#xa;- verificado: boolean&#xa;- emailVerified: boolean&#xa;- creadoPor: String&#xa;- creadoPorEmail: String&#xa;- creadoPorNombre: String&#xa;- actualizadoPor: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
+                    <mxGeometry y="30" width="300" height="380" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value=" MÉTODOS DE UTILIDAD&#xa;- _convertirFecha(fecha): Date&#xa;- _obtenerThemeDelLocalStorage(): String&#xa;+ getFotoUrl(): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
+                    <mxGeometry y="410" width="300" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value=" VERIFICACIÓN DE ROL&#xa;+ esMaster(): boolean&#xa;+ esAdministrador(): boolean&#xa;+ esColaborador(): boolean&#xa;+ tienePermiso(permiso): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
+                    <mxGeometry y="480" width="300" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value=" MÉTODOS DE ESTADO&#xa;+ estaActivo(): boolean&#xa;+ estaVerificado(): boolean&#xa;+ estaInactivo(): boolean&#xa;+ getEstadoTexto(): String&#xa;+ getEstadoBadge(): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
+                    <mxGeometry y="570" width="300" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value=" MÉTODOS DE PLAN&#xa;+ tieneLimiteUsuarios(): number&#xa;+ puedeCrearMasUsuarios(total): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
+                    <mxGeometry y="670" width="300" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="UserManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="440" width="340" height="750" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value=" ATRIBUTOS&#xa;- users: Array&lt;User&gt;&#xa;- currentUser: User | null" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="30" width="340" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value=" CONSTRUCTOR&#xa;+ constructor()&#xa;  - auth.onAuthStateChanged()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="90" width="340" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value=" CARGA Y BÚSQUEDA&#xa;+ loadCurrentUser(userId): Promise&lt;User|null&gt;&#xa;+ getTodasLasOrganizaciones(): Promise&lt;Array&gt;&#xa;+ getUserById(id): Promise&lt;User|null&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="150" width="340" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value=" CREACIÓN DE USUARIOS&#xa;+ createAdministrador(adminData, password): Promise&lt;Object&gt;&#xa;+ createColaborador(colabData, password, adminId): Promise&lt;Object&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="220" width="340" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value=" VERIFICACIÓN DE EMAIL&#xa;+ reenviarVerificacionEmail(): Promise&lt;Object&gt;&#xa;+ verificarEmail(actionCode): Promise&lt;Object&gt;&#xa;+ enviarCorreoRecuperacion(email): Promise&lt;Object&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="310" width="340" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value=" GESTIÓN DE ESTADO&#xa;+ inactivarUsuario(id, userType, orgCC): Promise&lt;boolean&gt;&#xa;+ reactivarUsuario(id, userType, orgCC): Promise&lt;boolean&gt;&#xa;+ updateUser(id, data, userType, orgCC): Promise&lt;boolean&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="380" width="340" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value=" AUTENTICACIÓN&#xa;+ iniciarSesion(email, password): Promise&lt;User&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="450" width="340" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value=" VERIFICACIÓN Y CONTEO&#xa;+ verificarCorreoEnOrganizacion(correo, orgCC): Promise&lt;boolean&gt;&#xa;+ verificarCorreoExistente(correo, tipo): Promise&lt;boolean&gt;&#xa;+ contarUsuariosActivosPorOrganizacion(orgCC): Promise&lt;number&gt;&#xa;+ contarTodosUsuariosPorOrganizacion(orgCC): Promise&lt;number&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="490" width="340" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value=" MÉTODOS DE CONSULTA&#xa;+ getColaboradoresByOrganizacion(orgCC, incluirInactivos): Promise&lt;Array&gt;&#xa;+ getAdministradores(incluirInactivos): Promise&lt;Array&gt;&#xa;+ getUsuariosInactivosPorOrganizacion(orgCC): Promise&lt;Array&gt;&#xa;+ esAdministrador(): boolean&#xa;+ tienePermiso(permiso): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="620" width="340" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="administradores" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="830" y="200" width="260" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value=" ATRIBUTOS&#xa;• organizacion: String&#xa;• organizacionCC: String&#xa;• nombreCompleto: String&#xa;• correoElectronico: String&#xa;• status: boolean&#xa;• idAuth: String&#xa;• fotoOrganizacion: String&#xa;• fotoUsuario: String&#xa;• fechaCreacion: Timestamp&#xa;• fechaActualizacion: Timestamp&#xa;• ultimoLogin: Timestamp" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="19" vertex="1">
+                    <mxGeometry y="30" width="260" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="colaboradores_{orgCC}" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="40" width="260" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value=" ATRIBUTOS&#xa;• organizacion: String&#xa;• organizacionCC: String&#xa;• nombreCompleto: String&#xa;• correoElectronico: String&#xa;• status: boolean&#xa;• idAuth: String&#xa;• fotoOrganizacion: String&#xa;• fotoUsuario: String&#xa;• fechaCreacion: Timestamp&#xa;• fechaActualizacion: Timestamp&#xa;• ultimoLogin: Timestamp" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="21" vertex="1">
+                    <mxGeometry y="30" width="260" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="" style="endArrow=block;endFill=1;endSize=8;startArrow=block;startFill=0;startSize=8;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" parent="1" source="8" target="2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="gestiona" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;" parent="23" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-0.3" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="25" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;" parent="1" source="2" target="19" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="585" y="405"/>
+                            <mxPoint x="585" y="320"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="mapea desde (admin)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" parent="25" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="0.5" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="27" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;" parent="1" source="2" target="21" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="mapea desde (colab)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" parent="27" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="0.5" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="29" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;" parent="1" source="8" target="19" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="lee/escribe" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" parent="29" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-0.2" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="32" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="8" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="720" y="370" as="sourcePoint"/>
+                        <mxPoint x="700" y="160" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="570" y="410"/>
+                            <mxPoint x="730" y="410"/>
+                            <mxPoint x="730" y="160"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="33" value="lee/escribe" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" parent="32" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-0.2" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="34" value="administradores del sistema" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="830" y="460" width="260" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value=" ATRIBUTOS&#xa;• nombreCompleto: String&#xa;• correoElectronico: String&#xa;• idAuth: String&#xa;• fotoUsuario: String&#xa;• fechaCreacion: Timestamp&#xa;• fechaActualizacion: Timestamp&#xa;• ultimoLogin: Timestamp" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="34">
+                    <mxGeometry y="30" width="260" height="140" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

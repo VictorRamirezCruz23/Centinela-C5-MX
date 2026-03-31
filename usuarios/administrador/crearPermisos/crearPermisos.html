@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nuevo Permiso | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Estilos modulo -->
+    <link rel="stylesheet" href="crearPermisos.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- SEO Básico -->
+    <meta name="description"
+        content="Centinela-MX es un sistema inteligente de seguridad para almacenamiento, monitoreo y predicción de incidencias. Plataforma confiable para prevención y análisis en tiempo real.">
+    <meta name="keywords"
+        content="centinela, centinela-mx, sistema de seguridad, seguridad inteligente, predicción de incidencias, monitoreo de seguridad, plataforma de seguridad, análisis de riesgos, prevención de incidentes">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app/" />
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Centinela-MX | Sistema Inteligente de Seguridad y Predicción">
+    <meta property="og:description"
+        content="Centinela-MX es una plataforma avanzada de seguridad para almacenamiento, monitoreo y predicción de incidencias en tiempo real.">
+    <meta property="og:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Vista previa oficial de Centinela-MX">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Logo oficial de Centinela-MX">
+    <meta property="og:site_name" content="Centinela-MX">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://centinela-mx.web.app">
+    <meta name="twitter:title" content="Centinela-MX | Seguridad Inteligente">
+    <meta name="twitter:description"
+        content="Sistema de seguridad inteligente para monitoreo, almacenamiento y predicción de incidencias.">
+    <meta name="twitter:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta name="twitter:creator" content="">
+
+    <!-- Schema.org / JSON-LD -->
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Centinela-MX",
+    "operatingSystem": "Web",
+    "applicationCategory": "SecurityApplication",
+    "description": "Centinela-MX es un sistema inteligente de seguridad para el almacenamiento, monitoreo y predicción de incidencias en tiempo real.",
+    "url": "https://centinela-mx.web.app",
+    "image": "https://centinela-mx.web.app/assets/images/logo.png",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Centinela-MX",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://centinela-mx.web.app/assets/images/logo.png"
+        }
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "MXN"
+    }
+    }
+    </script>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <br>
+
+    <!-- Contenedor principal -->
+    <div class="custom-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1 class="main-title">
+                    <i class="fas fa-lock"></i>
+                    Crear Nuevo Permiso
+                </h1>
+                <div class="header-description-text">
+                    "Define los módulos a los que tendrá acceso cada cargo"
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- FORMULARIO ÚNICO: CONFIGURACIÓN DE PERMISOS -->
+        <!-- ============================================= -->
+        <div class="form-row">
+            <div class="full-width">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-edit"></i>Configuración de Permisos</h5>
+                        <button id="btnVolverLista" class="btn-volver">
+                            <i class="fas fa-arrow-left"></i>Volver a la lista
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <form id="formPermisoPrincipal">
+                            <!-- Grid de 2 columnas -->
+                            <div class="form-grid">
+                                <div class="full-width">
+                                    <h6 class="section-title"><i class="fas fa-info-circle"></i>Información Básica</h6>
+                                </div>
+
+                                <!-- Organización (solo lectura) -->
+                                <div class="full-width">
+                                    <label for="organization" class="form-label">Organización</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-building"></i></span>
+                                        <input type="text" class="form-control" id="organization" readonly>
+                                    </div>
+                                    <div class="form-help-text">Organización a la que pertenece el permiso</div>
+                                </div>
+
+                                <!-- Selección de Área -->
+                                <div class="full-width">
+                                    <label for="areaSelect" class="form-label">Área *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-building"></i></span>
+                                        <select class="form-control" id="areaSelect" required>
+                                            <option value="" disabled selected>-- Selecciona un área --</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-help-text">Selecciona el área a la que pertenece el cargo</div>
+                                </div>
+
+                                <!-- Selección de Cargo -->
+                                <div class="full-width">
+                                    <label for="cargoSelect" class="form-label">Cargo *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-user-tie"></i></span>
+                                        <select class="form-control" id="cargoSelect" required disabled>
+                                            <option value="" disabled selected>-- Primero selecciona un área --</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-help-text">Selecciona el cargo específico</div>
+                                </div>
+
+                                <!-- Sección de Módulos -->
+                                <div class="full-width">
+                                    <h6 class="section-title" style="margin-top: 10px;">
+                                        <i class="fas fa-lock"></i>Módulos del Sistema
+                                    </h6>
+                                </div>
+
+                                <!-- Acciones rápidas -->
+                                <div class="full-width">
+                                    <div class="acciones-rapidas">
+                                        <button type="button" class="btn-accion-rapida" id="seleccionarTodos">
+                                            <i class="fas fa-check-double"></i> Seleccionar Todos
+                                        </button>
+                                        <button type="button" class="btn-accion-rapida" id="deseleccionarTodos">
+                                            <i class="fas fa-times"></i> Deseleccionar Todos
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Grid de permisos -->
+                                <div class="full-width">
+                                    <div class="permisos-grid">
+                                        <!-- Módulo: Áreas -->
+                                        <div class="permiso-card" id="permisoAreasCard">
+                                            <div class="permiso-icon">
+                                                <i class="fas fa-sitemap"></i>
+                                            </div>
+                                            <div class="permiso-contenido">
+                                                <span class="permiso-nombre">Áreas</span>
+                                                <span class="permiso-descripcion">Gestionar áreas de la
+                                                    organización</span>
+                                            </div>
+                                            <input type="checkbox" class="permiso-checkbox" id="permisoAreas">
+                                        </div>
+
+                                        <!-- Módulo: Categorías -->
+                                        <div class="permiso-card" id="permisoCategoriasCard">
+                                            <div class="permiso-icon">
+                                                <i class="fas fa-tags"></i>
+                                            </div>
+                                            <div class="permiso-contenido">
+                                                <span class="permiso-nombre">Categorías</span>
+                                                <span class="permiso-descripcion">Gestionar categorías de
+                                                    incidencias</span>
+                                            </div>
+                                            <input type="checkbox" class="permiso-checkbox" id="permisoCategorias">
+                                        </div>
+
+                                        <!-- Módulo: Sucursales -->
+                                        <div class="permiso-card" id="permisoSucursalesCard">
+                                            <div class="permiso-icon">
+                                                <i class="fas fa-store"></i>
+                                            </div>
+                                            <div class="permiso-contenido">
+                                                <span class="permiso-nombre">Sucursales</span>
+                                                <span class="permiso-descripcion">Gestionar sucursales</span>
+                                            </div>
+                                            <input type="checkbox" class="permiso-checkbox" id="permisoSucursales">
+                                        </div>
+
+                                        <!-- Módulo: Regiones -->
+                                        <div class="permiso-card" id="permisoRegionesCard">
+                                            <div class="permiso-icon">
+                                                <i class="fas fa-map-marked-alt"></i>
+                                            </div>
+                                            <div class="permiso-contenido">
+                                                <span class="permiso-nombre">Regiones</span>
+                                                <span class="permiso-descripcion">Gestionar regiones geográficas</span>
+                                            </div>
+                                            <input type="checkbox" class="permiso-checkbox" id="permisoRegiones">
+                                        </div>
+
+                                        <!-- Módulo: Incidencias (Dinámico - depende del plan) -->
+                                        <div class="permiso-card" id="permisoIncidenciasCard">
+                                            <div class="permiso-icon">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </div>
+                                            <div class="permiso-contenido">
+                                                <span class="permiso-nombre">Incidencias</span>
+                                                <span class="permiso-descripcion">Gestionar incidencias</span>
+                                            </div>
+                                            <input type="checkbox" class="permiso-checkbox" id="permisoIncidencias">
+                                        </div>
+
+                                        <!-- Módulo: Mapa de Alertas (Dinámico - depende del plan) -->
+                                        <div class="permiso-card" id="permisoMonitoreoCard" style="display: none;">
+                                            <div class="permiso-icon cyan">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <div class="permiso-contenido">
+                                                <span class="permiso-nombre">Mapa de Alertas</span>
+                                                <span class="permiso-descripcion">Visualización de alertas en
+                                                    mapa</span>
+                                            </div>
+                                            <input type="checkbox" class="permiso-checkbox" id="permisoMonitoreo"
+                                                data-modulo="monitoreo">
+                                        </div>
+
+                                        <!-- NUEVO Módulo: Usuarios -->
+                                        <div class="permiso-card" id="permisoUsuariosCard">
+                                            <div class="permiso-icon">
+                                                <i class="fas fa-users"></i>
+                                            </div>
+                                            <div class="permiso-contenido">
+                                                <span class="permiso-nombre">Usuarios</span>
+                                                <span class="permiso-descripcion">Gestionar usuarios del sistema</span>
+                                            </div>
+                                            <input type="checkbox" class="permiso-checkbox" id="permisoUsuarios">
+                                        </div>
+
+                                        <!-- NUEVO Módulo: Estadísticas -->
+                                        <div class="permiso-card" id="permisoEstadisticasCard">
+                                            <div class="permiso-icon">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                            <div class="permiso-contenido">
+                                                <span class="permiso-nombre">Estadísticas</span>
+                                                <span class="permiso-descripcion">Visualizar estadísticas y
+                                                    reportes</span>
+                                            </div>
+                                            <input type="checkbox" class="permiso-checkbox" id="permisoEstadisticas">
+                                        </div>
+
+                                        <!-- NUEVO Módulo: Tareas -->
+                                        <div class="permiso-card" id="permisoTareasCard">
+                                            <div class="permiso-icon">
+                                                <i class="fas fa-tasks"></i>
+                                            </div>
+                                            <div class="permiso-contenido">
+                                                <span class="permiso-nombre">Tareas</span>
+                                                <span class="permiso-descripcion">Gestionar tareas asignadas</span>
+                                            </div>
+                                            <input type="checkbox" class="permiso-checkbox" id="permisoTareas">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Mensaje informativo -->
+                        <div class="alert alert-info" style="margin-top: 20px;">
+                            <i class="fas fa-info-circle"></i>
+                            Los permisos se asignan por cargo y área. El módulo "Mapa de Alertas" solo está disponible
+                            si el plan de la organización lo incluye.
+                        </div>
+
+                        <!-- BOTONES DE ACCIÓN -->
+                        <div class="action-buttons-container">
+                            <button type="button" class="btn btn-success" id="registerBtn">
+                                <i class="fas fa-check"></i>Crear Permiso
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cancelBtn">
+                                <i class="fas fa-times"></i>Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script type="module" src="/components/navbarAdministrador.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="crearPermisos.js"></script>
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/administrador/cualquier-pagina.html -->
+    <script src="/components/protector-admin.js" data-modulo="generales"> </script>
+</body>
+</body>
+
+</html>

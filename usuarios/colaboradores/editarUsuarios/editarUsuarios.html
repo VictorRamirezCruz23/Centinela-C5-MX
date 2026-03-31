@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Colaborador | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Estilos modulo -->
+    <link rel="stylesheet" href="/usuarios/administrador/editarUsuarios/editarUsuarios.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <!-- SEO Básico -->
+    <meta name="description"
+        content="Centinela-MX es un sistema inteligente de seguridad para almacenamiento, monitoreo y predicción de incidencias. Plataforma confiable para prevención y análisis en tiempo real.">
+    <meta name="keywords"
+        content="centinela, centinela-mx, sistema de seguridad, seguridad inteligente, predicción de incidencias, monitoreo de seguridad, plataforma de seguridad, análisis de riesgos, prevención de incidentes">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app/" />
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Centinela-MX | Sistema Inteligente de Seguridad y Predicción">
+    <meta property="og:description"
+        content="Centinela-MX es una plataforma avanzada de seguridad para almacenamiento, monitoreo y predicción de incidencias en tiempo real.">
+    <meta property="og:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Vista previa oficial de Centinela-MX">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Logo oficial de Centinela-MX">
+    <meta property="og:site_name" content="Centinela-MX">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://centinela-mx.web.app">
+    <meta name="twitter:title" content="Centinela-MX | Seguridad Inteligente">
+    <meta name="twitter:description"
+        content="Sistema de seguridad inteligente para monitoreo, almacenamiento y predicción de incidencias.">
+    <meta name="twitter:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta name="twitter:creator" content="">
+
+    <!-- Schema.org / JSON-LD -->
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Centinela-MX",
+    "operatingSystem": "Web",
+    "applicationCategory": "SecurityApplication",
+    "description": "Centinela-MX es un sistema inteligente de seguridad para el almacenamiento, monitoreo y predicción de incidencias en tiempo real.",
+    "url": "https://centinela-mx.web.app",
+    "image": "https://centinela-mx.web.app/assets/images/logo.png",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Centinela-MX",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://centinela-mx.web.app/assets/images/logo.png"
+        }
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "MXN"
+    }
+    }
+    </script>
+</head>
+
+<body>
+    <!-- Partículas de fondo -->
+    <canvas id="particle-canvas"></canvas>
+
+    <br>
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-users"></i> Crear Nuevo Colaborador
+        </h1>
+        <div class="header-description">
+            Crea colaboradores de tu organización.
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="edit-main-container">
+        <div class="edit-wrapper">
+
+            <!-- Panel izquierdo: Fotos e información -->
+            <div class="edit-left-panel">
+                <header class="edit-header">
+                    <h1 class="edit-main-title">EDITAR COLABORADOR</h1>
+                    <p class="edit-sub-title">Gestión de acceso al sistema</p>
+                </header>
+
+                <!-- Foto del colaborador -->
+                <section class="photo-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-user-circle"></i> FOTO DEL COLABORADOR
+                    </h2>
+
+                    <div class="photo-container">
+                        <div class="profile-circle" id="profileCircle">
+                            <div class="placeholder-text" id="profilePlaceholder">
+                                <i class="fas fa-user"></i>
+                                <span>Foto colaborador</span>
+                            </div>
+                            <img src="" alt="Foto del colaborador" class="profile-image" id="profileImage"
+                                style="display: none;">
+                            <div class="edit-overlay" id="editProfileOverlay">
+                                <i class="fas fa-pencil-alt edit-icon"></i>
+                            </div>
+                        </div>
+                        <input type="file" id="profile-input" class="file-input" accept="image/*">
+                    </div>
+
+                    <p class="photo-info">Haz clic en la foto o en el lápiz para cambiar</p>
+                    <p class="photo-info">Formatos: JPG, PNG • Máximo: 5MB</p>
+                </section>
+
+                <!-- Logo de organización -->
+                <section class="photo-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-building"></i> LOGO ORGANIZACIÓN
+                    </h2>
+
+                    <div class="photo-container">
+                        <div class="profile-circle" id="orgCircle">
+                            <div class="placeholder-text" id="orgPlaceholder">
+                                <i class="fas fa-building"></i>
+                                <span>Logo organización</span>
+                            </div>
+                            <img src="" alt="Logo de la organización" class="profile-image" id="orgImage"
+                                style="display: none;">
+                            <div class="edit-overlay" id="editOrgOverlay">
+                                <i class="fas fa-pencil-alt edit-icon"></i>
+                            </div>
+                        </div>
+                        <input type="file" id="org-input" class="file-input" accept="image/*">
+                    </div>
+
+                    <p class="photo-info">Logo de la organización del colaborador</p>
+                </section>
+
+                <!-- Información del sistema -->
+                <section class="system-info-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-info-circle"></i> INFORMACIÓN DEL SISTEMA
+                    </h2>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-calendar-plus"></i> Fecha de Creación
+                            </div>
+                            <div class="info-value">
+                                <div id="creationDate">--/--/----</div>
+                                <div class="timestamp" id="creationTime">--:-- --</div>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-calendar-check"></i> Última Actualización
+                            </div>
+                            <div class="info-value">
+                                <div id="lastUpdateDate">--/--/----</div>
+                                <div class="timestamp" id="lastUpdateTime">--:-- --</div>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-sign-in-alt"></i> Último Login
+                            </div>
+                            <div class="info-value">
+                                <div id="lastLoginDate">--/--/----</div>
+                                <div class="timestamp" id="lastLoginTime">--:-- --</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Botón volver -->
+                <footer class="back-btn-container">
+                    <a href="../usuarios/usuarios.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i> VOLVER A GESTIÓN
+                    </a>
+                </footer>
+            </div>
+
+            <!-- Panel derecho: Formulario de edición -->
+            <div class="edit-right-panel">
+                <header class="edit-header">
+                    <h1 class="edit-main-title">DATOS DEL COLABORADOR</h1>
+                    <p class="edit-sub-title">Actualiza la información del colaborador</p>
+                </header>
+
+                <form class="edit-form-container" id="editProfileForm">
+                    <!-- Grid para campos del formulario -->
+                    <div class="form-grid">
+                        <!-- Nombre completo (EDITABLE) -->
+                        <div class="form-field-group full-width">
+                            <label class="field-label" for="fullName">
+                                <i class="fas fa-user"></i> NOMBRE COMPLETO *
+                            </label>
+                            <div class="input-wrapper">
+                                <input class="form-input-field" type="text" id="fullName"
+                                    placeholder="Ingresa el nombre completo" required>
+                            </div>
+                        </div>
+
+                        <!-- Correo electrónico (SOLO LECTURA) -->
+                        <div class="form-field-group">
+                            <label class="field-label" for="email">
+                                <i class="fas fa-envelope"></i> CORREO ELECTRÓNICO
+                            </label>
+                            <div class="input-wrapper">
+                                <input class="form-input-field readonly-field" type="email" id="email"
+                                    placeholder="Correo electrónico" readonly>
+                                <span class="readonly-badge">
+                                    <i class="fas fa-lock"></i> Solo lectura
+                                </span>
+                            </div>
+                            <p class="field-info">No se puede modificar el correo</p>
+                        </div>
+
+                        <!-- Organización (SOLO LECTURA) -->
+                        <div class="form-field-group">
+                            <label class="field-label" for="organizationName">
+                                <i class="fas fa-building"></i> ORGANIZACIÓN
+                            </label>
+                            <div class="input-wrapper">
+                                <input class="form-input-field readonly-field" type="text" id="organizationName"
+                                    placeholder="Nombre de la organización" readonly>
+                                <span class="readonly-badge">
+                                    <i class="fas fa-lock"></i> Solo lectura
+                                </span>
+                            </div>
+                            <p class="field-info">Contacta al administrador principal</p>
+                        </div>
+
+                        <!-- NUEVO: ÁREA (EDITABLE) -->
+                        <div class="form-field-group">
+                            <label class="field-label" for="areaSelect">
+                                <i class="fas fa-building"></i> ÁREA / DEPARTAMENTO
+                            </label>
+                            <div class="input-wrapper">
+                                <select class="form-input-field" id="areaSelect" required>
+                                    <option value="">Cargando áreas...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- NUEVO: CARGO EN EL ÁREA (EDITABLE) -->
+                        <div class="form-field-group">
+                            <label class="field-label" for="cargoEnAreaSelect">
+                                <i class="fas fa-user-tie"></i> CARGO EN EL ÁREA
+                            </label>
+                            <div class="input-wrapper">
+                                <select class="form-input-field" id="cargoEnAreaSelect" required>
+                                    <option value="">Primero selecciona un área</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Status (EDITABLE) -->
+                        <div class="form-field-group full-width">
+                            <label class="field-label">
+                                <i class="fas fa-toggle-on"></i> ESTATUS DEL COLABORADOR
+                            </label>
+                            <div class="status-selector">
+                                <div class="status-option" data-status="active">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span class="status-text">Activo</span>
+                                </div>
+                                <div class="status-option" data-status="inactive">
+                                    <i class="fas fa-times-circle"></i>
+                                    <span class="status-text">Inactivo</span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="status" value="active">
+                        </div>
+                    </div>
+
+                    <!-- Permisos del sistema -->
+                    <section class="permissions-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-shield-alt"></i> PERMISOS DEL SISTEMA
+                        </h2>
+
+                        <div class="permissions-grid">
+                            <label class="permission-checkbox">
+                                <input type="checkbox" name="permissions" value="dashboard">
+                                <span class="permission-label">Ver Dashboard</span>
+                            </label>
+                            <label class="permission-checkbox">
+                                <input type="checkbox" name="permissions" value="reports">
+                                <span class="permission-label">Generar Reportes</span>
+                            </label>
+                            <label class="permission-checkbox">
+                                <input type="checkbox" name="permissions" value="users">
+                                <span class="permission-label">Gestionar Usuarios</span>
+                            </label>
+                            <label class="permission-checkbox">
+                                <input type="checkbox" name="permissions" value="settings">
+                                <span class="permission-label">Configuración</span>
+                            </label>
+                            <label class="permission-checkbox">
+                                <input type="checkbox" name="permissions" value="analytics">
+                                <span class="permission-label">Analíticas</span>
+                            </label>
+                            <label class="permission-checkbox">
+                                <input type="checkbox" name="permissions" value="notifications">
+                                <span class="permission-label">Enviar Notificaciones</span>
+                            </label>
+                            <label class="permission-checkbox">
+                                <input type="checkbox" name="permissions" value="export">
+                                <span class="permission-label">Exportar Datos</span>
+                            </label>
+                            <label class="permission-checkbox">
+                                <input type="checkbox" name="permissions" value="admin">
+                                <span class="permission-label">Acceso Admin</span>
+                            </label>
+                        </div>
+                    </section>
+
+
+
+                    <!-- Sección para cambiar contraseña -->
+                    <div class="password-change-section">
+                        <button type="button" class="btn-change-password" id="changePasswordBtn">
+                            <i class="fas fa-key"></i> ENVIAR ENLACE PARA CAMBIAR CONTRASEÑA
+                        </button>
+                        <p class="password-change-info">
+                            Se enviará un enlace seguro al correo del colaborador para restablecer su contraseña.
+                        </p>
+                    </div>
+
+
+                    <!-- Acciones del formulario -->
+                    <div class="form-actions">
+                        <button type="button" class="action-btn save-btn" id="saveChangesBtn">
+                            <i class="fas fa-save"></i> GUARDAR CAMBIOS
+                        </button>
+                        <button type="button" class="action-btn cancel-btn" id="cancelBtn">
+                            <i class="fas fa-times"></i> CANCELAR
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts externos -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script src="/components/navbarColaborador.js"></script>
+    <script src="/components/footerColaborador.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+
+    <!-- Script principal - MÓDULO ES6 -->
+    <script type="module" src="/usuarios/administrador/editarUsuarios/editarUsuarios.js"></script>
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/colaborador/incidencias/mis-incidencias.html -->
+    <script src="/components/protector-colaborador.js" data-modulo="usuarios">
+    </script>
+</body>
+
+</html>

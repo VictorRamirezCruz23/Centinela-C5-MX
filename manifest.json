@@ -1,0 +1,18 @@
+{
+  "name": "Centinela-MX",
+  "short_name": "Centinela",
+  "description": "Sistema de cartografía y predicción de incidencias",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#1F1E1E",
+  "background_color": "#1F1E1E",
+  "icons": [
+    {
+      "src": "/assets/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

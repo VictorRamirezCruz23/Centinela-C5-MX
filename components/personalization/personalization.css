@@ -1,0 +1,249 @@
+/* =============================================
+   VARIABLES PRINCIPALES DE COLOR
+   ============================================= */
+
+:root {
+    /* ====== COLORES BASE ====== */
+    --color-bg-primary: #000000;
+    --color-bg-secondary: #00000000;
+    --color-bg-tertiary: #0000007a;
+    --color-bg-light: #ffffff;
+
+    /* ====== COLORES DE TEXTO ====== */
+    --color-text-primary: #ffffff;
+    --color-text-secondary: rgba(255, 255, 255, 0.8);
+    --color-text-light: #ffffff;
+    --color-text-dark: #000000;
+
+    /* ====== COLORES DE ACENTO Y EFECTOS ====== */
+    --color-accent-primary: #c0c0c0;
+    --color-accent-secondary: #ffffff;
+    --color-accent-footer: #ffffff;
+    --color-shadow: rgba(255, 255, 255, 0.55);
+    --color-glow: #ffffff;
+
+    /* ====== VARIABLES DE EFECTO ESPECÍFICAS ====== */
+    --text-shadow-effect: 0 0 10px var(--color-glow), 0 0 20px var(--color-glow), 0 0 30px var(--color-glow), 0 0 40px var(--color-glow);
+    --shadow-normal: 0 5px 15px var(--color-shadow);
+    --shadow-large: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --shadow-small: 0 2px 8px var(--color-shadow);
+
+    /* ====== VARIABLES DE ESTADO ====== */
+    --color-hover: rgba(245, 215, 66, 0);
+    --color-active: #c0c0c0;
+
+    /* ====== VARIABLES DE BORDES ====== */
+    --color-border-light: rgba(255, 255, 255, 0.1);
+    --color-border-dark: #3d8ad6;
+
+    /* ====== VARIABLES DE ÍCONOS ====== */
+    --color-icon-primary: var(--color-accent-secondary);
+    --color-icon-secondary: rgba(255, 255, 255, 0.7);
+
+    /* ====== PROPIEDADES DE DISEÑO ====== */
+    --transition-default: all 0.3s ease-in-out;
+    --transition-fast: all 0.15s ease;
+    --transition-slow: all 0.5s ease;
+    --border-radius-small: 6px;
+    --border-radius-medium: 8px;
+    --border-radius-large: 12px;
+    --border-radius-circle: 50%;
+
+    /* ====== TIPOGRAFÍA ====== */
+    --font-family-primary: 'Orbitron', sans-serif;
+    --font-family-secondary: sans-serif;
+
+    /* ====== VARIABLES ESPECÍFICAS POR COMPONENTE ====== */
+    --navbar-bg: var(--color-bg-secondary);
+    --navbar-text: var(--color-text-primary);
+    --navbar-logo-text: var(--color-text-primary);
+    --navbar-link-hover: var(--text-shadow-effect);
+    --navbar-scrolled-bg: var(--color-bg-primary);
+    --navbar-scrolled-shadow: var(--shadow-normal);
+    --footer-bg-primary: var(--color-bg-secondary);
+    --footer-bg-secondary: var(--color-bg-tertiary);
+    --footer-text-primary: var(--color-text-primary);
+    --footer-text-secondary: var(--color-text-secondary);
+    --footer-accent: var(--color-accent-footer);
+    --footer-link-hover: var(--text-shadow-effect);
+    --footer-social-bg: rgb(3, 3, 3);
+    --footer-social-hover: var(--color-accent-secondary);
+    --footer-border-accent: var(--color-accent-footer);
+}
+
+:root {
+    /* ====== VARIABLES ESPECÍFICAS PARA COMPONENTES ====== */
+    --sweetalert-bg: rgb(0, 0, 0); /* Fondo semitransparente pero no transparente */
+}
+
+/* =============================================
+   SWEETALERT2 - PERSONALIZACIÓN DE COLORES Y TIPOGRAFÍA
+   (TÍTULOS: ORBITRON | RESTO: SANS-SERIF)
+   ============================================= */
+
+/* POPUP PRINCIPAL - FONDO SÓLIDO CON VARIABLES */
+.swal2-popup {
+    background: var(--sweetalert-bg) !important;
+    border: 1px solid var(--color-accent-primary) !important;
+    color: var(--color-text-primary) !important;
+    box-shadow: var(--shadow-large) !important;
+    font-family: var(--font-family-secondary) !important; /* sans-serif por defecto */
+}
+
+/* Efecto de brillo en el borde */
+.swal2-popup::before {
+    background: linear-gradient(45deg,
+            var(--color-accent-primary),
+            var(--color-glow),
+            var(--color-accent-primary)) !important;
+    opacity: 0.3 !important;
+}
+
+/* Título - Orbitron */
+.swal2-title {
+    color: var(--color-text-primary) !important;
+    border-bottom: 1px solid rgba(192, 192, 192, 0.2) !important;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(192, 192, 192, 0.05),
+            transparent) !important;
+    text-shadow: 0 0 8px rgba(192, 192, 192, 0.3) !important;
+    font-family: var(--font-family-primary) !important; /* Orbitron */
+    font-weight: 600 !important; /* Asegura buena legibilidad */
+    letter-spacing: 1px !important; /* Opcional: mejora el estilo futurista */
+}
+
+/* Contenedor HTML - sans-serif */
+.swal2-html-container {
+    color: var(--color-text-secondary) !important;
+    background: rgba(255, 255, 255, 0.01) !important;
+    font-family: var(--font-family-secondary) !important;
+}
+
+/* =============================================
+   BOTONES - CONFIRMAR (ACEPTAR) CON COLOR-BG-PRIMARY
+   ============================================= */
+
+/* Botón confirmar - PINTADO CON COLOR-BG-PRIMARY */
+.swal2-confirm {
+    background: var(--color-bg-primary) !important;
+    color: var(--color-text-light) !important;
+    box-shadow: var(--shadow-small) !important;
+    border: 1px solid var(--color-accent-primary) !important;
+    transition: var(--transition-default) !important;
+    font-family: var(--font-family-secondary) !important;
+}
+
+/* Hover del botón confirmar - MISMO COLOR pero más brillante */
+.swal2-confirm:hover {
+    background: var(--color-bg-primary) !important;
+    filter: brightness(1.3) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px var(--color-bg-primary) !important;
+    border-color: var(--color-glow) !important;
+}
+
+/* Botón confirmar para acciones destructivas (ej: eliminar) */
+.swal2-confirm.swal2-styled[style*="background-color: rgb(221, 51, 51)"] {
+    background: #dc3545 !important;
+    border-color: #dc3545 !important;
+    font-family: var(--font-family-secondary) !important;
+}
+
+.swal2-confirm.swal2-styled[style*="background-color: rgb(221, 51, 51)"]:hover {
+    background: #dc3545 !important;
+    filter: brightness(1.2) !important;
+    box-shadow: 0 5px 15px #dc3545 !important;
+}
+
+/* Botón cancelar - SIEMPRE NEUTRO (sin pintar) */
+.swal2-cancel {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: var(--color-text-secondary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(5px) !important;
+    transition: var(--transition-default) !important;
+    font-family: var(--font-family-secondary) !important;
+}
+
+.swal2-cancel:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Inputs */
+.swal2-input,
+.swal2-textarea,
+.swal2-select {
+    background: rgba(0, 0, 0, 0.7) !important;
+    color: var(--color-text-primary) !important;
+    border: 1px solid rgba(192, 192, 192, 0.2) !important;
+    font-family: var(--font-family-secondary) !important;
+}
+
+/* Barra de progreso */
+.swal2-timer-progress-bar {
+    background: linear-gradient(90deg,
+            var(--color-accent-primary),
+            var(--color-glow),
+            var(--color-accent-primary)) !important;
+}
+
+/* Footer */
+.swal2-footer {
+    border-top: 1px solid rgba(192, 192, 192, 0.15) !important;
+    color: var(--color-text-secondary) !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+    font-family: var(--font-family-secondary) !important;
+}
+
+/* Loader */
+.swal2-loader {
+    border-color: var(--color-accent-primary) transparent var(--color-accent-primary) transparent !important;
+}
+
+/* Botón cerrar */
+.swal2-close {
+    color: var(--color-text-secondary) !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    font-family: var(--font-family-secondary) !important;
+}
+
+/* Mensaje de validación */
+.swal2-validation-message {
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #ef4444 !important;
+    border-left: 3px solid #ef4444 !important;
+    font-family: var(--font-family-secondary) !important;
+}
+
+/* =============================================
+   MEDIA QUERIES - SOLO PARA RESPONSIVE
+   ============================================= */
+@media (max-width: 768px) {
+    .swal2-popup {
+        max-width: 90vw !important;
+        margin: 0 15px !important;
+    }
+}
+
+/* =============================================
+   SCROLLBAR PERSONALIZADO
+   ============================================= */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-accent-primary);
+    border-radius: var(--border-radius-small);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-secondary);
+}

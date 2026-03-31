@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Global | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Estilos modulo -->
+    <link rel="stylesheet" href="./panelAdministrador.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Chart.js para gráficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <!-- ============================================= -->
+        <!-- SECCIÓN DE ACCIONES RÁPIDAS - BANDA DE BOTONES -->
+        <!-- ============================================= -->
+        
+
+    <main class="right-layout">
+        <section class="center-row" style="margin-top: 2rem;">
+            <div class="side full-width">
+                <div class="section-container">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fa-solid fa-bolt"></i> ACCIONES RÁPIDAS</h2>
+                        <p class="section-subtitle">Gestionar el sistema global</p>
+                    </div>
+
+                    <div class="cards-grid-2">
+                        <div class="dashboard-card" id="card-ver-empresas" data-action="empresas">
+                            <div class="card-icon blue">
+                                <i class="fa-solid fa-building"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Ver Empresas</h3>
+                                <p>Gestionar organizaciones</p>
+                            </div>
+                            <div class="card-arrow">→</div>
+                        </div>
+                        <div class="dashboard-card" id="card-ver-planes" data-action="planes">
+                            <div class="card-icon yellow">
+                                <i class="fa-solid fa-cloud"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Ver Consumo</h3>
+                                <p>Consulta el uso de tecnologías</p>
+                            </div>
+                            <div class="card-arrow">→</div>
+                        </div>
+                        <div class="dashboard-card" id="card-reportes" data-action="reportes">
+                            <div class="card-icon purple">
+                                <i class="fa-solid fa-street-view"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Cuentas de Monitoreo</h3>
+                                <p>Gestiona cuentas de monitoreo</p>
+                            </div>
+                            <div class="card-arrow">→</div>
+                        </div>
+                        <div class="dashboard-card" id="card-config" data-action="config">
+                            <div class="card-icon cyan">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Apartado de Visitantes</h3>
+                                <p>Configura tu apartado de público</p>
+                            </div>
+                            <div class="card-arrow">→</div>
+                        </div>            
+                        <div class="dashboard-card" id="card-respaldos" data-action="respaldos">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-boxes-stacked"></i>
+                            </div>
+                            <div class="card-text">
+                                <h3>Operaciones</h3>
+                                <p>Consulta de</p>
+                            </div>
+                            <div class="card-arrow">→</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- SECCIÓN KPI SUPERIOR - 6 TARJETAS CON DATOS GLOBALES -->
+        <div class="kpi-section">
+            <h2><i class="fa-solid fa-crown"></i> PANEL GLOBAL - SUPERADMIN</h2>
+            <div class="kpi-row kpi-row-6">
+                <!-- Tarjeta 1: EMPRESAS ACTIVAS -->
+                <div class="kpi-card" id="kpi-empresas">
+                    <i class="fa-solid fa-building" style="color: #2f8cff;"></i>
+                    <span class="kpi-number" id="total-empresas">0</span>
+                    <h3>EMPRESAS</h3>
+                    <p>Activas en el sistema</p>
+                </div>
+
+                <!-- Tarjeta 2: USUARIOS TOTALES -->
+                <div class="kpi-card" id="kpi-usuarios">
+                    <i class="fa-solid fa-users" style="color: #9caba4;"></i>
+                    <span class="kpi-number" id="total-usuarios">0</span>
+                    <h3>USUARIOS</h3>
+                    <p>Colaboradores + Admins</p>
+                </div>
+
+                <!-- Tarjeta 3: INGRESOS MENSUALES -->
+                <div class="kpi-card" id="kpi-ingresos">
+                    <i class="fa-solid fa-dollar-sign" style="color: #00cfff;"></i>
+                    <span class="kpi-number" id="total-ingresos">$0</span>
+                    <h3>INGRESOS</h3>
+                    <p>Estimado mensual</p>
+                </div>
+
+                <!-- Tarjeta 4: ALMACENAMIENTO -->
+                <div class="kpi-card" id="kpi-almacenamiento">
+                    <i class="fa-solid fa-database" style="color: #b16bff;"></i>
+                    <span class="kpi-number" id="total-almacenamiento">0 GB</span>
+                    <h3>ALMACENAMIENTO</h3>
+                    <p>Usado / Total</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECCIÓN GRÁFICAS Y TABLAS -->
+        <section class="dashboard-grid">
+            <!-- Columna izquierda - Gráficas -->
+            <div class="grid-left">
+                <!-- Distribución de Planes -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- COMPONENTES -->
+    <script type="module" src="/components/autenticador.js"></script>
+   <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script src="/components/navbarSysAdmin.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="./panelAdministrador.js"></script>
+    <script src="/components/protector-master.js"> </script>
+
+</body>
+
+</html>

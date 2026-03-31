@@ -1,0 +1,416 @@
+/* =============================================
+   REGISTRO POWER MANAGE - CSS SIMPLIFICADO
+   ============================================= */
+
+/* ========== RESET Y ESTILOS BASE ========== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--color-text-primary);
+    background: var(--color-bg-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ========== PAGE HEADER - TÍTULO Y DESCRIPCIÓN ========== */
+.page-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    text-align: center;
+    background: transparent;
+}
+
+.page-header h1 {
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: 2.2rem;
+    color: var(--color-text-primary);
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px var(--color-accent-primary), 0 0 20px var(--color-accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.page-header h1 i {
+    color: var(--color-text-primary);
+    filter: drop-shadow(0 0 8px var(--color-accent-primary));
+}
+
+.page-header .header-description {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+    line-height: 1.5;
+}
+
+/* ========== LAYOUT PRINCIPAL ========== */
+.edit-main-container {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: auto;
+    padding: 0 1rem 2rem 1rem;
+}
+
+.edit-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 600px; /* Reducido para panel único */
+    background: var(--color-bg-tertiary);
+    backdrop-filter: blur(8px);
+    border-radius: var(--border-radius-medium);
+    overflow: hidden;
+    box-shadow: var(--shadow-large);
+    border: 1px solid var(--color-border-light);
+}
+
+/* Panel único (antes right-panel) */
+.edit-right-panel {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-secondary);
+    width: 100%;
+}
+
+/* ========== TIPOGRAFÍA ========== */
+.edit-main-title {
+    font-family: var(--font-family-primary);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
+    text-shadow: var(--text-shadow-effect);
+}
+
+.edit-sub-title {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.3;
+}
+
+/* ========== FORMULARIO ========== */
+.edit-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.field-label {
+    color: var(--color-text-secondary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.field-label i {
+    color: var(--color-accent-primary);
+    font-size: 0.8rem;
+    min-width: 18px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-input-field {
+    width: 100%;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-small);
+    padding: 0.7rem 1rem;
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    font-family: 'Rajdhani', sans-serif;
+    height: 45px;
+    transition: var(--transition-default);
+}
+
+.form-input-field:focus {
+    outline: none;
+    border-color: var(--color-accent-primary);
+    background: var(--color-hover, rgba(255, 255, 255, 0.05));
+    box-shadow: 0 0 0 1px var(--color-shadow, rgba(192, 192, 192, 0.1));
+}
+
+.form-input-field::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 0.6;
+}
+
+/* Campo de Código Especial */
+#pmCode {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 700;
+    text-align: center;
+    font-size: 1.1rem;
+    border: 1px solid var(--color-accent-secondary);
+    background: rgba(0, 255, 255, 0.05);
+}
+
+/* ========== BOTONES ========== */
+.action-btn {
+    border: none;
+    border-radius: var(--border-radius-small);
+    padding: 0.8rem;
+    color: var(--color-text-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 45px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-family: 'Rajdhani', sans-serif;
+    box-shadow: var(--shadow-small);
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.save-btn {
+    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+    color: var(--color-text-dark);
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-normal);
+    background: linear-gradient(135deg, var(--color-accent-secondary), var(--color-accent-primary));
+}
+
+/* Botón VOLVER */
+.back-btn-container {
+    margin-top: 1.5rem;
+}
+
+.back-btn {
+    border: none;
+    border-radius: var(--border-radius-small);
+    padding: 0.8rem;
+    color: var(--color-text-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    height: 45px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-family: 'Rajdhani', sans-serif;
+    text-decoration: none;
+    box-shadow: var(--shadow-small);
+    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-normal);
+    background: linear-gradient(135deg, var(--color-accent-secondary), var(--color-accent-primary));
+}
+
+.back-btn i {
+    font-size: 0.8rem;
+}
+
+/* ========== MENSAJES Y ALERTAS ========== */
+.message-container {
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius-small);
+    font-size: 0.8rem;
+    font-weight: 500;
+    animation: slideIn 0.3s ease;
+    display: block;
+    margin: 0.5rem 0;
+}
+
+.message-container.info {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.message-container.info i {
+    font-size: 1rem;
+}
+
+/* ========== ANIMACIONES ========== */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+#step1, #step2 {
+    animation: fadeIn 0.5s ease-in-out;
+    width: 100%;
+}
+
+/* ========== RESPONSIVE ========== */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 1.8rem;
+        gap: 10px;
+    }
+    
+    .page-header .header-description {
+        font-size: 0.9rem;
+        padding: 0 10px;
+    }
+    
+    .edit-wrapper {
+        max-width: 95%;
+    }
+    
+    .edit-right-panel {
+        padding: 1.5rem;
+    }
+    
+    .edit-main-title {
+        font-size: 1.2rem;
+    }
+}
+
+/* Móviles */
+@media (max-width: 600px) {
+    .edit-right-panel {
+        padding: 1.25rem;
+    }
+    
+    .edit-main-title {
+        font-size: 1.1rem;
+    }
+    
+    .edit-sub-title {
+        font-size: 0.8rem;
+    }
+    
+    .form-input-field {
+        height: 44px;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    
+    .action-btn,
+    .back-btn {
+        height: 44px;
+        font-size: 0.75rem;
+        padding: 0.7rem;
+    }
+    
+    .message-container {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    #pmCode {
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+    .edit-right-panel {
+        padding: 1rem;
+    }
+    
+    .edit-main-title {
+        font-size: 1rem;
+    }
+    
+    .field-label {
+        font-size: 0.65rem;
+    }
+    
+    .form-input-field {
+        height: 42px;
+        font-size: 0.8rem;
+    }
+    
+    .action-btn,
+    .back-btn {
+        height: 42px;
+        font-size: 0.7rem;
+        padding: 0.5rem;
+    }
+    
+    #pmCode {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+}
+
+/* =============================================
+   SCROLLBAR PERSONALIZADO
+   ============================================= */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-accent-primary);
+    border-radius: var(--border-radius-small);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-secondary);
+}

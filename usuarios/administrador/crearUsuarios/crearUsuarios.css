@@ -1,0 +1,1429 @@
+/* =============================================
+   CREAR COLABORADOR - CSS SIMPLIFICADO
+   ============================================= */
+
+/* ========== RESET Y ESTILOS BASE ========== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--color-text-primary);
+    background: var(--color-bg-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ========== PAGE HEADER - TÍTULO Y DESCRIPCIÓN (AHORA VISIBLE) ========== */
+.page-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    text-align: center;
+    background: transparent;
+}
+
+.page-header h1 {
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: 2.5rem;
+    color: var(--color-text-primary);
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px var(--color-accent-primary), 0 0 20px var(--color-accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.page-header h1 i {
+    color: var(--color-text-primary);
+    filter: drop-shadow(0 0 8px var(--color-accent-primary));
+}
+
+.page-header .header-description {
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+    line-height: 1.6;
+}
+
+/* ========== LAYOUT PRINCIPAL ========== */
+.edit-main-container {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.edit-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 1100px;
+    min-height: 650px;
+    background: var(--color-bg-tertiary);
+    backdrop-filter: blur(8px);
+    border-radius: var(--border-radius-medium);
+    overflow: hidden;
+    box-shadow: var(--shadow-large);
+    border: 1px solid var(--color-border-light);
+}
+
+/* ========== PANELES ========== */
+.edit-left-panel,
+.edit-right-panel {
+    flex: 1;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-left-panel {
+    border-right: 1px solid var(--color-border-light);
+    background: var(--color-bg-primary);
+}
+
+.edit-right-panel {
+    background: var(--color-bg-secondary);
+    overflow-y: auto;
+}
+
+/* ========== TIPOGRAFÍA ========== */
+.edit-main-title {
+    font-family: var(--font-family-primary);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 0.5rem;
+    text-shadow: var(--text-shadow-effect);
+}
+
+.edit-sub-title {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.section-title {
+    font-family: var(--font-family-primary);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-title i {
+    color: var(--color-accent-primary);
+}
+
+/* ========== COMPONENTES DE FOTOS ========== */
+.photo-section {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.photo-container {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: 0 auto 1.25rem;
+}
+
+.profile-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--border-radius-circle);
+    overflow: hidden;
+    border: 4px solid var(--color-accent-primary);
+    background-color: var(--color-bg-secondary);
+    cursor: pointer;
+    transition: var(--transition-default);
+    position: relative;
+}
+
+.profile-circle:hover {
+    transform: scale(1.05);
+    border-color: var(--color-accent-secondary);
+    box-shadow: var(--shadow-normal);
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 2;
+    display: none;
+}
+
+.profile-circle:has(.profile-image[src]:not([src=""])) .profile-image {
+    display: block;
+}
+
+.profile-circle:has(.profile-image[src]:not([src=""])) .placeholder-text {
+    display: none;
+}
+
+.placeholder-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent-primary);
+}
+
+.placeholder-text i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.placeholder-text span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    max-width: 150px;
+}
+
+.edit-overlay {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background-color: var(--color-accent-primary);
+    width: 50px;
+    height: 50px;
+    border-radius: var(--border-radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-default);
+    border: 3px solid var(--color-bg-primary);
+    z-index: 10;
+}
+
+.edit-overlay:hover {
+    background-color: var(--color-accent-secondary);
+    transform: scale(1.15) rotate(10deg);
+}
+
+.edit-icon {
+    color: var(--color-text-dark);
+    font-size: 1.25rem;
+}
+
+.file-input {
+    display: none;
+}
+
+.photo-info {
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    margin-top: 0.5rem;
+}
+
+/* Logo de organización heredado - NO EDITABLE */
+.org-disabled {
+    cursor: default !important;
+    opacity: 0.9;
+}
+
+.org-disabled .edit-overlay {
+    display: none !important;
+}
+
+.org-disabled:hover {
+    transform: none !important;
+    border-color: var(--color-accent-primary) !important;
+}
+
+/* ========== FORMULARIO ========== */
+.edit-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.field-label {
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.field-label i {
+    color: var(--color-accent-primary);
+    font-size: 0.875rem;
+    min-width: 20px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-input-field {
+    width: 100%;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-small);
+    padding: 0.875rem 1.125rem;
+    color: var(--color-text-primary);
+    font-size: 0.9375rem;
+    font-family: 'Rajdhani', sans-serif;
+    height: 50px;
+    transition: var(--transition-default);
+}
+
+.form-input-field:focus {
+    outline: none;
+    border-color: var(--color-accent-primary);
+    background: var(--color-hover, rgba(255, 255, 255, 0.05));
+    box-shadow: 0 0 0 1px var(--color-shadow, rgba(192, 192, 192, 0.1));
+}
+
+.form-input-field::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 0.6;
+}
+
+/* Estilo para campo de teléfono con números */
+.form-input-field[type="tel"] {
+    font-family: monospace;
+    letter-spacing: 0.5px;
+}
+
+/* Campo de teléfono - hint */
+.field-hint {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.25rem;
+}
+
+.field-hint i {
+    font-size: 0.7rem;
+    color: var(--color-accent-primary);
+}
+
+/* ========== SELECT PERSONALIZADO ========== */
+select.form-input-field {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c0c0c0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+/* ===== ESTILOS ROBUSTOS PARA OPTIONS EN DIFERENTES NAVEGADORES ===== */
+
+/* Chrome, Safari, Edge, Opera */
+select.form-input-field option {
+    background-color: var(--color-bg-tertiary) !important;
+    color: var(--color-text-primary) !important;
+    padding: 12px !important;
+    font-family: 'Rajdhani', sans-serif !important;
+    font-size: 0.9rem !important;
+}
+
+select.form-input-field option:hover {
+    background-color: var(--color-accent-primary) !important;
+    color: var(--color-text-dark) !important;
+}
+
+select.form-input-field option:checked {
+    background-color: var(--color-accent-secondary) !important;
+    color: var(--color-text-dark) !important;
+    font-weight: 700 !important;
+}
+
+select.form-input-field option:active {
+    background-color: var(--color-accent-primary) !important;
+    color: var(--color-text-dark) !important;
+}
+
+/* ===== FIREFOX - requiere estilos especiales ===== */
+@-moz-document url-prefix() {
+    select.form-input-field {
+        background-color: var(--color-bg-tertiary) !important;
+        color: var(--color-text-primary) !important;
+        padding: 0.75rem 1rem !important;
+        text-indent: 0.01px;
+        text-overflow: '';
+    }
+
+    select.form-input-field option {
+        background-color: var(--color-bg-tertiary) !important;
+        color: var(--color-text-primary) !important;
+        padding: 12px !important;
+    }
+
+    select.form-input-field option:checked {
+        background-color: var(--color-accent-secondary) !important;
+        color: var(--color-text-dark) !important;
+        box-shadow: 0 0 10px 100px var(--color-accent-secondary) inset !important;
+    }
+
+    select.form-input-field option:hover {
+        background-color: var(--color-accent-primary) !important;
+        color: var(--color-text-dark) !important;
+    }
+
+    select.form-input-field:-moz-focusring {
+        color: transparent !important;
+        text-shadow: 0 0 0 var(--color-text-primary) !important;
+    }
+}
+
+/* ===== PARA EL PANEL DESPLEGABLE EN CHROME ===== */
+select.form-input-field:focus {
+    outline: none;
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 0 2px rgba(192, 192, 192, 0.3);
+}
+
+select.form-input-field>option,
+select.form-input-field optgroup {
+    background-color: var(--color-bg-tertiary) !important;
+    color: var(--color-text-primary) !important;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    select.form-input-field {
+        background-color: var(--color-bg-tertiary) !important;
+    }
+
+    select.form-input-field:focus {
+        background-color: var(--color-bg-tertiary) !important;
+    }
+
+    select.form-input-field optgroup,
+    select.form-input-field option {
+        background-color: var(--color-bg-tertiary) !important;
+        color: var(--color-text-primary) !important;
+        -webkit-text-fill-color: var(--color-text-primary) !important;
+    }
+}
+
+select.form-input-field:active,
+select.form-input-field:focus-within {
+    border-color: var(--color-accent-primary);
+}
+
+select.form-input-field option:disabled {
+    color: var(--color-text-secondary) !important;
+    opacity: 0.7;
+}
+
+select.form-input-field::-webkit-scrollbar {
+    width: 8px;
+    background-color: var(--color-bg-secondary);
+}
+
+select.form-input-field::-webkit-scrollbar-thumb {
+    background-color: var(--color-accent-primary);
+    border-radius: 4px;
+}
+
+select.form-input-field::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-accent-secondary);
+}
+
+select.form-input-field::-webkit-scrollbar-track {
+    background-color: var(--color-bg-tertiary);
+}
+
+select.form-input-field:disabled,
+select.form-input-field[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--color-bg-tertiary);
+    border-color: var(--color-border-light);
+}
+
+select.form-input-field:disabled option {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+[data-theme="light"] select.form-input-field option {
+    background-color: #ffffff !important;
+    color: #333333 !important;
+}
+
+[data-theme="dark"] select.form-input-field option {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+}
+
+select.form-input-field option:any-link,
+select.form-input-field option:any {
+    background-color: var(--color-bg-tertiary) !important;
+    color: var(--color-text-primary) !important;
+}
+
+/* Campos de solo lectura */
+.readonly-field {
+    background-color: var(--color-bg-tertiary) !important;
+    border-color: var(--color-border-light) !important;
+    color: var(--color-text-secondary) !important;
+    cursor: not-allowed !important;
+    opacity: 0.8;
+}
+
+/* Campos de contraseña */
+.contrasena-field .form-input-field {
+    padding-right: 3rem;
+}
+
+.toggle-contrasena {
+    position: absolute;
+    right: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-size: 1.125rem;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-small);
+    transition: var(--transition-default);
+}
+
+.toggle-contrasena:hover {
+    color: var(--color-accent-primary);
+    background: var(--color-hover, rgba(255, 255, 255, 0.05));
+}
+
+.divider {
+    height: 2px;
+    background: var(--color-border-light);
+    margin: 0.5rem 0;
+}
+
+/* ========== REQUISITOS DE CONTRASEÑA ========== */
+.contrasena-requirements {
+    padding: 1rem;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--border-radius-small);
+    border-left: 4px solid var(--color-accent-primary);
+}
+
+.requirements-title {
+    color: var(--color-accent-primary);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-family-primary);
+    text-transform: uppercase;
+}
+
+.requirements-list {
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    padding-left: 1.125rem;
+}
+
+.requirements-list li {
+    margin-bottom: 0.375rem;
+}
+
+/* ========== BOTONES ========== */
+.action-buttons {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+}
+
+.action-btn {
+    flex: 1;
+    border: none;
+    border-radius: var(--border-radius-small);
+    padding: 0.9375rem;
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    height: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: 'Rajdhani', sans-serif;
+    box-shadow: var(--shadow-small);
+    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-normal);
+    background: linear-gradient(135deg, var(--color-accent-secondary), var(--color-accent-primary));
+}
+
+/* Botón REGISTRARSE (estilo específico) */
+.save-btn {
+    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+    color: var(--color-text-dark);
+}
+
+.save-btn:hover {
+    background: linear-gradient(135deg, var(--color-accent-secondary), var(--color-accent-primary));
+    color: var(--color-text-dark);
+}
+
+/* Botón CANCELAR (estilo específico) */
+.cancel-btn {
+    background: linear-gradient(135deg, var(--color-bg-tertiary), var(--color-text-secondary));
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-light);
+}
+
+.cancel-btn:hover {
+    background: linear-gradient(135deg, var(--color-text-secondary), var(--color-bg-tertiary));
+    border-color: var(--color-accent-primary);
+}
+
+/* Botón VOLVER AL LOGIN */
+.back-btn-container {
+    margin-top: auto;
+}
+
+.back-btn {
+    border: none;
+    border-radius: var(--border-radius-small);
+    padding: 0.9375rem;
+    color: var(--color-text-dark);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    height: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: 'Rajdhani', sans-serif;
+    text-decoration: none;
+    box-shadow: var(--shadow-small);
+    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-normal);
+    background: linear-gradient(135deg, var(--color-accent-secondary), var(--color-accent-primary));
+}
+
+.back-btn i {
+    font-size: 0.875rem;
+}
+
+/* ========== MENSAJES Y ALERTAS ========== */
+.message-container {
+    padding: 0.9375rem 1.125rem;
+    border-radius: var(--border-radius-small);
+    font-size: 0.875rem;
+    font-weight: 500;
+    animation: slideIn 0.3s ease;
+    display: none;
+}
+
+.message-container.success {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.message-container.error {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.message-container.info {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* ========== ANIMACIONES ADICIONALES ========== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* ========== RESPONSIVE OPTIMIZADO ========== */
+
+/* Tablets y pantallas medianas (menos de 1100px) */
+@media (max-width: 1100px) {
+    .edit-wrapper {
+        max-width: 950px;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .photo-container {
+        width: 200px;
+        height: 200px;
+    }
+
+    .swal2-popup {
+        width: 90% !important;
+    }
+}
+
+/* Tablets (menos de 900px) */
+@media (max-width: 900px) {
+    .edit-wrapper {
+        max-width: 95%;
+        margin: 0 auto;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .photo-container {
+        width: 180px;
+        height: 180px;
+    }
+
+    .edit-left-panel,
+    .edit-right-panel {
+        padding: 2rem;
+    }
+}
+
+/* Punto de quiebre principal - Cambio a layout vertical (menos de 850px) */
+@media (max-width: 850px) {
+    .edit-wrapper {
+        flex-direction: column;
+        max-width: 600px;
+        margin: 0 auto;
+        min-height: auto;
+    }
+
+    .edit-left-panel {
+        border-right: none;
+        border-bottom: 1px solid var(--color-border-light);
+        padding: 1.5rem;
+    }
+
+    .edit-right-panel {
+        padding: 1.5rem;
+        overflow-y: visible;
+    }
+
+    .photo-container {
+        width: 160px;
+        height: 160px;
+    }
+
+    .edit-overlay {
+        width: 45px;
+        height: 45px;
+        bottom: 12px;
+        right: 12px;
+    }
+
+    .edit-icon {
+        font-size: 1.1rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .action-btn {
+        height: 48px;
+        font-size: 0.85rem;
+        padding: 0.8rem;
+    }
+
+    .form-input-field {
+        height: 48px;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* ===== SOLUCIÓN PARA SELECT EN MÓVIL ===== */
+    select.form-input-field {
+        font-size: 16px !important;
+        padding: 0.75rem 1rem;
+        background-position: right 1rem center;
+        width: 100%;
+        max-width: 100%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    select.form-input-field option {
+        max-width: 100%;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+
+    select.form-input-field:focus {
+        max-width: 100%;
+    }
+
+    .field-label {
+        font-size: 0.75rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .field-label i {
+        font-size: 0.8rem;
+        min-width: 18px;
+    }
+
+    .contrasena-field .form-input-field {
+        padding-right: 3rem;
+    }
+
+    .toggle-contrasena {
+        right: 0.75rem;
+        font-size: 1rem;
+        width: 24px;
+        height: 24px;
+    }
+
+    .contrasena-requirements {
+        padding: 0.875rem;
+    }
+
+    .requirements-title {
+        font-size: 0.75rem;
+    }
+
+    .requirements-list {
+        font-size: 0.7rem;
+        padding-left: 1rem;
+    }
+
+    .edit-main-title {
+        font-size: 1.3rem;
+    }
+
+    .edit-sub-title {
+        font-size: 0.85rem;
+    }
+
+    .section-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        gap: 0.5rem;
+    }
+
+    .photo-info {
+        font-size: 0.7rem;
+        line-height: 1.3;
+    }
+
+    .swal2-popup {
+        width: 90% !important;
+        margin: 0 auto !important;
+    }
+}
+
+/* Tablets pequeñas (menos de 768px) */
+@media (max-width: 768px) {
+    .edit-wrapper {
+        max-width: 95%;
+    }
+
+    .photo-container {
+        width: 150px;
+        height: 150px;
+    }
+
+    .page-header h1 {
+        font-size: 1.8rem;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .page-header .header-description {
+        font-size: 0.95rem;
+        padding: 0 10px;
+    }
+
+    .edit-overlay {
+        width: 42px;
+        height: 42px;
+    }
+
+    select.form-input-field {
+        font-size: 16px !important;
+        padding: 0.75rem 1rem !important;
+    }
+
+    select.form-input-field option {
+        font-size: 16px !important;
+        padding: 15px !important;
+    }
+
+    .form-input-field {
+        font-size: 0.9rem;
+    }
+
+    .field-hint {
+        font-size: 0.65rem;
+    }
+}
+
+/* Móviles (menos de 600px) */
+@media (max-width: 600px) {
+
+    .edit-left-panel,
+    .edit-right-panel {
+        padding: 1.25rem;
+    }
+
+    .photo-container {
+        width: 140px;
+        height: 140px;
+    }
+
+    .edit-overlay {
+        width: 40px;
+        height: 40px;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .edit-icon {
+        font-size: 1rem;
+    }
+
+    .edit-main-title {
+        font-size: 1.2rem;
+    }
+
+    .edit-sub-title {
+        font-size: 0.8rem;
+    }
+
+    .section-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.875rem;
+    }
+
+    .placeholder-text i {
+        font-size: 1.5rem;
+    }
+
+    .placeholder-text span {
+        font-size: 0.7rem;
+        max-width: 120px;
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+        max-width: 400px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .modal-btn {
+        width: 100%;
+        min-width: auto;
+        padding: 0.7rem;
+    }
+
+    .modal-title {
+        font-size: 1.1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .preview-image {
+        width: 150px;
+        height: 150px;
+    }
+
+    .modal-message {
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .photo-info {
+        font-size: 0.7rem;
+        line-height: 1.4;
+    }
+
+    .photo-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .action-buttons {
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+
+    .action-btn {
+        height: 45px;
+        font-size: 0.8rem;
+        padding: 0.7rem;
+    }
+
+    .back-btn {
+        height: 45px;
+        font-size: 0.8rem;
+        padding: 0.7rem;
+    }
+
+    .contrasena-requirements {
+        padding: 0.75rem;
+    }
+
+    .requirements-list {
+        font-size: 0.65rem;
+    }
+
+    .field-hint {
+        font-size: 0.6rem;
+    }
+
+    /* SweetAlert2 responsive */
+    .swal2-title {
+        font-size: 1.1rem !important;
+    }
+
+    .swal2-styled {
+        padding: 0.6rem 1rem !important;
+        height: 40px !important;
+        min-width: auto !important;
+        font-size: 0.75rem !important;
+    }
+
+    .swal2-icon {
+        width: 50px !important;
+        height: 50px !important;
+    }
+
+    .swal2-icon-content {
+        font-size: 2rem !important;
+    }
+
+    .swal2-html-container {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Móviles medianos (menos de 480px) */
+@media (max-width: 480px) {
+
+    .edit-left-panel,
+    .edit-right-panel {
+        padding: 1rem;
+    }
+
+    .photo-container {
+        width: 130px;
+        height: 130px;
+    }
+
+    .edit-overlay {
+        width: 36px;
+        height: 36px;
+        bottom: 8px;
+        right: 8px;
+    }
+
+    .edit-icon {
+        font-size: 0.9rem;
+    }
+
+    .edit-main-title {
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+    }
+
+    .edit-header {
+        margin-bottom: 1rem;
+    }
+
+    .field-label {
+        font-size: 0.7rem;
+    }
+
+    .field-label i {
+        font-size: 0.75rem;
+        min-width: 16px;
+    }
+
+    .form-input-field {
+        height: 44px;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    select.form-input-field {
+        font-size: 16px !important;
+        padding: 0.6rem 0.8rem;
+        background-position: right 0.8rem center;
+        background-size: 0.9rem;
+    }
+
+    .contrasena-field .form-input-field {
+        padding-right: 2.8rem;
+    }
+
+    .toggle-contrasena {
+        right: 0.6rem;
+        font-size: 0.95rem;
+        width: 22px;
+        height: 22px;
+    }
+
+    .action-btn,
+    .back-btn {
+        height: 44px;
+        font-size: 0.8rem;
+        padding: 0.6rem;
+    }
+
+    .contrasena-requirements {
+        padding: 0.6rem;
+    }
+
+    .requirements-title {
+        font-size: 0.7rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .requirements-list {
+        font-size: 0.6rem;
+        padding-left: 0.875rem;
+    }
+
+    .requirements-list li {
+        margin-bottom: 0.25rem;
+    }
+
+    .photo-info {
+        font-size: 0.6rem;
+        margin-top: 0.25rem;
+    }
+
+    .placeholder-text i {
+        font-size: 1.3rem;
+    }
+
+    .placeholder-text span {
+        font-size: 0.65rem;
+        max-width: 100px;
+    }
+
+    .section-title {
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .section-title i {
+        font-size: 0.9rem;
+    }
+
+    .field-hint {
+        font-size: 0.55rem;
+    }
+
+    .modal-content {
+        padding: 1.25rem;
+    }
+
+    .preview-image {
+        width: 130px;
+        height: 130px;
+    }
+
+    .modal-btn {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    /* SweetAlert2 responsive */
+    .swal2-actions {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    .swal2-styled {
+        width: 100% !important;
+        margin: 0.25rem 0 !important;
+    }
+
+    .swal2-popup {
+        padding: 1rem !important;
+    }
+}
+
+/* Móviles muy pequeños (menos de 360px) */
+@media (max-width: 360px) {
+
+    .edit-left-panel,
+    .edit-right-panel {
+        padding: 0.75rem;
+    }
+
+    .photo-container {
+        width: 110px;
+        height: 110px;
+    }
+
+    .edit-overlay {
+        width: 32px;
+        height: 32px;
+    }
+
+    .edit-main-title {
+        font-size: 1rem;
+    }
+
+    .form-input-field {
+        height: 40px;
+        font-size: 0.8rem;
+        padding: 0.5rem 0.7rem;
+    }
+
+    select.form-input-field {
+        font-size: 16px !important;
+    }
+
+    .action-btn,
+    .back-btn {
+        height: 40px;
+        font-size: 0.75rem;
+    }
+
+    .field-label {
+        font-size: 0.65rem;
+    }
+
+    .field-label i {
+        font-size: 0.7rem;
+        min-width: 14px;
+    }
+
+    .section-title {
+        font-size: 0.8rem;
+    }
+
+    .section-title i {
+        font-size: 0.85rem;
+    }
+
+    .placeholder-text i {
+        font-size: 1.2rem;
+    }
+
+    .placeholder-text span {
+        font-size: 0.6rem;
+    }
+
+    .photo-info {
+        font-size: 0.55rem;
+    }
+
+    .field-hint {
+        font-size: 0.5rem;
+    }
+
+    .contrasena-requirements {
+        padding: 0.5rem;
+    }
+}
+
+/* Optimización para pantallas muy grandes */
+@media (min-width: 1400px) {
+    .edit-wrapper {
+        max-width: 1200px;
+    }
+
+    .edit-left-panel {
+        max-width: 400px;
+    }
+
+    .photo-container {
+        width: 240px;
+        height: 240px;
+    }
+
+    .form-input-field {
+        font-size: 1rem;
+        height: 55px;
+        padding: 1rem 1.25rem;
+    }
+
+    .field-label {
+        font-size: 0.85rem;
+    }
+
+    .field-label i {
+        font-size: 1rem;
+    }
+
+    .edit-main-title {
+        font-size: 1.8rem;
+    }
+
+    .edit-sub-title {
+        font-size: 1rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+    }
+
+    .action-btn,
+    .back-btn {
+        height: 55px;
+        font-size: 1rem;
+        padding: 1rem;
+    }
+
+    .contrasena-requirements {
+        padding: 1.25rem;
+    }
+
+    .requirements-title {
+        font-size: 0.9rem;
+    }
+
+    .requirements-list {
+        font-size: 0.85rem;
+    }
+}
+
+/* =============================================
+   SCROLLBAR PERSONALIZADO
+   ============================================= */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-accent-primary);
+    border-radius: var(--border-radius-small);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-secondary);
+}

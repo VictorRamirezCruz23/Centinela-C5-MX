@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cuentas Monitoreo | Centinela</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Estilos modulo -->
+    <link rel="stylesheet" href="cuentasPM.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- SEO Básico -->
+    <meta name="description" content="Gestión de cuentas técnicas Power Manage en Centinela-MX">
+    <meta name="keywords" content="power manage, cuentas técnicas, middleware, token institucional">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Power Manage | Centinela-MX">
+    <meta property="og:description" content="Gestión de cuentas técnicas Power Manage">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Power Manage - Centinela-MX",
+        "description": "Gestión de cuentas técnicas Power Manage",
+        "url": "https://centinela-mx.web.app",
+        "applicationCategory": "SecurityApplication"
+    }
+    </script>
+</head>
+
+<body>
+<canvas id="particle-canvas"></canvas>
+
+<div class="admin-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-network-wired"></i> Gestión de monitoreo alarma - intrusión
+        </h1>
+        <div class="header-description">
+            Administra las cuentas de monitoreo. Puedes ver detalles, 
+            asignar a organizaciones y cambiar el estado de cada cuenta.
+        </div>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="filtros-container">
+        <div class="filtros-header">
+            <h5><i class="fas fa-search"></i> Buscar cuentas:</h5>
+        </div>
+        <div class="filtros-body">
+            <div class="filtro-grupo">
+                <label for="buscarCuenta">Email, organización o estado</label>
+                <input type="text" id="buscarCuenta" class="filtro-input" 
+                       placeholder="Escribe para buscar" autocomplete="off">
+            </div>
+            <div class="filtro-acciones">
+                <button class="btn-buscar" id="btnBuscarCuenta">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+                <button class="btn-limpiar" id="btnLimpiarBusqueda">
+                    <i class="fas fa-times"></i> Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tarjeta contenedora de la tabla -->
+    <div class="card">
+        <div class="card-header">
+            <h5><i class="fas fa-network-wired"></i> Lista de Cuentas Monitoreo</h5>
+            <button class="btn-nueva-cuenta" id="addBtn">
+                <i class="fas fa-plus"></i> Nueva Cuenta
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table" id="tablaCuentas">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Organización</th>
+                            <th>App ID</th>
+                            <th>Estado</th>
+                            <th style="width: 180px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuentasTableBody">
+                        <!-- Se llenará dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            <div class="pagination-container">
+                <div class="pagination-info" id="paginationInfo"></div>
+                <nav>
+                    <ul class="pagination" id="pagination">
+                        <!-- Se llenará dinámicamente -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script type="module" src="/components/autenticador.js"></script>
+<script type="module" src="/components/cargadorTemas.js"></script>
+<script type="module" src="/components/particulas.js"></script>
+  <script type="module" src="/components/navbarSysAdmin.js"></script><script src="/components/footerAdministrador.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="cuentasPM.js"></script>
+<script src="/components/protector-master.js"> </script>
+
+</body>
+</html>

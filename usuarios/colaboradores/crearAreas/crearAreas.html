@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nueva Área | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Estilos modulo -->
+    <link rel="stylesheet" href="/usuarios/administrador/crearAreas/crearAreas.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <!-- SEO Básico -->
+    <meta name="description"
+        content="Centinela-MX es un sistema inteligente de seguridad para almacenamiento, monitoreo y predicción de incidencias. Plataforma confiable para prevención y análisis en tiempo real.">
+    <meta name="keywords"
+        content="centinela, centinela-mx, sistema de seguridad, seguridad inteligente, predicción de incidencias, monitoreo de seguridad, plataforma de seguridad, análisis de riesgos, prevención de incidentes">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app/" />
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Centinela-MX | Sistema Inteligente de Seguridad y Predicción">
+    <meta property="og:description"
+        content="Centinela-MX es una plataforma avanzada de seguridad para almacenamiento, monitoreo y predicción de incidencias en tiempo real.">
+    <meta property="og:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Vista previa oficial de Centinela-MX">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Logo oficial de Centinela-MX">
+    <meta property="og:site_name" content="Centinela-MX">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://centinela-mx.web.app">
+    <meta name="twitter:title" content="Centinela-MX | Seguridad Inteligente">
+    <meta name="twitter:description"
+        content="Sistema de seguridad inteligente para monitoreo, almacenamiento y predicción de incidencias.">
+    <meta name="twitter:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta name="twitter:creator" content="">
+
+    <!-- Schema.org / JSON-LD -->
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Centinela-MX",
+    "operatingSystem": "Web",
+    "applicationCategory": "SecurityApplication",
+    "description": "Centinela-MX es un sistema inteligente de seguridad para el almacenamiento, monitoreo y predicción de incidencias en tiempo real.",
+    "url": "https://centinela-mx.web.app",
+    "image": "https://centinela-mx.web.app/assets/images/logo.png",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Centinela-MX",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://centinela-mx.web.app/assets/images/logo.png"
+        }
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "MXN"
+    }
+    }
+    </script>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <br>
+
+    <!-- Contenedor principal -->
+    <div class="centinela-container">
+        <!-- Header -->
+        <div class="centinela-row">
+            <div class="centinela-col-12">
+                <div class="header-content">
+                    <h1 class="h3 mb-3">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        Crear Nueva Área
+                    </h1>
+                    <div class="text-muted">
+                        Complete el formulario para registrar un área nueva en el sistema.<br>
+                        Todos los campos marcados con * son obligatorios.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORMULARIO PRINCIPAL -->
+        <form id="formCrearArea">
+            <!-- Tarjeta 1: Información Principal del Área -->
+            <div class="centinela-col-12">
+                <div class="centinela-card">
+                    <div class="centinela-card-header">
+                        <h5 class="card-title"><i class="fas fa-edit me-2"></i>Información del Área</h5>
+                        <button type="button" id="btnVolverLista" class="btn-volver">
+                            <i class="fas fa-arrow-left"></i>Volver a la lista
+                        </button>
+                    </div>
+                    <div class="centinela-card-body">
+                        <!-- Sección: Información Básica -->
+                        <div class="centinela-row mb-4">
+                            <div class="centinela-col-12">
+                                <h6 class="border-bottom pb-2 mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>Información Básica
+                                </h6>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="nombreArea" class="form-label">
+                                    <i class="fas fa-building me-1"></i>Nombre del Área <span class="required">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    <input type="text" class="form-control" id="nombreArea" name="nombreArea"
+                                        placeholder="Ej: Recursos Humanos, Ventas, Tecnología" required>
+                                </div>
+                                <div class="form-text">Ingrese el nombre completo del área o departamento</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="responsable" class="form-label">
+                                    <i class="fas fa-user me-1"></i>Responsable del Área
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                                    <select class="form-select" id="responsable" name="responsable">
+                                        <option value="">Seleccione un responsable...</option>
+                                    </select>
+                                </div>
+                                <div class="form-text mt-1">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Persona encargada del área (opcional)
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="descripcionArea" class="form-label">
+                                    <i class="fas fa-align-left me-1"></i>Descripción del Área <span
+                                        class="required">*</span>
+                                </label>
+                                <textarea class="form-control" id="descripcionArea" name="descripcionArea" rows="4"
+                                    placeholder="Describa las funciones principales, objetivos y responsabilidades del área..."
+                                    required></textarea>
+                                <div class="form-text">Ingrese una descripción detallada del área</div>
+                                <div class="char-limit-info">
+                                    <span class="char-counter" id="contadorCaracteres">0/500</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2: Gestión de Cargos -->
+            <div class="centinela-row mt-4">
+                <div class="centinela-col-12">
+                    <div class="centinela-card">
+                        <div class="centinela-card-header">
+                            <h5 class="card-title"><i class="fas fa-briefcase me-2"></i>Gestión de Cargos</h5>
+                        </div>
+                        <div class="centinela-card-body">
+                            <!-- Sección de Cargos -->
+                            <div class="centinela-row mb-4">
+                                <div class="centinela-col-12">
+                                    <!-- Contenedor dinámico de cargos -->
+                                    <div id="cargosList" class="cargos-container">
+                                        <div class="cargos-empty">
+                                            <i class="fas fa-briefcase mb-2"></i>
+                                            <p>No hay cargos agregados</p>
+                                            <small>Haga clic en "Agregar Cargo" para añadir uno</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Botón para agregar cargo -->
+                                    <div class="d-flex justify-content-start mt-3">
+                                        <button type="button" class="btn-agregar-cargo" id="btnAgregarCargo">
+                                            <i class="fas fa-plus-circle"></i>
+                                            Agregar Cargo
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mensaje informativo -->
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Los cargos que agregue aquí estarán disponibles para asignar a los empleados de esta
+                                área.
+                            </div>
+
+                            <div class="d-flex justify-content-start gap-3 mt-4">
+                                <button type="submit" class="btn-success" id="btnCrearArea">
+                                    <i class="fas fa-check me-2"></i>Crear Área
+                                </button>
+                                <button type="button" class="btn-secondary" id="btnCancelar">
+                                    <i class="fas fa-times me-2"></i>Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script src="/components/navbarColaborador.js"></script>
+    <script src="/components/footerColaborador.js"></script>
+    <script type="module" src="/usuarios/administrador/crearAreas/crearAreas.js"></script>
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/colaborador/incidencias/mis-incidencias.html -->
+    <script src="/components/protector-colaborador.js" data-modulo="areas">
+    </script>
+</body>
+
+</html>

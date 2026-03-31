@@ -1,0 +1,1339 @@
+/* =============================================
+   ASIGNAR PERMISOS A ADMINISTRADORES - ESTILOS
+   VERSIÓN SUPER RESPONSIVE - Basado en consumoGlobal.css
+   ============================================= */
+
+/* =============================================
+   VARIABLES GLOBALES (Heredadas del sistema)
+   ============================================= */
+:root {
+    --breakpoint-xs: 480px;
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+    
+    /* Colores de planes (manteniendo tu paleta) */
+    --color-monitoreo: #3b82f6;
+    --color-incidencias: #ef4444;
+    --color-completo: #f59e0b;
+    --transition-card: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =============================================
+   CONTENEDOR PRINCIPAL
+   ============================================= */
+.admin-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: clamp(1rem, 5vw, 2rem);
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 100vh;
+}
+
+/* =============================================
+   PAGE HEADER (Igual que consumoGlobal)
+   ============================================= */
+.page-header {
+    margin-bottom: clamp(1.5rem, 5vw, 2.5rem);
+    padding-bottom: clamp(0.75rem, 3vw, 1.25rem);
+    text-align: center;
+}
+
+.page-header h1 {
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(1.5rem, 6vw, 2.8rem);
+    color: var(--color-text-primary);
+    margin-bottom: clamp(0.5rem, 2vw, 0.75rem);
+    text-shadow: 0 0 10px var(--color-accent-primary), 0 0 20px var(--color-accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 3vw, 1rem);
+    flex-wrap: wrap;
+    word-break: break-word;
+}
+
+.page-header h1 i {
+    color: var(--color-text-primary);
+    filter: drop-shadow(0 0 8px var(--color-accent-primary));
+    font-size: clamp(1.2rem, 5vw, 2rem);
+}
+
+.page-header .header-description {
+    color: var(--color-text-secondary);
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+    max-width: min(90%, 900px);
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+    line-height: 1.5;
+    padding: 0 1rem;
+}
+
+.page-header .header-description small {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.85em;
+    background: rgba(0, 207, 255, 0.1);
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+}
+
+/* =============================================
+   BUSCADOR (Estilo igual al selector de empresa)
+   ============================================= */
+.buscador-container {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large, 1rem);
+    box-shadow: var(--shadow-normal, 0 4px 6px rgba(0,0,0,0.1));
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    overflow: hidden;
+}
+
+.buscador-header {
+    background: rgba(20, 20, 20, 0.95);
+    border-bottom: 1px solid var(--color-border-light);
+    padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
+}
+
+.buscador-header h5 {
+    color: var(--color-text-primary) !important;
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(0.75rem, 3vw, 0.95rem);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.buscador-header h5 i {
+    color: var(--color-accent-primary);
+    font-size: clamp(0.8rem, 3vw, 1rem);
+}
+
+.buscador-body {
+    padding: clamp(1rem, 4vw, 1.5rem);
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 3vw, 1.25rem);
+    align-items: flex-end;
+}
+
+.buscador-grupo {
+    flex: 3 1 280px;
+    min-width: min(100%, 260px);
+}
+
+.buscador-input {
+    width: 100%;
+    padding: clamp(0.6rem, 3vw, 0.85rem) clamp(0.75rem, 3vw, 1rem);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium, 0.75rem);
+    color: var(--color-text-primary) !important;
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+    font-size: clamp(0.85rem, 3.5vw, 1rem);
+    transition: all 0.2s ease;
+}
+
+.buscador-input:focus {
+    outline: none;
+    border-color: var(--color-accent-primary);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 2px rgba(0, 207, 255, 0.1);
+}
+
+.buscador-acciones {
+    display: flex;
+    gap: clamp(0.5rem, 2vw, 0.75rem);
+    align-items: center;
+    flex: 2 1 280px;
+    flex-wrap: wrap;
+}
+
+.btn-buscar, .btn-limpiar {
+    padding: clamp(0.6rem, 3vw, 0.85rem) clamp(0.75rem, 3vw, 1rem);
+    border-radius: var(--border-radius-medium, 0.75rem);
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(0.7rem, 3vw, 0.9rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(4px, 2vw, 8px);
+    transition: all 0.2s ease;
+    flex: 1;
+    min-width: fit-content;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .btn-buscar, .btn-limpiar {
+        white-space: normal;
+        word-break: keep-all;
+        padding: 0.6rem 0.75rem;
+    }
+    
+    .buscador-acciones {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .buscador-acciones button {
+        width: 100%;
+    }
+}
+
+.btn-buscar {
+    background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border: 1px solid var(--color-accent-primary);
+    color: var(--color-text-primary) !important;
+}
+
+.btn-buscar:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(145deg, #1a1a1a, #100f0f);
+    box-shadow: 0 0 20px rgba(192, 192, 192, 0.3);
+    border-color: #ffffff;
+}
+
+.btn-limpiar {
+    background: transparent;
+    border: 1px solid var(--color-border-light);
+    color: var(--color-text-primary) !important;
+}
+
+.btn-limpiar:hover {
+    border-color: var(--color-accent-primary);
+    color: var(--color-text-primary) !important;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* =============================================
+   RESULTADOS CONTAINER (Estilo card)
+   ============================================= */
+.resultados-container {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large, 1rem);
+    box-shadow: var(--shadow-normal, 0 4px 6px rgba(0,0,0,0.1));
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+}
+
+.resultados-header {
+    background: rgba(20, 20, 20, 0.95);
+    border-bottom: 1px solid var(--color-border-light);
+    padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: clamp(0.5rem, 2vw, 1rem);
+}
+
+.resultados-header h5 {
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(0.75rem, 3vw, 0.95rem);
+    text-transform: uppercase;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.resultados-header h5 i {
+    color: var(--color-accent-primary);
+}
+
+.resultados-count {
+    color: var(--color-text-secondary);
+    font-size: clamp(0.7rem, 3vw, 0.85rem);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.3rem 0.8rem;
+    border-radius: 30px;
+    border: 1px solid var(--color-border-light);
+}
+
+.resultados-lista {
+    padding: clamp(1rem, 4vw, 1.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 3vw, 1rem);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+/* Scroll personalizado */
+.resultados-lista::-webkit-scrollbar {
+    width: 6px;
+}
+
+.resultados-lista::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.resultados-lista::-webkit-scrollbar-thumb {
+    background: var(--color-accent-primary);
+    border-radius: 10px;
+}
+
+/* =============================================
+   ADMIN CARD (Estilo mejorado tipo metric-card)
+   ============================================= */
+.admin-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large, 1rem);
+    padding: clamp(1rem, 3vw, 1.25rem) clamp(1rem, 4vw, 1.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 3vw, 1.5rem);
+    transition: var(--transition-card);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: clamp(3px, 1vw, 5px);
+    height: 100%;
+    background: var(--color-accent-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.admin-card:hover {
+    background: rgba(0, 207, 255, 0.05);
+    border-color: var(--color-accent-primary);
+    transform: translateX(5px);
+}
+
+.admin-card:hover::before {
+    opacity: 1;
+}
+
+.admin-info {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 3vw, 1rem);
+    flex: 2;
+    min-width: 200px;
+}
+
+.admin-avatar {
+    width: clamp(40px, 8vw, 50px);
+    height: clamp(40px, 8vw, 50px);
+    border-radius: 50%;
+    background: rgba(0, 207, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1.2rem, 5vw, 1.5rem);
+    color: var(--color-accent-primary);
+    border: 1px solid var(--color-border-light);
+    flex-shrink: 0;
+}
+
+.admin-details h4 {
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
+    color: var(--color-text-primary);
+    margin: 0 0 0.25rem 0;
+    font-family: var(--font-family-primary, 'Orbitron'), sans-serif;
+}
+
+.admin-details p {
+    font-size: clamp(0.7rem, 3vw, 0.8rem);
+    color: var(--color-text-secondary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.admin-empresa {
+    flex: 1;
+    min-width: 150px;
+}
+
+.admin-empresa span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(0.8rem, 3.5vw, 0.9rem);
+    color: var(--color-text-primary);
+    background: rgba(255,255,255,0.03);
+    padding: 0.4rem 0.8rem;
+    border-radius: 30px;
+    border: 1px solid var(--color-border-light);
+}
+
+.admin-empresa i {
+    color: var(--color-accent-primary);
+}
+
+.admin-plan-actual {
+    flex: 1;
+    min-width: 120px;
+}
+
+.plan-badge {
+    display: inline-block;
+    padding: 0.25rem 0.8rem;
+    border-radius: 30px;
+    font-size: clamp(0.65rem, 2.5vw, 0.7rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+}
+
+.plan-badge.monitoreo { 
+    background: rgba(59, 130, 246, 0.2); 
+    color: #3b82f6; 
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
+}
+.plan-badge.incidencias { 
+    background: rgba(239, 68, 68, 0.2); 
+    color: #ef4444; 
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
+}
+.plan-badge.completo { 
+    background: rgba(245, 158, 11, 0.2); 
+    color: #f59e0b; 
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.2);
+}
+.plan-badge.sin-plan { 
+    background: rgba(107, 114, 128, 0.2); 
+    color: #9ca3af; 
+    border: 1px solid rgba(107, 114, 128, 0.4);
+}
+
+.admin-accion button {
+    padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 3vw, 1.5rem);
+    background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border: 1px solid var(--color-accent-primary);
+    border-radius: var(--border-radius-medium, 0.75rem);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary, 'Orbitron'), sans-serif;
+    font-size: clamp(0.7rem, 3vw, 0.8rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.admin-accion button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 207, 255, 0.3);
+    border-color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .admin-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .admin-accion {
+        width: 100%;
+    }
+    
+    .admin-accion button {
+        width: 100%;
+        white-space: normal;
+    }
+}
+
+/* =============================================
+   MODAL (Estilo mejorado)
+   ============================================= */
+.modal-plan {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-plan-content {
+    background: var(--color-bg-secondary);
+    border-radius: clamp(1rem, 5vw, 1.5rem);
+    max-width: 700px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid var(--color-border-light);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease;
+}
+
+.modal-plan-content.small {
+    max-width: 500px;
+}
+
+.modal-plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: clamp(1rem, 4vw, 1.5rem) clamp(1.25rem, 5vw, 2rem);
+    border-bottom: 1px solid var(--color-border-light);
+    background: rgba(20, 20, 20, 0.95);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.modal-plan-header h3 {
+    margin: 0;
+    font-family: var(--font-family-primary, 'Orbitron');
+    color: var(--color-text-primary);
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: var(--color-accent-primary);
+}
+
+.modal-plan-body {
+    padding: clamp(1rem, 4vw, 1.5rem) clamp(1.25rem, 5vw, 2rem);
+}
+
+/* Admin info dentro del modal */
+.admin-info-seleccionado {
+    background: rgba(0, 207, 255, 0.05);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium, 0.75rem);
+    padding: clamp(0.75rem, 3vw, 1rem);
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.admin-info-seleccionado .info-icon {
+    width: 45px;
+    height: 45px;
+    background: rgba(0, 207, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: var(--color-accent-primary);
+    flex-shrink: 0;
+}
+
+.admin-info-seleccionado .info-text h4 {
+    margin: 0 0 5px 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+}
+
+.admin-info-seleccionado .info-text p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+}
+
+/* =============================================
+   PLANES OPCIONES (Grid estilo moderno)
+   ============================================= */
+.planes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.plan-opcion {
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large, 1rem);
+    overflow: hidden;
+    transition: all 0.2s ease;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.plan-opcion:hover {
+    border-color: var(--color-accent-primary);
+    transform: translateX(3px);
+}
+
+.plan-opcion.selected {
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 20px rgba(0, 207, 255, 0.2);
+    background: rgba(0, 207, 255, 0.02);
+}
+
+.plan-opcion-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+    flex-wrap: wrap;
+}
+
+.plan-opcion-icono {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.plan-opcion-info {
+    flex: 1;
+    min-width: 150px;
+}
+
+.plan-opcion-info h4 {
+    margin: 0 0 5px 0;
+    color: var(--color-text-primary);
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
+    font-family: var(--font-family-primary);
+}
+
+.plan-opcion-info p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+}
+
+.plan-opcion-precio {
+    text-align: right;
+    margin-right: 0.5rem;
+}
+
+.plan-opcion-precio span {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    font-family: 'Rajdhani', sans-serif;
+}
+
+.plan-opcion-precio small {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+}
+
+.plan-opcion-selector input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--color-accent-primary);
+    margin: 0;
+}
+
+.plan-opcion-modulos {
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.modulo-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.25rem 0.7rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+}
+
+.modulo-tag i {
+    font-size: 0.65rem;
+}
+
+.modulo-tag.activo {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Loading spinner pequeño */
+.loading-spinner-small {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-text-secondary);
+}
+
+.loading-spinner-small i {
+    font-size: 1.5rem;
+    color: var(--color-accent-primary);
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+}
+
+/* =============================================
+   FORMULARIO Y ACCIONES
+   ============================================= */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-primary);
+    font-size: clamp(0.7rem, 3vw, 0.8rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: var(--font-family-primary);
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-border-light);
+    border-radius: 0.75rem;
+    color: var(--color-text-primary);
+    font-family: var(--font-family-secondary);
+    font-size: 0.9rem;
+}
+
+.help-text {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.7rem;
+    color: var(--color-text-dim, #6c757d);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.btn-cancelar {
+    background: transparent;
+    border: 1px solid var(--color-border-light);
+    color: var(--color-text-secondary);
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-family: var(--font-family-primary);
+    font-size: 0.8rem;
+}
+
+.btn-cancelar:hover {
+    border-color: var(--color-accent-primary);
+    color: var(--color-text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-asignar {
+    background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border: 1px solid var(--color-accent-primary);
+    color: var(--color-text-primary);
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-family: var(--font-family-primary);
+    font-size: 0.8rem;
+}
+
+.btn-asignar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 207, 255, 0.3);
+    border-color: #ffffff;
+}
+
+/* =============================================
+   EMPTY STATE
+   ============================================= */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--color-text-secondary);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: rgba(0, 207, 255, 0.3);
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-primary);
+}
+
+.empty-state p {
+    font-size: 0.9rem;
+}
+
+/* =============================================
+   LOADING SPINNER GLOBAL
+   ============================================= */
+.loading-spinner {
+    text-align: center;
+    padding: clamp(2rem, 8vw, 3rem);
+    color: var(--color-text-secondary);
+}
+
+.loading-spinner i {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    color: var(--color-accent-primary);
+    animation: spin 1s linear infinite;
+}
+
+/* =============================================
+   ANIMACIONES
+   ============================================= */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* =============================================
+   RESPONSIVE FINAL - AJUSTES EXTREMOS
+   ============================================= */
+
+/* Pantallas muy pequeñas (menos de 360px) */
+@media (max-width: 360px) {
+    .admin-container {
+        padding: 0.75rem;
+    }
+    
+    .admin-card {
+        padding: 0.75rem;
+    }
+    
+    .plan-opcion-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .plan-opcion-precio {
+        text-align: left;
+        width: 100%;
+    }
+    
+    .plan-opcion-selector {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+    }
+    
+    .plan-opcion {
+        position: relative;
+    }
+}
+
+/* Pantallas horizontales en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+    .resultados-lista {
+        max-height: 250px;
+    }
+    
+    .modal-plan-content {
+        max-height: 85vh;
+    }
+}
+
+/* Pantallas táctiles grandes (tablets) */
+@media (min-width: 768px) and (max-width: 1024px) and (pointer: coarse) {
+    .admin-card {
+        padding: 1rem;
+    }
+    
+    .btn-buscar, .btn-limpiar {
+        padding: 0.7rem 1rem;
+    }
+}
+
+/* Pantallas muy grandes (TVs, monitores ultra wide) */
+@media (min-width: 1920px) {
+    .admin-container {
+        max-width: 1800px;
+        padding: 2rem;
+    }
+    
+    .resultados-lista {
+        max-height: 700px;
+    }
+}
+/* =============================================
+   ESTILOS PARA MODAL DE CONFIRMACIÓN - TEXTO LEGIBLE
+   ============================================= */
+
+/* Contenedor de confirmación - Mejor contraste */
+#confirmacionContenido {
+    color: var(--color-text-primary, #ffffff);
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+}
+
+#confirmacionContenido p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: clamp(0.9rem, 4vw, 1rem);
+    color: #ffffff !important; /* Forzar blanco */
+}
+
+/* Estilo para los datos del administrador en confirmación */
+#confirmacionContenido .admin-data {
+    background: rgba(0, 207, 255, 0.1);
+    border-left: 3px solid var(--color-accent-primary);
+    padding: 0.8rem 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+}
+
+#confirmacionContenido .admin-data strong {
+    color: var(--color-accent-primary);
+    font-weight: 700;
+}
+
+/* Estilo para los detalles del plan */
+#confirmacionContenido .plan-details {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-border-light);
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 12px;
+}
+
+#confirmacionContenido .plan-details p {
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+#confirmacionContenido .plan-details strong {
+    min-width: 120px;
+    color: var(--color-accent-primary);
+}
+
+#confirmacionContenido .plan-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #f59e0b !important; /* Color naranja para el plan Monitoreo */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#confirmacionContenido .price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #10b981 !important; /* Verde para el precio */
+}
+
+#confirmacionContenido .date {
+    color: #3b82f6 !important; /* Azul para fechas */
+    font-weight: 600;
+}
+
+/* Badge para el tipo de plan en confirmación */
+#confirmacionContenido .plan-badge-confirm {
+    display: inline-block;
+    padding: 0.25rem 1rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+}
+
+.plan-badge-confirm.monitoreo {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+    border: 1px solid #3b82f6;
+}
+
+.plan-badge-confirm.incidencias {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+.plan-badge-confirm.completo {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 1px solid #f59e0b;
+}
+
+/* =============================================
+   MEJORAS PARA MODAL DE PLANES - TEXTO SIEMPRE VISIBLE
+   ============================================= */
+
+/* Forzar que todos los textos en modales sean blancos o de alto contraste */
+.modal-plan-content,
+.modal-plan-body,
+.planes-container,
+.plan-opcion,
+.plan-opcion-info,
+.plan-opcion-info h4,
+.plan-opcion-info p,
+.plan-opcion-precio span,
+.modulo-tag,
+.form-group label,
+.help-text {
+    color: var(--color-text-primary, #ffffff) !important;
+}
+
+/* Mejorar contraste en textos secundarios */
+.plan-opcion-info p,
+.help-text,
+.modulo-tag {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Precio más destacado */
+.plan-opcion-precio span {
+    color: #f59e0b !important;
+    font-size: 1.3rem;
+}
+
+/* Módulos activos más visibles */
+.modulo-tag.activo {
+    background: rgba(16, 185, 129, 0.25);
+    color: #10b981 !important;
+    border: 1px solid #10b981;
+}
+
+/* Texto del admin seleccionado */
+.admin-info-seleccionado .info-text h4,
+.admin-info-seleccionado .info-text p {
+    color: #ffffff !important;
+}
+
+.admin-info-seleccionado .info-text p {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* =============================================
+   MEJORAS VISUALES PARA LAS TARJETAS DE ADMIN
+   ============================================= */
+
+/* Asegurar que el texto de la organización sea visible */
+.admin-empresa span {
+    color: #ffffff !important;
+    background: rgba(0, 207, 255, 0.1);
+}
+
+.admin-empresa i {
+    color: var(--color-accent-primary);
+}
+
+/* Nombre del administrador siempre blanco */
+.admin-details h4 {
+    color: #ffffff !important;
+}
+
+.admin-details p {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Badge del plan actual más visible */
+.plan-badge {
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+.plan-badge.monitoreo { 
+    background: rgba(59, 130, 246, 0.3); 
+    color: #ffffff !important;
+    border: 1px solid #3b82f6;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+.plan-badge.incidencias { 
+    background: rgba(239, 68, 68, 0.3); 
+    color: #ffffff !important;
+    border: 1px solid #ef4444;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+.plan-badge.completo { 
+    background: rgba(245, 158, 11, 0.3); 
+    color: #ffffff !important;
+    border: 1px solid #f59e0b;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+.plan-badge.sin-plan { 
+    background: rgba(107, 114, 128, 0.4); 
+    color: #ffffff !important;
+    border: 1px solid #6b7280;
+}
+
+/* =============================================
+   MEJORAS PARA SELECT Y INPUTS
+   ============================================= */
+
+.selector-select,
+.buscador-input,
+.form-input {
+    color: #ffffff !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.selector-select option {
+    background: #1a1a2e !important;
+    color: #ffffff !important;
+}
+
+/* Placeholder más visible */
+.buscador-input::placeholder,
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* =============================================
+   MEJORAS PARA BOTONES
+   ============================================= */
+
+.btn-cargar,
+.btn-actualizar,
+.btn-pdf,
+.btn-buscar,
+.btn-limpiar,
+.btn-asignar,
+.btn-cancelar {
+    color: #ffffff !important;
+}
+
+.btn-cancelar {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.btn-cancelar:hover {
+    color: #ffffff !important;
+}
+
+/* =============================================
+   MEJORAS PARA HEADERS Y TÍTULOS
+   ============================================= */
+
+.page-header h1,
+.page-header .header-description,
+.resultados-header h5,
+.buscador-header h5,
+.selector-header h5,
+.card-header h5 {
+    color: #ffffff !important;
+}
+
+.resultados-count {
+    color: rgba(255, 255, 255, 0.8) !important;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+/* =============================================
+   ESTILOS COMPACTOS PARA TARJETAS DE PLANES
+   ============================================= */
+
+/* Contenedor de planes en modo compacto */
+.planes-container.compacta .planes-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Tarjeta de plan compacta */
+.planes-container.compacta .plan-opcion {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--color-border-light);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.planes-container.compacta .plan-opcion.selected {
+    border-color: var(--color-accent-primary);
+    background: rgba(0, 207, 255, 0.05);
+    box-shadow: 0 0 12px rgba(0, 207, 255, 0.15);
+}
+
+/* Ocultar el input radio original */
+.planes-container.compacta .plan-opcion input[type="radio"] {
+    display: none;
+}
+
+/* Label que actúa como contenedor clickeable */
+.planes-container.compacta .plan-opcion label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    margin: 0;
+    width: 100%;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Header del plan compacto (icono + nombre + precio) */
+.planes-container.compacta .plan-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 2;
+    min-width: 180px;
+}
+
+.planes-container.compacta .plan-header i {
+    font-size: 1.2rem;
+    width: 28px;
+    text-align: center;
+}
+
+.planes-container.compacta .plan-header h3 {
+    font-size: 0.95rem;
+    margin: 0;
+    font-family: var(--font-family-primary, 'Orbitron');
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+.planes-container.compacta .plan-precio {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.15);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+/* Stats compactos (íconos + números) */
+.planes-container.compacta .plan-stats {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.planes-container.compacta .plan-stats span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.planes-container.compacta .plan-stats i {
+    font-size: 0.7rem;
+}
+
+/* Ocultar secciones que ya no se necesitan */
+.planes-container.compacta .plan-descripcion,
+.planes-container.compacta .plan-modulos,
+.planes-container.compacta .mapas-activos,
+.planes-container.compacta .permisos-activos,
+.planes-container.compacta .badge-modulos,
+.planes-container.compacta .badge-permisos,
+.planes-container.compacta .badge-vigencia {
+    display: none;
+}
+
+/* Para móviles muy pequeños, ajustar layout */
+@media (max-width: 560px) {
+    .planes-container.compacta .plan-opcion label {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .planes-container.compacta .plan-stats {
+        justify-content: flex-start;
+        margin-top: 0.25rem;
+        width: 100%;
+    }
+    
+    .planes-container.compacta .plan-header {
+        width: 100%;
+    }
+}
+
+/* =============================================
+   MEJORAS PARA FOOTER
+   ============================================= */
+
+.footer-datetime {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.footer-datetime i {
+    color: var(--color-accent-primary);
+}

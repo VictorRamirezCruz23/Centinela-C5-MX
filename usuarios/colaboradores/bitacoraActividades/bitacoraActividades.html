@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora de Actividades | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/usuarios/administrador/bitacoraActividades/bitacoraActividades.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+
+    <meta name="description" content="Bitácora de actividades - Sistema Centinela">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app/" />
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Centinela-MX | Bitácora de Actividades">
+    <meta property="og:description" content="Registro detallado de actividades de usuarios">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Centinela-MX | Bitácora de Actividades">
+    <meta name="twitter:description" content="Registro detallado de actividades de usuarios">
+    <meta name="twitter:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <br>
+
+    <div class="custom-container">
+        <div class="header-section">
+            <div class="header-content">
+                <h1 class="main-title">
+                    <i class="fas fa-history"></i>
+                    Bitácora de Actividades
+                </h1>
+                <div class="header-description-text">
+                    <i class="fas fa-clock"></i>
+                    Registro detallado de todas las acciones realizadas en el sistema
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="full-width">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-calendar-alt"></i>Filtro por Fecha</h5>
+                        <button id="btnVolverDashboard" class="btn-volver">
+                            <i class="fas fa-arrow-left"></i>Volver al Dashboard
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="calendario-container">
+                            <h6 class="section-title">
+                                <i class="fas fa-calendar-day"></i>
+                                Selecciona una fecha
+                            </h6>
+                            <div class="calendario-wrapper">
+                                <input type="text" id="calendario" placeholder="Selecciona una fecha...">
+                                <div class="fecha-info">
+                                    <span class="fecha-actual">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span id="fechaSeleccionada">Hoy</span>
+                                    </span>
+                                    <span id="totalActividades" class="badge">0 actividades</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="actividades-container">
+                            <h6 class="section-title">
+                                <i class="fas fa-stream"></i>
+                                Actividades del día
+                            </h6>
+                            <div class="actividades-lista" id="listaActividades">
+                                <div class="sin-actividades">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <p>No hay actividades registradas para esta fecha</p>
+                                    <small>Selecciona otra fecha en el calendario</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons-container">
+                            <button type="button" class="btn btn-primary" id="btnRefrescar">
+                                <i class="fas fa-sync-alt"></i>Refrescar
+                            </button>
+                            <button type="button" class="btn btn-primary" id="btnHoy">
+                                <i class="fas fa-calendar-day"></i>Ver Hoy
+                            </button>
+                            <!-- SOLO UN BOTÓN: PDF del Día -->
+                            <button type="button" class="btn btn-primary" id="btnGenerarPDF">
+                                <i class="fas fa-file-pdf"></i>PDF del Día
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script src="/components/navbarColaborador.js"></script>
+    <script src="/components/footerColaborador.js"></script>
+    <script type="module" src="/usuarios/administrador/bitacoraActividades/bitacoraActividades.js"></script>
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/colaborador/incidencias/mis-incidencias.html -->
+    <script src="/components/protector-colaborador.js" data-modulo="bitacora">
+    </script>
+</body>
+
+</html>

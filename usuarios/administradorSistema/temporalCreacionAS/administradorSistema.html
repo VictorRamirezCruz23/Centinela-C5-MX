@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear SuperAdmin | Centinela-Mx</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    <link rel="stylesheet" href="/usuarios/visitantes/registro/registro.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .info-box {
+            background: var(--color-bg-tertiary);
+            border-radius: var(--border-radius-small);
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--color-border-light);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .info-box i {
+            font-size: 1.5rem;
+            color: var(--color-accent-primary);
+        }
+
+        .info-box-content {
+            flex: 1;
+        }
+
+        .info-box-content h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-family: var(--font-family-primary);
+        }
+
+        .info-box-content p {
+            font-size: 0.8125rem;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: var(--color-accent-primary);
+            color: var(--color-text-dark);
+            margin-top: 0.5rem;
+        }
+
+        .requirements-list li.valid {
+            color: #2ecc71;
+        }
+
+        .requirements-list li.valid i {
+            color: #2ecc71;
+        }
+
+        .requirements-list li.invalid {
+            color: var(--color-text-secondary);
+        }
+
+        .requirements-list li.invalid i {
+            color: #e74c3c;
+        }
+
+        .image-upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .image-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--color-bg-tertiary);
+            border: 3px solid var(--color-accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-preview:hover {
+            transform: scale(1.05);
+            border-color: var(--color-accent-secondary);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-secondary);
+            font-size: 2rem;
+        }
+
+        .image-preview .placeholder span {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .image-upload-btn {
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border-light);
+            color: var(--color-text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .image-upload-btn:hover {
+            background: var(--color-accent-primary);
+            color: var(--color-text-dark);
+            border-color: var(--color-accent-primary);
+        }
+
+        .remove-image-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--border-radius-small);
+            transition: all 0.3s ease;
+        }
+
+        .remove-image-btn:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        @media (max-width: 850px) {
+            .edit-wrapper {
+                max-width: 550px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .info-box {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+            
+            .image-preview {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="edit-main-container">
+        <div class="edit-wrapper">
+            
+            <div class="edit-left-panel">
+                <header class="edit-header">
+                    <h1 class="edit-main-title">
+                        <i class="fas fa-crown"></i> SUPERADMIN
+                    </h1>
+                    <p class="edit-sub-title">Administrador del Sistema Centinela</p>
+                </header>
+
+                <div class="info-box">
+                    <i class="fas fa-shield-alt"></i>
+                    <div class="info-box-content">
+                        <h4>⚠️ Herramienta de Configuración</h4>
+                        <p>Este formulario crea un SuperAdministrador del sistema.</p>
+                        <span class="badge">CREAR SUPERADMIN</span>
+                    </div>
+                </div>
+
+                <div class="info-box" style="margin-top: 0;">
+                    <i class="fas fa-key"></i>
+                    <div class="info-box-content">
+                        <h4>¿Qué puede hacer un SuperAdmin?</h4>
+                        <ul class="requirements-list" style="margin-top: 0.5rem; padding-left: 1.125rem;">
+                            <li style="color: var(--color-text-secondary);">✓ Acceso total al sistema</li>
+                            <li style="color: var(--color-text-secondary);">✓ Gestionar todas las organizaciones</li>
+                            <li style="color: var(--color-text-secondary);">✓ Ver todos los datos globales</li>
+                            <li style="color: var(--color-text-secondary);">✓ Configurar el sistema</li>
+                            <li style="color: var(--color-text-secondary);">✓ Crear administradores</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <footer class="back-btn-container" style="margin-top: auto;">
+                    <a href="/usuarios/visitantes/inicioSesion/inicioSesion.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>VOLVER AL LOGIN
+                    </a>
+                </footer>
+            </div>
+
+            <div class="edit-right-panel">
+                <header class="edit-header">
+                    <h1 class="edit-main-title">CREAR SUPERADMIN</h1>
+                    <p class="edit-sub-title">Completa los datos para crear el administrador del sistema</p>
+                </header>
+
+                <form class="edit-form-container" id="masterForm">
+                    
+                    <div class="image-upload-container">
+                        <div class="image-preview" id="imagePreview" onclick="document.getElementById('imageInput').click()">
+                            <div class="placeholder">
+                                <i class="fas fa-camera"></i>
+                                <span>Subir foto</span>
+                            </div>
+                        </div>
+                        <input type="file" id="imageInput" accept="image/jpeg,image/png,image/jpg,image/gif" style="display: none;">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button type="button" class="image-upload-btn" id="uploadImageBtn">
+                                <i class="fas fa-upload"></i> SELECCIONAR IMAGEN
+                            </button>
+                            <button type="button" class="remove-image-btn" id="removeImageBtn" style="display: none;">
+                                <i class="fas fa-trash-alt"></i> ELIMINAR
+                            </button>
+                        </div>
+                        <small style="color: var(--color-text-secondary); font-size: 0.7rem;">
+                            Formatos: JPG, PNG, GIF | Máx: 2MB
+                        </small>
+                    </div>
+
+                    <div class="form-field-group">
+                        <label class="field-label" for="fullName">
+                            <i class="fas fa-user"></i> NOMBRE COMPLETO
+                        </label>
+                        <div class="input-wrapper">
+                            <input class="form-input-field" type="text" id="fullName" 
+                                   placeholder="Ingresa tu nombre completo" required>
+                        </div>
+                    </div>
+
+                    <div class="form-field-group">
+                        <label class="field-label" for="email">
+                            <i class="fas fa-envelope"></i> CORREO ELECTRÓNICO
+                        </label>
+                        <div class="input-wrapper">
+                            <input class="form-input-field" type="email" id="email" 
+                                   placeholder="ejemplo@correo.com" required>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="form-field-group">
+                        <label class="field-label" for="password">
+                            <i class="fas fa-key"></i> CONTRASEÑA
+                        </label>
+                        <div class="input-wrapper password-field">
+                            <input class="form-input-field" type="password" id="password" 
+                                   placeholder="********" required>
+                            <button type="button" class="toggle-password" data-target="password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-field-group">
+                        <label class="field-label" for="confirmPassword">
+                            <i class="fas fa-key"></i> CONFIRMAR CONTRASEÑA
+                        </label>
+                        <div class="input-wrapper password-field">
+                            <input class="form-input-field" type="password" id="confirmPassword" 
+                                   placeholder="********" required>
+                            <button type="button" class="toggle-password" data-target="confirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="password-requirements">
+                        <div class="requirements-title">REQUISITOS DE CONTRASEÑA SEGURA:</div>
+                        <ul class="requirements-list" id="passwordRequirements">
+                            <li id="reqLength" class="invalid">
+                                <i class="fas fa-times-circle"></i> Mínimo 6 caracteres
+                            </li>
+                            <li id="reqMatch" class="invalid">
+                                <i class="fas fa-times-circle"></i> Las contraseñas coinciden
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="message-container" id="mainMessage"></div>
+
+                    <div class="action-buttons">
+                        <button type="submit" class="action-btn save-btn" id="createBtn" disabled>
+                            <i class="fas fa-crown"></i>CREAR SUPERADMIN
+                        </button>
+                        <button type="button" class="action-btn cancel-btn" id="cancelBtn">
+                            <i class="fas fa-times"></i>CANCELAR
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    
+    <script type="module">
+        import { UserManager } from '/clases/user.js';
+
+        const masterForm = document.getElementById('masterForm');
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirmPassword');
+        const createBtn = document.getElementById('createBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const mainMessage = document.getElementById('mainMessage');
+        const reqLength = document.getElementById('reqLength');
+        const reqMatch = document.getElementById('reqMatch');
+        
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const uploadImageBtn = document.getElementById('uploadImageBtn');
+        const removeImageBtn = document.getElementById('removeImageBtn');
+        
+        let imagenBase64 = '';
+        let userManager;
+
+        function imagenToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
+            });
+        }
+
+        function validarTamañoImagen(file) {
+            const maxSize = 2 * 1024 * 1024;
+            if (file.size > maxSize) {
+                showMessage('La imagen no debe exceder los 2MB', 'error');
+                return false;
+            }
+            return true;
+        }
+
+        function validarTipoImagen(file) {
+            const tiposValidos = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+            if (!tiposValidos.includes(file.type)) {
+                showMessage('Formato no válido. Usa JPG, PNG o GIF', 'error');
+                return false;
+            }
+            return true;
+        }
+
+        function actualizarVistaPrevia(base64String) {
+            if (base64String) {
+                imagePreview.innerHTML = `<img src="${base64String}" alt="Foto de perfil">`;
+                removeImageBtn.style.display = 'inline-flex';
+            } else {
+                imagePreview.innerHTML = `
+                    <div class="placeholder">
+                        <i class="fas fa-camera"></i>
+                        <span>Subir foto</span>
+                    </div>
+                `;
+                removeImageBtn.style.display = 'none';
+            }
+        }
+
+        async function handleImageSelect(file) {
+            if (!file) return;
+            if (!validarTipoImagen(file) || !validarTamañoImagen(file)) return;
+            try {
+                const base64 = await imagenToBase64(file);
+                imagenBase64 = base64;
+                actualizarVistaPrevia(imagenBase64);
+                showMessage('Imagen cargada correctamente', 'success');
+            } catch (error) {
+                showMessage('Error al procesar la imagen', 'error');
+            }
+        }
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                handleImageSelect(e.target.files[0]);
+            }
+        });
+
+        uploadImageBtn.addEventListener('click', () => imageInput.click());
+        imagePreview.addEventListener('click', () => imageInput.click());
+
+        removeImageBtn.addEventListener('click', () => {
+            imagenBase64 = '';
+            actualizarVistaPrevia('');
+            imageInput.value = '';
+            showMessage('Imagen eliminada', 'info');
+        });
+
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+
+        function showMessage(message, type) {
+            mainMessage.textContent = message;
+            mainMessage.className = `message-container ${type}`;
+            mainMessage.style.display = 'block';
+            setTimeout(() => {
+                mainMessage.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    mainMessage.style.display = 'none';
+                    mainMessage.style.animation = '';
+                }, 300);
+            }, 5000);
+        }
+
+        function validatePassword() {
+            const password = passwordInput.value;
+            const confirm = confirmInput.value;
+            
+            if (password.length >= 6) {
+                reqLength.className = 'valid';
+                reqLength.innerHTML = '<i class="fas fa-check-circle"></i> Mínimo 6 caracteres ✓';
+            } else {
+                reqLength.className = 'invalid';
+                reqLength.innerHTML = '<i class="fas fa-times-circle"></i> Mínimo 6 caracteres';
+            }
+            
+            if (password && confirm && password === confirm) {
+                reqMatch.className = 'valid';
+                reqMatch.innerHTML = '<i class="fas fa-check-circle"></i> Las contraseñas coinciden ✓';
+            } else {
+                reqMatch.className = 'invalid';
+                reqMatch.innerHTML = '<i class="fas fa-times-circle"></i> Las contraseñas coinciden';
+            }
+            
+            createBtn.disabled = !(password.length >= 6 && password === confirm && password.length > 0);
+        }
+
+        passwordInput.addEventListener('input', validatePassword);
+        confirmInput.addEventListener('input', validatePassword);
+
+        masterForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (createBtn.disabled) {
+                showMessage('Cumple los requisitos de contraseña', 'error');
+                return;
+            }
+
+            createBtn.disabled = true;
+            createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO...';
+
+            try {
+                userManager = new UserManager();
+                
+                const masterData = {
+                    nombreCompleto: fullNameInput.value.trim(),
+                    correoElectronico: emailInput.value.trim(),
+                    fotoUsuario: imagenBase64
+                };
+
+                const resultado = await userManager.createMaster(masterData, passwordInput.value);
+
+                await Swal.fire({
+                    title: '¡SUPERADMIN CREADO!',
+                    html: `
+                        <div style="text-align: left;">
+                            <p><strong>ID:</strong> ${resultado.id}</p>
+                            <p><strong>Nombre:</strong> ${resultado.user.nombreCompleto}</p>
+                            <p><strong>Email:</strong> ${resultado.user.correoElectronico}</p>
+                            <p><strong>Rol:</strong> MASTER</p>
+                            ${imagenBase64 ? '<p><strong>Foto:</strong> ✅ Imagen guardada</p>' : '<p><strong>Foto:</strong> ❌ Sin imagen</p>'}
+                        </div>
+                        <p style="margin-top: 15px; color: #e74c3c;">⚠️ GUARDA ESTOS DATOS</p>
+                    `,
+                    icon: 'success',
+                    confirmButtonText: 'ENTENDIDO',
+                    confirmButtonColor: '#ff6b35',
+                    background: 'var(--color-bg-primary)',
+                    color: 'var(--color-text-primary)'
+                });
+
+                masterForm.reset();
+                imagenBase64 = '';
+                actualizarVistaPrevia('');
+                
+                setTimeout(() => {
+                    window.location.href = '/usuarios/visitantes/inicioSesion/inicioSesion.html';
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                
+                let errorMessage = error.message;
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'El correo electrónico ya está registrado en el sistema.';
+                }
+
+                Swal.fire({
+                    title: 'ERROR',
+                    text: errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'INTENTAR DE NUEVO',
+                    confirmButtonColor: '#ff6b35',
+                    background: 'var(--color-bg-primary)',
+                    color: 'var(--color-text-primary)'
+                });
+            } finally {
+                createBtn.innerHTML = '<i class="fas fa-crown"></i>CREAR SUPERADMIN';
+                createBtn.disabled = false;
+                validatePassword();
+            }
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            Swal.fire({
+                title: '¿Cancelar?',
+                text: 'Los datos ingresados se perderán',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'SÍ, CANCELAR',
+                cancelButtonText: 'NO, SEGUIR',
+                confirmButtonColor: '#ff6b35',
+                cancelButtonColor: '#6c757d',
+                background: 'var(--color-bg-primary)',
+                color: 'var(--color-text-primary)'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    masterForm.reset();
+                    imagenBase64 = '';
+                    actualizarVistaPrevia('');
+                    validatePassword();
+                    showMessage('Registro cancelado', 'info');
+                }
+            });
+        });
+
+        validatePassword();
+    </script>
+      <script type="module" src="/components/navbarSysAdmin.js"></script>
+</body>
+
+</html>

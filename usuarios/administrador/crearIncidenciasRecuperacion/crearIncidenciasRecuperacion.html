@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Mercancía Perdida | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Estilos modulo -->
+    <link rel="stylesheet" href="./crearIncidenciasRecuperacion.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+
+    <!-- SEO Básico -->
+    <meta name="description" content="Registro de mercancía perdida o robada - Sistema Centinela">
+    <meta name="keywords" content="centinela, mercancia perdida, robo, extravio, registro de perdidas">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Centinela-MX | Registro de Mercancía Perdida">
+    <meta property="og:description" content="Registro de mercancía perdida o robada con evidencias fotográficas">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+    <meta property="og:site_name" content="Centinela-MX">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Centinela-MX | Registro de Mercancía Perdida">
+    <meta name="twitter:description" content="Registro de mercancía perdida o robada con evidencias fotográficas">
+    <meta name="twitter:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <br>
+
+    <!-- Contenedor principal -->
+    <div class="custom-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1 class="main-title">
+                    <i class="fas fa-box-open"></i>
+                    Registro de Mercancía Perdida
+                </h1>
+                <div class="header-description-text">
+                    "Registra mercancía robada, extraviada o pérdida con evidencias fotográficas"
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- FORMULARIO PRINCIPAL -->
+        <!-- ============================================= -->
+        <div class="form-row">
+            <div class="full-width">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-edit"></i>Información del Evento</h5>
+                        <button id="btnVolverLista" class="btn-volver">
+                            <i class="fas fa-arrow-left"></i>Volver a la lista
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <form id="formMercanciaPrincipal">
+                            <div class="form-grid" style="grid-template-columns: 1fr;">
+                                <div class="full-width">
+                                    <h6 class="section-title"><i class="fas fa-info-circle"></i>Información Básica</h6>
+                                </div>
+
+                                <!-- Organización (solo lectura) -->
+                                <div class="full-width">
+                                    <label for="organization" class="form-label">Organización</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-building"></i></span>
+                                        <input type="text" class="form-control" id="organization" readonly>
+                                    </div>
+                                    <div class="form-help-text">Organización a la que pertenece el registro</div>
+                                </div>
+
+                                <!-- Empresa/Centro Comercial con buscador -->
+                                <div class="full-width">
+                                    <label for="nombreEmpresaCC" class="form-label">Empresa / Centro Comercial *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-store"></i></span>
+                                        <input type="text" class="form-control" id="nombreEmpresaCC"
+                                            placeholder="Escribe el nombre de la empresa o centro comercial..." 
+                                            autocomplete="off" required>
+                                    </div>
+                                    <div class="form-help-text">Nombre de la empresa o centro comercial afectado</div>
+                                    <div id="sugerenciasEmpresa" class="sugerencias-container"></div>
+                                </div>
+
+                                <!-- Tipo de Evento -->
+                                <div class="full-width">
+                                    <label for="tipoEvento" class="form-label">Tipo de Evento *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                                        <select class="form-control" id="tipoEvento" required>
+                                            <option value="">-- Selecciona el tipo de evento --</option>
+                                            <option value="robo">Robo</option>
+                                            <option value="extravio">Extravío</option>
+                                            <option value="accidente">Accidente</option>
+                                            <option value="otro">Otro</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-help-text">Clasifica el tipo de evento ocurrido</div>
+                                </div>
+
+                                <!-- Monto Perdido -->
+                                <div class="full-width">
+                                    <label for="montoPerdido" class="form-label">Monto Perdido *</label>
+                                    <div class="monto-input-group">
+                                        <div class="input-group" style="flex: 1;">
+                                            <span class="input-group-icon"><i class="fas fa-dollar-sign"></i></span>
+                                            <input type="number" class="form-control" id="montoPerdido" 
+                                                placeholder="0.00" step="0.01" min="0" required>
+                                        </div>
+                                        <div class="monto-preview">
+                                            <i class="fas fa-chart-line"></i> <span id="montoPerdidoPreview">$0.00</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-help-text">Monto total de la mercancía perdida</div>
+                                </div>
+
+                                <!-- Monto Recuperado (opcional) -->
+                                <div class="full-width">
+                                    <label for="montoRecuperado" class="form-label">Monto Recuperado</label>
+                                    <div class="monto-input-group">
+                                        <div class="input-group" style="flex: 1;">
+                                            <span class="input-group-icon"><i class="fas fa-undo-alt"></i></span>
+                                            <input type="number" class="form-control" id="montoRecuperado" 
+                                                placeholder="0.00" step="0.01" min="0">
+                                        </div>
+                                        <div class="monto-preview">
+                                            <i class="fas fa-chart-line"></i> <span id="montoRecuperadoPreview">$0.00</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-help-text">Monto recuperado (si aplica)</div>
+                                </div>
+
+                                <!-- Fecha y Hora del evento -->
+                                <div class="full-width">
+                                    <label for="fechaHoraEvento" class="form-label">Fecha y Hora del Evento *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </span>
+                                        <input type="text" class="form-control" id="fechaHoraEvento"
+                                            placeholder="Selecciona fecha y hora" required>
+                                    </div>
+                                    <div class="form-help-text">Fecha y hora en que ocurrió el evento (no puede ser futura)</div>
+                                </div>
+
+                                <!-- Narración de Eventos -->
+                                <div class="full-width">
+                                    <label for="narracionEventos" class="form-label">Narración de los Eventos *</label>
+                                    <textarea class="form-control" id="narracionEventos" rows="6"
+                                        placeholder="Describa detalladamente lo sucedido, incluyendo cómo ocurrió, personas involucradas, circunstancias, etc..."
+                                        required></textarea>
+                                    <div class="form-help-text">Describa con detalle cómo ocurrieron los hechos</div>
+                                    <div class="char-limit-info">
+                                        <span class="char-counter" id="contadorNarracion">0/2000</span>
+                                    </div>
+                                </div>
+
+                                <!-- Detalles de la Pérdida (opcional) -->
+                                <div class="full-width">
+                                    <label for="detallesPerdida" class="form-label">Detalles de la Pérdida</label>
+                                    <textarea class="form-control" id="detallesPerdida" rows="4"
+                                        placeholder="Especificaciones de la mercancía perdida: productos, cantidades, valores unitarios, etc. (opcional)"></textarea>
+                                    <div class="form-help-text">Detalles específicos de la mercancía perdida (opcional)</div>
+                                    <div class="char-limit-info">
+                                        <span class="char-counter" id="contadorDetalles">0/1000</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- SECCIÓN: EVIDENCIAS FOTOGRÁFICAS -->
+        <!-- ============================================= -->
+        <div class="form-row" style="margin-top: 20px;">
+            <div class="full-width">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-images"></i>Evidencias Fotográficas</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Alerta informativa -->
+                        <div class="alert alert-info" style="margin-bottom: 20px;">
+                            <i class="fas fa-info-circle"></i>
+                            Puedes agregar imágenes como evidencia. Haz clic en el botón Editar para abrir el editor
+                            completo donde podrás dibujar círculos, flechas y agregar comentarios.
+                        </div>
+
+                        <!-- Sección de carga de imágenes -->
+                        <div class="image-upload-section">
+                            <div class="upload-area">
+                                <input type="file" id="inputImagenes" multiple accept="image/*" style="display: none;">
+                                <button type="button" class="btn-upload" id="btnAgregarImagen">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    Agregar evidencias
+                                </button>
+                                <div class="upload-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    Formatos: JPG, PNG, GIF. Máximo 5MB por imagen.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vista previa de imágenes -->
+                        <div class="images-preview-container">
+                            <h6>
+                                <i class="fas fa-images"></i>
+                                Evidencias seleccionadas (<span id="imagenesCount">0</span>)
+                            </h6>
+                            <div class="images-grid" id="imagenesPreview">
+                                <div class="no-images">
+                                    <i class="fas fa-images"></i>
+                                    <p>No hay evidencias seleccionadas</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BOTONES DE ACCIÓN -->
+                        <div class="action-buttons-container">
+                            <button type="button" class="btn btn-success" id="btnCrearRegistro">
+                                <i class="fas fa-save"></i>Registrar Evento
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="btnCancelar">
+                                <i class="fas fa-times"></i>Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script type="module" src="/components/navbarAdministrador.js"></script>
+    <script src="/components/imagenEditorEvidencias.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="./crearIncidenciasRecuperacion.js"></script>
+
+    <!-- Protector de pagina -->
+    <script src="/components/protector-admin.js" data-modulo="incidencias"> </script>
+</body>
+
+</html>

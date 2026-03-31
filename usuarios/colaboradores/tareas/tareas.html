@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Notas | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/usuarios/administrador/tareas/tareas.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- SEO Básico -->
+    <meta name="description" content="Gestión de notas - Sistema Centinela">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Centinela-MX | Mis Notas">
+    <meta property="og:description" content="Gestiona tus notas y checklists">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+    <meta property="og:site_name" content="Centinela-MX">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Centinela-MX | Notas">
+    <meta name="twitter:description" content="Sistema de gestión de notas">
+    <meta name="twitter:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Contenedor principal -->
+    <div class="custom-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1 class="main-title">
+                    <i class="fas fa-sticky-note"></i>
+                    Mis Notas
+                </h1>
+                <div class="header-description-text">
+                    <i class="fas fa-quote-left"></i>
+                    Gestiona tus checklists y notas pendientes
+                    <i class="fas fa-quote-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de acciones principales -->
+        <div class="actions-bar">
+            <div class="action-buttons-group">
+                <button class="btn-action" id="btnCrearNota">
+                    <i class="fas fa-plus"></i>
+                    Crear Nota
+                </button>
+            </div>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Buscar notas...">
+            </div>
+        </div>
+
+        <!-- Tabs de filtrado -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tipo="todas">Todas</button>
+                <button class="tab-btn" data-tipo="generales">Generales</button>
+                <button class="tab-btn" data-tipo="personales">Personales</button>
+                <button class="tab-btn" data-tipo="compartidas">Compartidas</button>
+                <button class="tab-btn" data-tipo="area">Por Área</button>
+            </div>
+        </div>
+
+        <!-- FORMULARIO INLINE DE CREACIÓN (se muestra al hacer clic en Crear Nota) -->
+        <div class="formulario-creacion" id="formularioCreacion" style="display: none;">
+            <div class="formulario-header">
+                <h3 id="formularioTitulo">Nueva Nota Personal</h3>
+                <button class="btn-cerrar-form" id="cerrarFormulario">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="formulario-body">
+                <!-- SELECTOR DE TIPO DE NOTA (arriba del título) -->
+                <div class="tipo-selector-container">
+                    <label class="form-label">Tipo de nota</label>
+                    <div class="tipo-options">
+                        <div class="tipo-option" data-tipo="general">
+                            <i class="fas fa-globe"></i>
+                            <span>General</span>
+                        </div>
+                        <div class="tipo-option" data-tipo="personal">
+                            <i class="fas fa-user"></i>
+                            <span>Personal</span>
+                        </div>
+                        <div class="tipo-option" data-tipo="compartida">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Compartida</span>
+                        </div>
+                        <div class="tipo-option" data-tipo="area">
+                            <i class="fas fa-building"></i>
+                            <span>Por Área</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Título -->
+                <div class="form-field">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" id="notaTitulo" placeholder="Título de la nota"
+                        maxlength="100">
+                </div>
+
+                <!-- Contenido/Descripción -->
+                <div class="form-field">
+                    <label class="form-label">Contenido</label>
+                    <textarea class="form-control" id="notaDescripcion" rows="3" placeholder="Descripción de la nota"
+                        maxlength="500"></textarea>
+                </div>
+
+                <!-- Checklist -->
+                <div class="form-field">
+                    <label class="form-label">Checklist</label>
+                    <div class="items-container">
+                        <div id="itemsList" class="items-list">
+                            <!-- Los items se generan dinámicamente -->
+                        </div>
+                        <button type="button" class="btn-add-item" id="btnAgregarItem">
+                            <i class="fas fa-plus"></i> Agregar elemento al checklist
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Campos específicos según tipo (se llenan dinámicamente) -->
+                <div id="camposEspecificos"></div>
+
+                <!-- Fecha límite (opcional) -->
+                <div class="form-field">
+                    <div class="recordatorio-checkbox">
+                        <input type="checkbox" id="tieneRecordatorio">
+                        <label for="tieneRecordatorio">
+                            <i class="fas fa-calendar-alt"></i>
+                            Establecer fecha límite
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-field fecha-container" id="fechaContainer" style="display: none;">
+                    <label class="form-label">Fecha límite</label>
+                    <input type="date" class="form-control" id="fechaLimite">
+                </div>
+
+                <!-- Campos ocultos -->
+                <input type="hidden" id="notaId" value="">
+            </div>
+
+            <div class="formulario-footer">
+                <button type="button" class="btn btn-secondary" id="cancelarNota">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-success" id="guardarNota">
+                    <i class="fas fa-check"></i> Guardar Nota
+                </button>
+            </div>
+        </div>
+
+        <!-- Grid de notas (siempre visible) -->
+        <div class="tareas-grid" id="tareasGrid">
+            <!-- Las notas se cargarán aquí -->
+            <div class="loading-state">
+                <div class="loading-content">
+                    <div class="loading-spinner"></div>
+                    <h3>Cargando notas...</h3>
+                    <p>Obteniendo datos de Firebase</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script src="/components/navbarColaborador.js"></script>
+    <script src="/components/footerColaborador.js"></script>
+    <script type="module" src="/usuarios/administrador/tareas/tareas.js"></script>
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/administrador/cualquier-pagina.html -->
+    <script src="/components/protector-colaborador.js" data-modulo="tareas"> </script>
+</body>
+</body>
+
+</html>

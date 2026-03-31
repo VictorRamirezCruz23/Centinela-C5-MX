@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "centinelamx": "centinela-mx",
+    "centinelaMX": "centinela-mx",
+    "default": "centinela-mx"
+  },
+  "targets": {},
+  "etags": {}
+}

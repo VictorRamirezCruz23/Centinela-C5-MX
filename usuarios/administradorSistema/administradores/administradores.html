@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Administradores | Centinela</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Estilos específicos -->
+    <link rel="stylesheet" href="./administradores.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Contenedor principal -->
+    <div class="admin-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-user-shield"></i>
+                Administradores de Organizaciones
+            </h1>
+            <div class="header-description">
+                Gestión de administradores de cada organización.
+                Visualiza, filtra y administra los administradores registrados en el sistema.
+            </div>
+        </div>
+
+        <!-- Tarjetas de estadísticas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalEstadisticas">0</h3>
+                    <p>Total Administradores</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="activosEstadisticas">0</h3>
+                    <p>Activos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de búsqueda -->
+        <div class="filtros-container">
+            <div class="filtros-header">
+                <h5><i class="fas fa-search"></i> Buscar administradores:</h5>
+            </div>
+            <div class="filtros-body">
+                <div class="filtro-grupo">
+                    <label for="buscarAdministrador">Nombre, email u organización</label>
+                    <input type="text" id="buscarAdministrador" class="filtro-input" 
+                           placeholder="Buscar por nombre, correo o organización..." autocomplete="off">
+                </div>
+                <div class="filtro-acciones">
+                    <button class="btn-buscar" id="btnBuscar">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                    <button class="btn-limpiar" id="btnLimpiarBusqueda">
+                        <i class="fas fa-times"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Administradores -->
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-list"></i> Lista de Administradores</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="tablaAdministradores">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">Avatar</th>
+                                <th>Nombre / Email</th>
+                                <th>Rol</th>
+                                <th>Organización</th>
+                                <th>Plan</th>
+                                <th>Estado</th>
+                                <th style="width: 100px;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaAdministradoresBody">
+                            <!-- Se llenará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación -->
+                <div class="pagination-container">
+                    <div class="pagination-info" id="paginationInfo"></div>
+                    <nav>
+                        <ul class="pagination" id="pagination">
+                            <!-- Se llenará dinámicamente -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script src="/components/navbarSysAdmin.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="./administradores.js"></script>
+    <script src="/components/protector-master.js"> </script>
+</body>
+
+</html>

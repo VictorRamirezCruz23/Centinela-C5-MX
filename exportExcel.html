@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exportador de Firebase a Excel - Con Vista Previa</title>
+    
+    <!-- Librería SheetJS para Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        // Tu configuración de Firebase (REEMPLAZA CON TUS DATOS)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAkRF8CUBs8dKlpk6N2U4EhESYhsOAW9sQ",
+        authDomain: "centinela-c5.firebaseapp.com",
+        databaseURL: "https://centinela-c5-default-rtdb.firebaseio.com",
+        projectId: "centinela-c5",
+        storageBucket: "centinela-c5.firebasestorage.app",
+        messagingSenderId: "572612004113",
+        appId: "1:572612004113:web:9ff187d18068d1fdf5a4b0",
+        measurementId: "G-GP0ZLWBT7Y",
+        };
+        
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Hacer disponible la función de exportación globalmente
+        window.db = db;
+        window.collection = collection;
+        window.getDocs = getDocs;
+        window.query = query;
+        window.limit = limit;
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1em;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #f6f9fc 0%, #f1f5f9 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .info-card .stats {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .info-card .stats-label {
+            color: #4a5568;
+            font-size: 0.9em;
+        }
+        
+        .info-card .collection-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+        
+        .progress-bar-container {
+            margin: 20px 0;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .options-group {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .options-group h3 {
+            font-size: 1em;
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .checkbox-label input {
+            width: auto;
+            cursor: pointer;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px 24px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .alert-success {
+            background: #c6f6d5;
+            color: #22543d;
+            border-left: 4px solid #48bb78;
+        }
+        
+        .alert-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border-left: 4px solid #f56565;
+        }
+        
+        .alert-info {
+            background: #bee3f8;
+            color: #2c5282;
+            border-left: 4px solid #4299e1;
+        }
+        
+        .alert-warning {
+            background: #feebc8;
+            color: #7b341e;
+            border-left: 4px solid #ed8936;
+        }
+        
+        .close-alert {
+            margin-left: auto;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2em;
+            padding: 0 5px;
+        }
+        
+        .close-alert:hover {
+            opacity: 0.7;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            min-width: 300px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: #333;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+        
+        .loading-subtext {
+            font-size: 0.85em;
+            color: #718096;
+            margin-top: 10px;
+        }
+        
+        .info-text {
+            text-align: center;
+            color: #718096;
+            font-size: 0.85em;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .loading-content {
+                padding: 20px 30px;
+                min-width: 250px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Exportador de Firebase</h1>
+            <p>Consulta documentos y exporta a Excel con expansión de arrays</p>
+        </div>
+        
+        <div class="content">
+            <div id="alertContainer"></div>
+            
+            <div class="input-group">
+                <label for="collectionName">📁 Nombre de la colección:</label>
+                <input type="text" id="collectionName" placeholder="Ej: zona, usuarios, productos" autocomplete="off">
+            </div>
+            
+            <div id="infoCard" class="info-card" style="display: none;">
+                <div style="font-size: 1.2em;">📊 Estadísticas de la colección</div>
+                <div class="stats" id="documentCount">0</div>
+                <div class="stats-label">documentos encontrados</div>
+                <div class="collection-name" id="collectionNameDisplay"></div>
+            </div>
+            
+            <div id="progressContainer" class="progress-bar-container">
+                <div class="progress-bar" id="progressBar">Procesando...</div>
+            </div>
+            
+            <div class="options-group">
+                <h3>⚙️ Opciones de exportación:</h3>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="expandArrays" checked>
+                        <span>Expandir arrays en columnas separadas</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="expandObjects">
+                        <span>Expandir objetos anidados</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="checkBtn" class="btn-secondary" onclick="checkCollection()">
+                    🔍 Ver documentos
+                </button>
+                <button id="exportBtn" class="btn-primary" onclick="exportToExcel()" disabled>
+                    📊 Exportar a Excel
+                </button>
+            </div>
+            
+            <div class="info-text">
+                ⚡ Los arrays se expandirán en columnas como: campo_0, campo_1, campo_2...<br>
+                📝 Los textos largos se truncarán automáticamente para cumplir con los límites de Excel (32,767 caracteres)
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        let cachedDocuments = null;
+        let cachedCollectionName = null;
+        
+        // Verificar colección y mostrar cantidad de documentos
+        window.checkCollection = async function() {
+            const collectionName = document.getElementById('collectionName').value.trim();
+            const checkBtn = document.getElementById('checkBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            
+            if (!collectionName) {
+                showAlert('⚠️ Por favor ingresa el nombre de la colección', 'error');
+                return;
+            }
+            
+            checkBtn.disabled = true;
+            clearAlert();
+            showLoading(true, 'Consultando colección...');
+            
+            try {
+                const db = window.db;
+                const collectionRef = collection(db, collectionName);
+                const querySnapshot = await getDocs(collectionRef);
+                const documentCount = querySnapshot.size;
+                
+                if (documentCount === 0) {
+                    showAlert(`📭 La colección "${collectionName}" no tiene documentos`, 'info');
+                    document.getElementById('infoCard').style.display = 'none';
+                    exportBtn.disabled = true;
+                    cachedDocuments = null;
+                } else {
+                    // Mostrar información
+                    document.getElementById('documentCount').textContent = documentCount;
+                    document.getElementById('collectionNameDisplay').textContent = `Colección: ${collectionName}`;
+                    document.getElementById('infoCard').style.display = 'block';
+                    
+                    showAlert(`✅ Se encontraron ${documentCount} documento(s) en la colección "${collectionName}"`, 'success');
+                    exportBtn.disabled = false;
+                    
+                    // Cachear los documentos para exportación rápida
+                    cachedDocuments = querySnapshot;
+                    cachedCollectionName = collectionName;
+                }
+                
+            } catch (error) {
+                console.error('Error al consultar:', error);
+                showAlert(`❌ Error al consultar la colección: ${error.message}`, 'error');
+                document.getElementById('infoCard').style.display = 'none';
+                exportBtn.disabled = true;
+                cachedDocuments = null;
+            } finally {
+                showLoading(false);
+                checkBtn.disabled = false;
+            }
+        };
+        
+        // Función para truncar texto según límites de Excel
+        function truncateForExcel(value, maxLength = 32767) {
+            if (typeof value !== 'string') return value;
+            if (value.length <= maxLength) return value;
+            
+            // Truncar y agregar indicador
+            const truncated = value.substring(0, maxLength - 20) + '...[TRUNCADO]';
+            console.warn(`Texto truncado: original ${value.length} caracteres, reducido a ${truncated.length}`);
+            return truncated;
+        }
+        
+        // Función para expandir arrays en múltiples columnas
+        function expandArrayValue(value, prefix, expandObjectsFlag) {
+            if (!Array.isArray(value)) {
+                return { [prefix]: truncateForExcel(formatValue(value, expandObjectsFlag)) };
+            }
+            
+            const expanded = {};
+            
+            if (value.length === 0) {
+                expanded[`${prefix}`] = '[Vacío]';
+                return expanded;
+            }
+            
+            // Expandir cada elemento del array (límite máximo de 256 columnas por array)
+            const maxArrayItems = 256;
+            const itemsToProcess = value.slice(0, maxArrayItems);
+            
+            if (value.length > maxArrayItems) {
+                console.warn(`Array en ${prefix} tiene ${value.length} elementos, solo se exportarán los primeros ${maxArrayItems}`);
+            }
+            
+            itemsToProcess.forEach((item, index) => {
+                const columnName = `${prefix}_${index}`;
+                
+                if (Array.isArray(item) && expandObjectsFlag) {
+                    const subExpanded = expandArrayValue(item, columnName, expandObjectsFlag);
+                    Object.assign(expanded, subExpanded);
+                } else if (typeof item === 'object' && item !== null && expandObjectsFlag) {
+                    const subExpanded = expandObjectValue(item, columnName, expandObjectsFlag);
+                    Object.assign(expanded, subExpanded);
+                } else {
+                    expanded[columnName] = truncateForExcel(formatValue(item, expandObjectsFlag));
+                }
+            });
+            
+            return expanded;
+        }
+        
+        // Función para expandir objetos en múltiples columnas
+        function expandObjectValue(obj, prefix, expandObjectsFlag) {
+            if (!expandObjectsFlag || typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+                return { [prefix]: truncateForExcel(formatValue(obj, expandObjectsFlag)) };
+            }
+            
+            const expanded = {};
+            const maxProperties = 200;
+            const entries = Object.entries(obj).slice(0, maxProperties);
+            
+            if (Object.keys(obj).length > maxProperties) {
+                console.warn(`Objeto en ${prefix} tiene ${Object.keys(obj).length} propiedades, solo se exportarán las primeras ${maxProperties}`);
+            }
+            
+            entries.forEach(([key, value]) => {
+                const newKey = `${prefix}.${key}`;
+                
+                if (Array.isArray(value)) {
+                    const arrayExpanded = expandArrayValue(value, newKey, expandObjectsFlag);
+                    Object.assign(expanded, arrayExpanded);
+                } else if (typeof value === 'object' && value !== null && expandObjectsFlag) {
+                    const objExpanded = expandObjectValue(value, newKey, expandObjectsFlag);
+                    Object.assign(expanded, objExpanded);
+                } else {
+                    expanded[newKey] = truncateForExcel(formatValue(value, expandObjectsFlag));
+                }
+            });
+            
+            return expanded;
+        }
+        
+        // Formatear valores simples
+        function formatValue(value, expandObjectsFlag) {
+            if (value === null || value === undefined) {
+                return '';
+            }
+            
+            // Manejar Timestamp de Firebase
+            if (value.toDate && typeof value.toDate === 'function') {
+                try {
+                    return value.toDate().toLocaleString();
+                } catch (e) {
+                    return String(value);
+                }
+            }
+            
+            // Manejar GeoPoint
+            if (value.latitude !== undefined && value.longitude !== undefined) {
+                return `${value.latitude}, ${value.longitude}`;
+            }
+            
+            // Manejar booleanos
+            if (typeof value === 'boolean') {
+                return value ? 'Sí' : 'No';
+            }
+            
+            // Manejar números
+            if (typeof value === 'number') {
+                return value;
+            }
+            
+            // Si es objeto pero no se debe expandir
+            if (typeof value === 'object' && !expandObjectsFlag) {
+                try {
+                    const jsonStr = JSON.stringify(value);
+                    return truncateForExcel(jsonStr);
+                } catch (e) {
+                    return '[Object]';
+                }
+            }
+            
+            return String(value);
+        }
+        
+        // Procesar datos con expansión
+        function processDataWithExpansion(querySnapshot, expandArrays, expandObjects, updateProgress) {
+            const documentsData = [];
+            const allColumns = new Set();
+            const totalDocs = querySnapshot.size;
+            let processed = 0;
+            
+            querySnapshot.forEach((doc) => {
+                const docData = doc.data();
+                const expandedDoc = {};
+                
+                // Procesar cada campo del documento
+                Object.entries(docData).forEach(([key, value]) => {
+                    let expandedFields = {};
+                    
+                    if (Array.isArray(value) && expandArrays) {
+                        expandedFields = expandArrayValue(value, key, expandObjects);
+                    } else if (typeof value === 'object' && value !== null && expandObjects && !Array.isArray(value)) {
+                        expandedFields = expandObjectValue(value, key, expandObjects);
+                    } else {
+                        expandedFields[key] = truncateForExcel(formatValue(value, expandObjects));
+                    }
+                    
+                    Object.assign(expandedDoc, expandedFields);
+                    
+                    Object.keys(expandedFields).forEach(col => {
+                        // Limitar longitud del nombre de columna a 255 caracteres (límite de Excel)
+                        const safeColName = col.length > 255 ? col.substring(0, 252) + '...' : col;
+                        allColumns.add(safeColName);
+                    });
+                });
+                
+                // Agregar el ID del documento
+                expandedDoc['document_id'] = truncateForExcel(doc.id);
+                allColumns.add('document_id');
+                
+                documentsData.push(expandedDoc);
+                processed++;
+                
+                if (updateProgress) {
+                    updateProgress(processed, totalDocs);
+                }
+            });
+            
+            // Ordenar columnas para consistencia
+            const sortedColumns = Array.from(allColumns).sort();
+            
+            // Limitar número máximo de columnas (Excel tiene límite de 16,384 columnas)
+            const maxColumns = 16384;
+            if (sortedColumns.length > maxColumns) {
+                console.warn(`Demasiadas columnas (${sortedColumns.length}), limitando a ${maxColumns}`);
+                showAlert(`⚠️ Se encontraron ${sortedColumns.length} columnas, pero Excel solo soporta ${maxColumns}. Se exportarán las primeras ${maxColumns} columnas.`, 'warning');
+            }
+            
+            return {
+                documentsData,
+                allColumns: sortedColumns.slice(0, maxColumns)
+            };
+        }
+        
+        // Preparar datos para Excel
+        function prepareDataForExcel(documentsData, allColumns) {
+            const excelRows = [];
+            
+            // Cabeceras
+            excelRows.push(allColumns);
+            
+            // Datos
+            documentsData.forEach(doc => {
+                const row = allColumns.map(column => {
+                    const value = doc[column] !== undefined ? doc[column] : '';
+                    // Asegurar que cada celda cumpla con los límites de Excel
+                    if (typeof value === 'string' && value.length > 32767) {
+                        return value.substring(0, 32764) + '...';
+                    }
+                    return value;
+                });
+                excelRows.push(row);
+            });
+            
+            return excelRows;
+        }
+        
+        // Descargar archivo Excel
+        function downloadExcelFile(data, fileName) {
+            try {
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                
+                // Ajustar ancho de columnas automáticamente
+                const colWidths = [];
+                for (let i = 0; i < Math.min(data[0].length, 100); i++) {
+                    let maxLength = 0;
+                    for (let j = 0; j < Math.min(data.length, 100); j++) {
+                        const cellValue = data[j][i] ? String(data[j][i]) : "";
+                        maxLength = Math.max(maxLength, Math.min(cellValue.length, 100));
+                    }
+                    colWidths.push({ wch: Math.min(maxLength + 2, 50) });
+                }
+                ws['!cols'] = colWidths;
+                
+                const wb = XLSX.utils.book_new();
+                const sheetName = fileName.replace(/_[^_]*\.xlsx$/, '').substring(0, 31);
+                XLSX.utils.book_append_sheet(wb, ws, sheetName);
+                
+                XLSX.writeFile(wb, fileName);
+                
+                console.log(`Archivo descargado: ${fileName}`);
+            } catch (error) {
+                console.error('Error al crear archivo Excel:', error);
+                throw new Error('Error al generar el archivo Excel');
+            }
+        }
+        
+        // Obtener fecha actual para el nombre del archivo
+        function getCurrentDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            return `${year}${month}${day}_${hours}${minutes}`;
+        }
+        
+        // Actualizar barra de progreso
+        function updateProgress(current, total) {
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const percent = Math.round((current / total) * 100);
+            
+            progressContainer.style.display = 'block';
+            progressBar.style.width = `${percent}%`;
+            progressBar.textContent = `Procesando: ${current} de ${total} documentos (${percent}%)`;
+            
+            if (current === total) {
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 1000);
+            }
+        }
+        
+        // Exportar a Excel
+        window.exportToExcel = async function() {
+            const expandArrays = document.getElementById('expandArrays').checked;
+            const expandObjects = document.getElementById('expandObjects').checked;
+            const exportBtn = document.getElementById('exportBtn');
+            const checkBtn = document.getElementById('checkBtn');
+            
+            if (!cachedDocuments || !cachedCollectionName) {
+                showAlert('⚠️ Primero verifica la colección con el botón "Ver documentos"', 'warning');
+                return;
+            }
+            
+            exportBtn.disabled = true;
+            checkBtn.disabled = true;
+            clearAlert();
+            showLoading(true, 'Exportando datos...');
+            
+            try {
+                const result = processDataWithExpansion(cachedDocuments, expandArrays, expandObjects, updateProgress);
+                
+                const excelData = prepareDataForExcel(result.documentsData, result.allColumns);
+                
+                const fileName = `${cachedCollectionName}_exportacion_${getCurrentDate()}.xlsx`;
+                downloadExcelFile(excelData, fileName);
+                
+                showAlert(`✅ Exportación exitosa! Se exportaron ${result.documentsData.length} documentos con ${result.allColumns.length} columnas`, 'success');
+                
+                // Limpiar progreso
+                document.getElementById('progressContainer').style.display = 'none';
+                
+            } catch (error) {
+                console.error('Error al exportar:', error);
+                showAlert(`❌ Error al exportar: ${error.message}`, 'error');
+            } finally {
+                showLoading(false);
+                exportBtn.disabled = false;
+                checkBtn.disabled = false;
+            }
+        };
+        
+        // Mostrar loading overlay
+        function showLoading(show, message = 'Exportando datos...') {
+            let loadingOverlay = document.getElementById('loadingOverlay');
+            
+            if (show && !loadingOverlay) {
+                loadingOverlay = document.createElement('div');
+                loadingOverlay.id = 'loadingOverlay';
+                loadingOverlay.className = 'loading-overlay';
+                loadingOverlay.innerHTML = `
+                    <div class="loading-content">
+                        <div class="spinner"></div>
+                        <div class="loading-text">${message}</div>
+                        <div class="loading-subtext">Expandiendo arrays y objetos</div>
+                    </div>
+                `;
+                document.body.appendChild(loadingOverlay);
+            } else if (!show && loadingOverlay) {
+                loadingOverlay.remove();
+            }
+        }
+        
+        // Mostrar alerta
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertId = 'alert_' + Date.now();
+            
+            let icon = '';
+            switch(type) {
+                case 'success': icon = '✅'; break;
+                case 'error': icon = '❌'; break;
+                case 'info': icon = 'ℹ️'; break;
+                case 'warning': icon = '⚠️'; break;
+                default: icon = '📌';
+            }
+            
+            const alertHtml = `
+                <div id="${alertId}" class="alert alert-${type}" style="animation: slideIn 0.3s ease-out;">
+                    <span style="font-size: 1.2em;">${icon}</span>
+                    <span style="flex: 1;">${message}</span>
+                    <span class="close-alert" onclick="this.parentElement.remove()">✖</span>
+                </div>
+            `;
+            
+            alertContainer.insertAdjacentHTML('beforeend', alertHtml);
+            
+            setTimeout(() => {
+                const alert = document.getElementById(alertId);
+                if (alert) {
+                    alert.style.animation = 'slideOut 0.3s ease-out';
+                    setTimeout(() => {
+                        if (alert.parentElement) alert.remove();
+                    }, 300);
+                }
+            }, 8000);
+        }
+        
+        // Limpiar alertas
+        function clearAlert() {
+            const alertContainer = document.getElementById('alertContainer');
+            if (alertContainer) {
+                alertContainer.innerHTML = '';
+            }
+        }
+        
+        // Agregar animación de salida
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                from {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateY(-20px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Presionar Enter en el input para verificar
+        document.getElementById('collectionName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkCollection();
+            }
+        });
+        
+        // Limpiar alertas al cambiar el input
+        document.getElementById('collectionName').addEventListener('input', function() {
+            clearAlert();
+            document.getElementById('infoCard').style.display = 'none';
+            document.getElementById('exportBtn').disabled = true;
+            cachedDocuments = null;
+        });
+        
+        console.log('✅ Exportador de Firebase con vista previa listo!');
+    </script>
+</body>
+</html>

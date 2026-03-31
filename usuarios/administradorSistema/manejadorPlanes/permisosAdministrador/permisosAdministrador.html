@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar Permisos a Administradores | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="./permisosAdministrador.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- SEO Básico -->
+    <meta name="description" content="Asignación de planes a administradores - Centinela-MX">
+    <meta name="author" content="Centinela-MX">
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Contenedor principal -->
+    <main class="admin-container">
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-user-shield"></i>
+                Asignar Permisos a Administradores
+            </h1>
+            <div class="header-description">
+                Selecciona un administrador por su organización y asígnale un plan de permisos.
+                Los planes determinan qué módulos podrá gestionar en su organización.
+                <br>
+                <small><i class="fas fa-calendar-alt"></i> Los planes tienen una vigencia de <strong>30 días</strong> a partir de la asignación.</small>
+            </div>
+        </div>
+
+        <!-- Buscador de empresas -->
+        <div class="buscador-container">
+            <div class="buscador-header">
+                <h5><i class="fas fa-search"></i> Buscar administrador por organización:</h5>
+            </div>
+            <div class="buscador-body">
+                <div class="buscador-grupo">
+                    <input type="text" id="buscarOrganizacion" class="buscador-input" 
+                           placeholder="Escribe el nombre de la empresa..." autocomplete="off">
+                </div>
+                <div class="buscador-acciones">
+                    <button class="btn-buscar" id="btnBuscar">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                    <button class="btn-limpiar" id="btnLimpiar">
+                        <i class="fas fa-times"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultados de búsqueda -->
+        <div class="resultados-container" id="resultadosContainer" style="display: none;">
+            <div class="resultados-header">
+                <h5><i class="fas fa-building"></i> Administradores encontrados</h5>
+                <span class="resultados-count" id="resultadosCount">0 resultados</span>
+            </div>
+            <div class="resultados-lista" id="resultadosLista">
+                <!-- Se llenará dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Modal de asignación de plan -->
+        <div id="modalAsignarPlan" class="modal-plan" style="display: none;">
+            <div class="modal-plan-content">
+                <div class="modal-plan-header">
+                    <h3 id="modalTitle">Asignar Plan</h3>
+                    <button class="modal-close" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-plan-body">
+                    <div id="adminInfoSeleccionado" class="admin-info-seleccionado">
+                        <!-- Datos del admin seleccionado -->
+                    </div>
+
+                    <!-- CONTENEDOR DE PLANES - ESTE ES EL QUE USA EL JAVASCRIPT -->
+                    <div class="form-group">
+                        <label>Seleccionar Plan</label>
+                        <div id="planesContainer" class="planes-container">
+                            <!-- Aquí se cargarán dinámicamente los planes desde Firestore -->
+                            <div class="loading-spinner-small">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <span>Cargando planes...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="btnCancelarModal" class="btn-cancelar">Cancelar</button>
+                        <button type="button" id="btnAsignarPlan" class="btn-asignar">Asignar Plan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de confirmación -->
+        <div id="modalConfirmacion" class="modal-plan" style="display: none;">
+            <div class="modal-plan-content small">
+                <div class="modal-plan-header">
+                    <h3>Confirmar Asignación</h3>
+                    <button class="modal-close" id="closeConfirmModal">&times;</button>
+                </div>
+                <div class="modal-plan-body">
+                    <div id="confirmacionContenido"></div>
+                    <div class="form-actions">
+                        <button type="button" id="btnCancelarConfirm" class="btn-cancelar">Cancelar</button>
+                        <button type="button" id="btnConfirmarAsignar" class="btn-asignar">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script type="module" src="/components/navbarSysAdmin.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="./permisosAdministrador.js"></script>
+    <script src="/components/protector-master.js"> </script>
+</body>
+
+</html>

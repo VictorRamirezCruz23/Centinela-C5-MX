@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enlazar Cuenta de Monitoreo | Centinela</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="enlaceCuentaMonitoreo.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <canvas id="particle-canvas"></canvas>
+    
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-link"></i> Enlazar Cuenta de Monitoreo
+        </h1>
+        <div class="header-description">
+            Asigna una cuenta de monitoreo a una organización existente
+        </div>
+    </div>
+
+    <div class="edit-main-container">
+        <div class="edit-wrapper">
+            <div class="edit-right-panel">
+                <header class="edit-header">
+                    <h1 class="edit-main-title">ASIGNACIÓN A ORGANIZACIÓN</h1>
+                    <p class="edit-sub-title">
+                        Selecciona la organización a la que pertenecerá esta cuenta de monitoreo
+                    </p>
+                </header>
+
+                <form class="edit-form-container" id="enlaceForm">
+                    <!-- Información de la cuenta -->
+                    <div class="info-card" id="cuentaInfo">
+                        <div class="info-header">
+                            <i class="fas fa-network-wired"></i>
+                            <span>Cuenta de Monitoreo</span>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-row">
+                                <span class="info-label">Email:</span>
+                                <span class="info-value" id="cuentaEmail">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">App ID:</span>
+                                <code class="info-value" id="cuentaAppId">-</code>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Estado:</span>
+                                <span class="status-badge" id="cuentaStatus">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selección de organización -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="organizacionSelect">
+                            <i class="fas fa-building"></i> ORGANIZACIÓN
+                        </label>
+                        <div class="input-wrapper">
+                            <select class="form-input-field" id="organizacionSelect" required>
+                                <option value="">Selecciona una organización...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-field-group" id="organizacionInfoGroup" style="display: none;">
+                        <div class="info-card">
+                            <div class="info-header">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Información de la Organización</span>
+                            </div>
+                            <div class="info-content" id="organizacionInfo">
+                                <div class="info-row">
+                                    <span class="info-label">Nombre:</span>
+                                    <span class="info-value" id="orgNombre">-</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Identificador:</span>
+                                    <span class="info-value" id="orgCamelCase">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advertencia si ya tiene organización -->
+                    <div class="message-container warning" id="warningMessage" style="display: none;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Esta cuenta ya está asignada a una organización. Al continuar, se reemplazará la asignación actual.
+                    </div>
+
+                    <button type="submit" class="action-btn save-btn" id="btnEnlazar">
+                        <i class="fas fa-link"></i> ENLAZAR CON ORGANIZACIÓN
+                    </button>
+                </form>
+
+                <footer class="back-btn-container">
+                    <a href="/usuarios/administrador/cuentasPM/cuentasPM.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i> VOLVER A GESTIÓN
+                    </a>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script src="/components/navbarAdministrador.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script type="module" src="enlaceCuentaMonitoreo.js"></script>
+    <script src="/components/protector-master.js"> </script>
+</body>
+</html>

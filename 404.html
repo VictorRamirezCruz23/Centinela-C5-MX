@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centinela-MX | Mantenimiento</title>
+
+    <!-- FUENTES -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- ICONOS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- FAVICON -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    
+    <!-- SISTEMA DE COLORES -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    <link rel="stylesheet" href="/components/particulas/particulas.css">
+
+    <!--Estilos-->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--color-bg-primary, #000000);
+            color: var(--color-text-secondary, rgba(255, 255, 255, 0.8));
+            font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+            min-height: 100vh;
+        }
+
+        .error-layout {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background-color: transparent;
+        }
+
+        .error-box {
+            background: var(--color-bg-primary, #000000);
+            border: 1px solid var(--color-border-light, rgba(255, 255, 255, 0.1));
+            border-radius: var(--border-radius-large, 16px);
+            padding: 42px 38px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            animation: glow-cycle 6s infinite;
+            backdrop-filter: blur(5px);
+            box-shadow: var(--shadow-normal, 0 5px 15px rgba(255, 255, 255, 0.15));
+        }
+
+        .error-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+
+        .error-logo img {
+            width: 110px;
+            filter: drop-shadow(0 0 12px var(--color-shadow, rgba(214,214,214,.45)));
+            transition: var(--transition-default, all 0.3s ease-in-out);
+        }
+
+        .error-logo img:hover {
+            filter: drop-shadow(0 0 18px var(--color-glow, rgba(214,214,214,.75)));
+            transform: scale(1.05);
+        }
+
+        .error-title {
+            font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+            font-size: 26px;
+            color: var(--color-text-primary, #ffffff);
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            text-shadow: var(--text-shadow-effect, 0 0 10px rgba(255, 255, 255, 0.5));
+        }
+
+        .error-text {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            color: var(--color-text-secondary, rgba(255, 255, 255, 0.8));
+            font-family: var(--font-family-secondary, 'Poppins', sans-serif);
+        }
+
+        .error-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 26px;
+            border-radius: var(--border-radius-circle, 30px);
+            background: var(--color-bg-primary, #000000);
+            border: 1px solid var(--color-border-light, rgba(255, 255, 255, 0.1));
+            color: var(--color-text-primary, #ffffff);
+            font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+            font-size: 13px;
+            text-decoration: none;
+            transition: var(--transition-default, all 0.3s ease-in-out);
+            cursor: pointer;
+        }
+
+        .error-btn:hover {
+            border-color: var(--color-accent-primary, #c0c0c0);
+            box-shadow: 0 0 18px var(--color-shadow, rgba(214,214,214,.45));
+            background: var(--color-hover, rgba(255, 255, 255, 0.05));
+            transform: translateY(-2px);
+        }
+
+        .error-btn i {
+            color: var(--color-icon-primary, var(--color-accent-secondary));
+            font-size: 14px;
+            transition: var(--transition-default, all 0.3s ease-in-out);
+        }
+
+        .error-btn:hover i {
+            color: var(--color-accent-primary, #c0c0c0);
+            transform: translateX(-3px);
+        }
+
+        @keyframes glow-cycle {
+            0%, 100% {
+                box-shadow: 0 0 12px var(--color-shadow, rgba(214,214,214,.15));
+                border-color: var(--color-border-light, rgba(255, 255, 255, 0.1));
+            }
+            50% {
+                box-shadow: 0 0 26px var(--color-glow, rgba(214,214,214,.75));
+                border-color: var(--color-accent-primary, #c0c0c0);
+            }
+        }
+
+        /* Canvas para partículas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            background: transparent;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .error-layout {
+                padding: 20px;
+            }
+            
+            .error-box {
+                padding: 30px 24px;
+                max-width: 340px;
+            }
+            
+            .error-logo img {
+                width: 90px;
+            }
+            
+            .error-title {
+                font-size: 22px;
+            }
+            
+            .error-text {
+                font-size: 13px;
+                line-height: 1.5;
+            }
+            
+            .error-btn {
+                padding: 8px 20px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-box {
+                padding: 24px 18px;
+                max-width: 300px;
+            }
+            
+            .error-logo img {
+                width: 80px;
+            }
+            
+            .error-title {
+                font-size: 20px;
+                margin-bottom: 12px;
+            }
+            
+            .error-text {
+                font-size: 12px;
+                margin-bottom: 16px;
+            }
+            
+            .error-btn {
+                padding: 7px 18px;
+                font-size: 11px;
+            }
+        }
+
+        /* Animación de entrada */
+        .error-box {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Efecto de fondo sutil */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(192, 192, 192, 0.1) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            z-index: -2;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <main class="error-layout">
+        <section class="error-box">
+            <div class="error-logo">
+                <img src="/assets/images/logo.png" alt="Centinela-MX">
+            </div>
+
+            <h1 class="error-title">En mantenimiento</h1>
+
+            <p class="error-text">
+                Esta sección se encuentra temporalmente en mantenimiento.<br>
+                Nuestros desarrolladores están trabajando en ello.
+            </p>
+
+            <!-- BOTÓN VOLVER js-->
+            <a href="#" class="error-btn" onclick="window.history.back(); return false;">
+                <i class="fa-solid fa-arrow-left"></i>
+                Volver
+            </a>
+        </section>
+    </main>
+
+    <script src="/components/themeloader.js"></script>
+    <script src="/components/particulas/particulas.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Página de mantenimiento cargada');
+            
+            // Forzar tema oscuro
+            document.documentElement.classList.add('theme-dark');
+            
+            // Verificar tema cargado
+            setTimeout(() => {
+                if (window.themeLoader) {
+                    console.log('✅ Theme Loader detectado');
+                }
+                
+                // Verificar partículas
+                const canvas = document.getElementById('particle-canvas');
+                if (canvas) {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    console.log('🎨 Canvas de partículas configurado');
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

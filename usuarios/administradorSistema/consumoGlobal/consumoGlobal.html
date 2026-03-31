@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumo Global | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="./consumoGlobal.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="admin-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-globe-americas"></i>
+                Consumo Global Firebase
+            </h1>
+            <div class="header-description">
+                Panel administrativo para visualizar el consumo de todas las empresas.
+                Selecciona una empresa para ver sus métricas detalladas.
+            </div>
+        </div>
+
+        <!-- Selector de Empresa y Filtros -->
+        <div class="empresa-selector-container">
+            <div class="selector-header">
+                <h5><i class="fas fa-building"></i> Seleccionar Empresa:</h5>
+            </div>
+            <div class="selector-body">
+                <div class="selector-grupo">
+                    <select id="selectEmpresa" class="selector-select">
+                        <option value="">-- Cargando empresas... --</option>
+                    </select>
+                </div>
+                <div class="selector-acciones">
+                    <button class="btn-cargar" id="btnCargarEmpresa">
+                        <i class="fas fa-search"></i> Cargar Datos
+                    </button>
+                    <button class="btn-actualizar" id="btnActualizarTodo">
+                        <i class="fas fa-sync-alt"></i> Actualizar Lista
+                    </button>
+                    <button class="btn-pdf" id="btnExportarPDF">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjetas de métricas principales (Empresa seleccionada) -->
+        <div class="empresa-info" id="empresaInfo" style="display: none;">
+            <div class="info-header">
+                <h3><i class="fas fa-chart-bar"></i> <span id="empresaNombre"></span></h3>
+                <span class="ultima-actualizacion" id="empresaUltimaActualizacion"></span>
+            </div>
+            
+            <div class="metrics-grid">
+                <!-- Firestore -->
+                <div class="metric-card firestore">
+                    <div class="metric-title">
+                        <i class="fas fa-database"></i> Firestore
+                    </div>
+                    <div class="metric-value" id="empresaFirestoreTotal">0</div>
+                    <div class="metric-subtitle" id="empresaFirestoreDetalle">L:0 / E:0 / A:0 / D:0</div>
+                    <i class="fas fa-cloud metric-icon"></i>
+                </div>
+
+                <!-- Storage -->
+                <div class="metric-card storage">
+                    <div class="metric-title">
+                        <i class="fas fa-cloud-upload-alt"></i> Storage
+                    </div>
+                    <div class="metric-value" id="empresaStorageTotal">0</div>
+                    <div class="metric-subtitle" id="empresaStorageDetalle">Sub:0 / Desc:0 / Del:0</div>
+                    <i class="fas fa-archive metric-icon"></i>
+                </div>
+
+                <!-- Functions -->
+                <div class="metric-card functions">
+                    <div class="metric-title">
+                        <i class="fas fa-code"></i> Cloud Functions
+                    </div>
+                    <div class="metric-value" id="empresaFunctionsTotal">0</div>
+                    <div class="metric-subtitle" id="empresaFunctionsDetalle">Invoc: 0</div>
+                    <i class="fas fa-bolt metric-icon"></i>
+                </div>
+
+                <!-- FCM -->
+                <div class="metric-card fcm">
+                    <div class="metric-title">
+                        <i class="fas fa-bell"></i> FCM Notificaciones
+                    </div>
+                    <div class="metric-value" id="empresaFCMTotal">0</div>
+                    <div class="metric-subtitle" id="empresaFCMDetalle">Push:0 / Tokens:0</div>
+                    <i class="fas fa-broadcast-tower metric-icon"></i>
+                </div>
+
+                <!-- Total General -->
+                <div class="metric-card total">
+                    <div class="metric-title">
+                        <i class="fas fa-calculator"></i> Total Operaciones
+                    </div>
+                    <div class="metric-value" id="empresaTotalOperaciones">0</div>
+                    <div class="metric-subtitle" id="empresaTotalDetalle">Todas las operaciones</div>
+                    <i class="fas fa-chart-pie metric-icon"></i>
+                </div>
+            </div>
+
+            <!-- Gráficas -->
+            <div class="charts-row">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-pie"></i> Distribución por servicio</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="graficoEmpresaDistribucion" style="width: 100%; height: 300px;"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-line"></i> Desglose por tipo</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="graficoEmpresaTipos" style="width: 100%; height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-datetime">
+            <i class="fas fa-sync-alt"></i>
+            Última actualización global: <span id="fechaActualizacionGlobal">-</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.j"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script type="module" src="/components/navbarSysAdmin.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="./consumoGlobal.js"></script>
+    <script src="/components/protector-master.js"> </script>
+</body>
+
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinculación monitoreo alarma - intrusión | Centinela</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="registroPM.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <canvas id="particle-canvas"></canvas>
+    
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-network-wired"></i> Creación cuenta de monitoreo
+        </h1>
+        <div class="header-description">
+            Creación de cuentas de monitoreo Power Manage
+        </div>
+    </div>
+
+    <div class="edit-main-container">
+        <div class="edit-wrapper" style="max-width: 650px;">
+            
+            <div class="edit-right-panel" style="border: none; width: 100%;">
+                <header class="edit-header">
+                    <h1 class="edit-main-title">ALTA TÉCNICA</h1>
+                    <p class="edit-sub-title">
+                        Sigue los pasos para crear tu cuenta de monitoreo
+                    </p>
+                </header>
+
+                <form class="edit-form-container" id="pmRegisterForm">
+                    
+                    <!-- PASO 1: Solicitar código -->
+                    <div id="step1">
+                        <div class="form-field-group">
+                            <label class="field-label" for="pmEmail">
+                                <i class="fas fa-envelope"></i> EMAIL ORGANIZACIONAL
+                            </label>
+                            <div class="input-wrapper">
+                                <input class="form-input-field" type="email" id="pmEmail" 
+                                       placeholder="ejemplo@organizacion.com" required>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="action-btn save-btn" id="btnSendCode">
+                            <i class="fas fa-paper-plane"></i> SOLICITAR CÓDIGO 2FA
+                        </button>
+                    </div>
+
+                    <!-- PASO 2: Verificar código -->
+                    <div id="step2" style="display:none;">
+                        <div class="message-container info">
+                            <i class="fas fa-info-circle"></i>
+                            Ingresa el código de verificación enviado al correo
+                        </div>
+                        
+                        <div class="form-field-group">
+                            <label class="field-label" for="pmCode">
+                                <i class="fas fa-key"></i> CÓDIGO DE VERIFICACIÓN
+                            </label>
+                            <div class="input-wrapper">
+                                <input class="form-input-field" type="text" id="pmCode" 
+                                       placeholder="Ingresa el código" maxlength="12">
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="action-btn save-btn" id="btnVerifyCode">
+                            <i class="fas fa-check-circle"></i> VERIFICAR CÓDIGO
+                        </button>
+                    </div>
+
+                    <!-- PASO 3: Establecer contraseña -->
+                    <div id="step3" style="display:none;">
+                        <div class="message-container info">
+                            <i class="fas fa-lock"></i>
+                            Establece una contraseña para tu cuenta Power Manage
+                        </div>
+                        
+                        <div class="form-field-group">
+                            <label class="field-label" for="newPassword">
+                                <i class="fas fa-key"></i> CONTRASEÑA
+                            </label>
+                            <div class="input-wrapper">
+                                <input class="form-input-field" type="password" id="newPassword" 
+                                       placeholder="Mínimo 8 caracteres" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-field-group">
+                            <label class="field-label" for="confirmPassword">
+                                <i class="fas fa-check-double"></i> CONFIRMAR CONTRASEÑA
+                            </label>
+                            <div class="input-wrapper">
+                                <input class="form-input-field" type="password" id="confirmPassword" 
+                                       placeholder="Repite la contraseña" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="action-btn save-btn" id="btnSetPassword">
+                            <i class="fas fa-save"></i> FINALIZAR REGISTRO
+                        </button>
+                    </div>
+                    
+                </form>
+
+                <footer class="back-btn-container" style="margin-top: 1.5rem;">
+                    <a href="/usuarios/administrador/usuarios/usuarios.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i> VOLVER A GESTIÓN
+                    </a>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+  <script type="module" src="/components/navbarSysAdmin.js"></script>    
+  <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script type="module" src="registroPM.js"></script>
+    <script src="/components/protector-master.js"> </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Permiso | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Estilos modulo -->
+    <link rel="stylesheet" href="/usuarios/administrador/verPermisos/verPermisos.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- SEO Básico -->
+    <meta name="description"
+        content="Centinela-MX es un sistema inteligente de seguridad para almacenamiento, monitoreo y predicción de incidencias. Plataforma confiable para prevención y análisis en tiempo real.">
+    <meta name="keywords"
+        content="centinela, centinela-mx, sistema de seguridad, seguridad inteligente, predicción de incidencias, monitoreo de seguridad, plataforma de seguridad, análisis de riesgos, prevención de incidentes">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app/" />
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Centinela-MX | Sistema Inteligente de Seguridad y Predicción">
+    <meta property="og:description"
+        content="Centinela-MX es una plataforma avanzada de seguridad para almacenamiento, monitoreo y predicción de incidencias en tiempo real.">
+    <meta property="og:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Vista previa oficial de Centinela-MX">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Logo oficial de Centinela-MX">
+    <meta property="og:site_name" content="Centinela-MX">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://centinela-mx.web.app">
+    <meta name="twitter:title" content="Centinela-MX | Seguridad Inteligente">
+    <meta name="twitter:description"
+        content="Sistema de seguridad inteligente para monitoreo, almacenamiento y predicción de incidencias.">
+    <meta name="twitter:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta name="twitter:creator" content="">
+
+    <!-- Schema.org / JSON-LD -->
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Centinela-MX",
+    "operatingSystem": "Web",
+    "applicationCategory": "SecurityApplication",
+    "description": "Centinela-MX es un sistema inteligente de seguridad para el almacenamiento, monitoreo y predicción de incidencias en tiempo real.",
+    "url": "https://centinela-mx.web.app",
+    "image": "https://centinela-mx.web.app/assets/images/logo.png",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Centinela-MX",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://centinela-mx.web.app/assets/images/logo.png"
+        }
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "MXN"
+    }
+    }
+    </script>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <br>
+
+    <!-- Contenedor principal -->
+    <div class="custom-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1 class="main-title">
+                    <i class="fas fa-eye"></i>
+                    Ver Detalle de Permiso
+                </h1>
+                <div class="header-description-text">
+                    "Visualiza toda la información del permiso"
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- INFORMACIÓN DEL PERMISO (SOLO LECTURA) -->
+        <!-- ============================================= -->
+        <div class="form-row">
+            <div class="full-width">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-info-circle"></i>Información del Permiso</h5>
+                        <button id="btnVolverLista" class="btn-volver">
+                            <i class="fas fa-arrow-left"></i>Volver a la lista
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-grid">
+                            <!-- Grid de 2 columnas para la información -->
+                            <div class="full-width">
+                                <h6 class="section-title"><i class="fas fa-info-circle"></i>Información Básica</h6>
+                            </div>
+
+                            <!-- Organización (solo lectura) -->
+                            <div class="full-width">
+                                <label for="infoOrganizacion" class="form-label">Organización</label>
+                                <div class="input-group">
+                                    <span class="input-group-icon"><i class="fas fa-building"></i></span>
+                                    <input type="text" class="form-control" id="infoOrganizacion" readonly value="-">
+                                </div>
+                            </div>
+
+                            <!-- Área -->
+                            <div class="full-width">
+                                <label for="infoArea" class="form-label">Área</label>
+                                <div class="input-group">
+                                    <span class="input-group-icon"><i class="fas fa-building"></i></span>
+                                    <input type="text" class="form-control" id="infoArea" readonly value="-">
+                                </div>
+                            </div>
+
+                            <!-- Cargo -->
+                            <div class="full-width">
+                                <label for="infoCargo" class="form-label">Cargo</label>
+                                <div class="input-group">
+                                    <span class="input-group-icon"><i class="fas fa-user-tie"></i></span>
+                                    <input type="text" class="form-control" id="infoCargo" readonly value="-">
+                                </div>
+                            </div>
+
+                            <!-- Fecha Creación -->
+                            <div class="full-width">
+                                <label for="infoFechaCreacion" class="form-label">Fecha Creación</label>
+                                <div class="input-group">
+                                    <span class="input-group-icon"><i class="fas fa-calendar-alt"></i></span>
+                                    <input type="text" class="form-control" id="infoFechaCreacion" readonly value="-">
+                                </div>
+                            </div>
+
+                            <!-- Última Actualización -->
+                            <div class="full-width">
+                                <label for="infoFechaActualizacion" class="form-label">Última Actualización</label>
+                                <div class="input-group">
+                                    <span class="input-group-icon"><i class="fas fa-calendar-check"></i></span>
+                                    <input type="text" class="form-control" id="infoFechaActualizacion" readonly
+                                        value="-">
+                                </div>
+                            </div>
+
+                            <!-- Sección de Módulos -->
+                            <div class="full-width">
+                                <h6 class="section-title" style="margin-top: 10px;">
+                                    <i class="fas fa-lock"></i>Módulos del Sistema
+                                </h6>
+                            </div>
+
+                            <!-- Grid de módulos -->
+                            <div class="full-width">
+                                <div class="modulos-grid" id="modulosContainer">
+                                    <!-- Se llenará dinámicamente -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mensaje informativo -->
+                        <div class="alert alert-info" style="margin-top: 20px;">
+                            <i class="fas fa-info-circle"></i>
+                            Visualización de permisos asignados por área y cargo.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <br>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script src="/components/navbarColaborador.js"></script>
+    <script src="/components/footerColaborador.js"></script>
+    <script type="module" src="/usuarios/administrador/verPermisos/verPermisos.js"></script>
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/colaborador/incidencias/mis-incidencias.html -->
+    <script src="/components/protector-colaborador.js" data-modulo="permisos">
+    </script>
+</body>
+
+</html>

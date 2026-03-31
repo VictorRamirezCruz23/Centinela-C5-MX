@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Colaborador | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Estilos modulo -->
+    <link rel="stylesheet" href="crearUsuarios.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <!-- SEO Básico -->
+    <meta name="description"
+        content="Centinela-MX es un sistema inteligente de seguridad para almacenamiento, monitoreo y predicción de incidencias. Plataforma confiable para prevención y análisis en tiempo real.">
+    <meta name="keywords"
+        content="centinela, centinela-mx, sistema de seguridad, seguridad inteligente, predicción de incidencias, monitoreo de seguridad, plataforma de seguridad, análisis de riesgos, prevención de incidentes">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app" />
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Centinela-MX | Sistema Inteligente de Seguridad y Predicción">
+    <meta property="og:description"
+        content="Centinela-MX es una plataforma avanzada de seguridad para almacenamiento, monitoreo y predicción de incidencias en tiempo real.">
+    <meta property="og:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Vista previa oficial de Centinela-MX">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Logo oficial de Centinela-MX">
+    <meta property="og:site_name" content="Centinela-MX">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://centinela-mx.web.app">
+    <meta name="twitter:title" content="Centinela-MX | Seguridad Inteligente">
+    <meta name="twitter:description"
+        content="Sistema de seguridad inteligente para monitoreo, almacenamiento y predicción de incidencias.">
+    <meta name="twitter:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta name="twitter:creator" content="">
+
+    <!-- Schema.org / JSON-LD -->
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Centinela-MX",
+    "operatingSystem": "Web",
+    "applicationCategory": "SecurityApplication",
+    "description": "Centinela-MX es un sistema inteligente de seguridad para el almacenamiento, monitoreo y predicción de incidencias en tiempo real.",
+    "url": "https://centinela-mx.web.app",
+    "image": "https://centinela-mx.web.app/assets/images/logo.png",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Centinela-MX",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://centinela-mx.web.app/assets/images/logo.png"
+        }
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "MXN"
+    }
+    }
+    </script>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <br>
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-users"></i> Crear Nuevo Colaborador
+        </h1>
+        <div class="header-description">
+            Crea colaboradores de tu organización.
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="edit-main-container">
+
+        <div class="edit-wrapper">
+
+            <!-- Panel izquierdo: Fotos -->
+            <div class="edit-left-panel">
+                <header class="edit-header">
+                    <h1 class="edit-main-title">CREAR COLABORADOR</h1>
+                    <p class="edit-sub-title" id="adminNameSubtitle">Administrador del Sistema Centinela</p>
+                </header>
+
+                <!-- Foto de perfil -->
+                <section class="photo-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-user"></i>FOTO DE PERFIL
+                    </h2>
+
+                    <div class="photo-container">
+                        <div class="profile-circle" id="profileCircle">
+                            <div class="placeholder-text" id="profilePlaceholder">
+                                <i class="fas fa-user"></i>
+                                <span>Foto de perfil</span>
+                            </div>
+                            <img src="" alt="Foto de perfil" class="profile-image" id="profileImage"
+                                style="display: none;">
+                            <div class="edit-overlay" id="editProfileOverlay">
+                                <i class="fas fa-pencil-alt edit-icon"></i>
+                            </div>
+                        </div>
+                        <input type="file" id="profile-input" class="file-input" accept="image/*">
+                    </div>
+
+                    <p class="photo-info">Haz clic en la foto o en el lápiz para cambiar la imagen</p>
+                    <p class="photo-info">Formatos: JPG, PNG, GIF • Máximo: 5MB</p>
+                </section>
+
+                <!-- Logo de organización (heredado) -->
+                <section class="photo-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-building"></i>LOGO ORGANIZACIÓN
+                    </h2>
+
+                    <div class="photo-container">
+                        <div class="profile-circle org-disabled" id="orgCircle">
+                            <div class="placeholder-text" id="orgPlaceholder">
+                                <i class="fas fa-building"></i>
+                                <span>Logo organización</span>
+                            </div>
+                            <img src="" alt="Logo de la organización" class="profile-image" id="orgImage"
+                                style="display: none;">
+                            <div class="edit-overlay" id="editOrgOverlay" style="display: none;">
+                                <i class="fas fa-pencil-alt edit-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="photo-info" id="orgInfoText">Logo heredado del administrador</p>
+                </section>
+
+                <!-- Botón volver -->
+                <footer class="back-btn-container">
+                    <a href="/usuarios/administrador/usuarios/usuarios.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>VOLVER A GESTIÓN
+                    </a>
+                </footer>
+            </div>
+
+            <!-- Panel derecho: Formulario -->
+            <div class="edit-right-panel">
+                <header class="edit-header">
+                    <h1 class="edit-main-title" id="formMainTitle">CREAR COLABORADOR</h1>
+                    <p class="edit-sub-title" id="formSubTitle">Completa los datos para crear un colaborador</p>
+                </header>
+
+                <form class="edit-form-container" id="registerForm">
+                    <!-- Organización (heredada - solo lectura) -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="organization">
+                            <i class="fas fa-building"></i> ORGANIZACIÓN
+                        </label>
+                        <div class="input-wrapper">
+                            <input class="form-input-field readonly-field" type="text" id="organization"
+                                placeholder="Cargando..." readonly required>
+                        </div>
+                    </div>
+
+                    <!-- Nombre completo -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="nombreCompleto">
+                            <i class="fas fa-user"></i> NOMBRE COMPLETO
+                        </label>
+                        <div class="input-wrapper">
+                            <input class="form-input-field" type="text" id="nombreCompleto"
+                                placeholder="Ingresa el nombre completo" required>
+                        </div>
+                    </div>
+
+                    <!-- Correo electrónico -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="correoElectronico">
+                            <i class="fas fa-envelope"></i> CORREO ELECTRÓNICO
+                        </label>
+                        <div class="input-wrapper">
+                            <input class="form-input-field" type="email" id="correoElectronico"
+                                placeholder="ejemplo@correo.com" required>
+                        </div>
+                    </div>
+
+                    <!-- Teléfono - NUEVO CAMPO -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="telefono">
+                            <i class="fas fa-phone-alt"></i> TELÉFONO
+                        </label>
+                        <div class="input-wrapper">
+                            <input class="form-input-field" type="tel" id="telefono"
+                                placeholder="Ej: 5512345678 o 525512345678" inputmode="numeric" pattern="[0-9]+"
+                                maxlength="15">
+                        </div>
+                        <div class="field-hint">
+                            <i class="fas fa-info-circle"></i> Solo números, sin espacios ni guiones (máximo 15 dígitos)
+                        </div>
+                    </div>
+
+                    <!-- CARGO / ROL EN EL SISTEMA -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="rol">
+                            <i class="fas fa-briefcase"></i> ROL EN EL SISTEMA
+                        </label>
+                        <div class="input-wrapper">
+                            <select class="form-input-field" id="rol" required>
+                                <option value="">Selecciona un rol</option>
+                                <option value="colaborador">Colaborador</option>
+                                <option value="supervisor">Supervisor</option>
+                                <option value="coordinador">Coordinador</option>
+                                <option value="gerente">Gerente</option>
+                                <option value="analista">Analista</option>
+                                <option value="desarrollador">Desarrollador</option>
+                                <option value="diseñador">Diseñador</option>
+                                <option value="soporte">Soporte Técnico</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- ÁREA / DEPARTAMENTO (desde Firebase) -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="areaSelect">
+                            <i class="fas fa-building"></i> ÁREA / DEPARTAMENTO
+                        </label>
+                        <div class="input-wrapper">
+                            <select class="form-input-field" id="areaSelect" required>
+                                <option value="">Cargando áreas...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- CARGO EN EL ÁREA (desde Firebase) -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="cargoEnAreaSelect">
+                            <i class="fas fa-user-tie"></i> CARGO EN EL ÁREA
+                        </label>
+                        <div class="input-wrapper">
+                            <select class="form-input-field" id="cargoEnAreaSelect" required>
+                                <option value="">Primero selecciona un área</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- SUCURSAL (SOLO SI EL ÁREA ES "SUCURSALES") -->
+                    <div class="form-field-group" id="sucursalContainer" style="display: none;">
+                        <label class="field-label" for="sucursalSelect">
+                            <i class="fas fa-store"></i> SUCURSAL
+                        </label>
+                        <div class="input-wrapper">
+                            <select class="form-input-field" id="sucursalSelect">
+                                <option value="">Selecciona una sucursal</option>
+                            </select>
+                        </div>
+                        <div class="field-hint" id="sucursalHint">
+                            <i class="fas fa-info-circle"></i> Opcional. Selecciona la sucursal a la que pertenecerá
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- Contraseña -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="contrasena">
+                            <i class="fas fa-key"></i> CONTRASEÑA
+                        </label>
+                        <div class="input-wrapper contrasena-field">
+                            <input class="form-input-field" type="password" id="contrasena" placeholder="********"
+                                required>
+                            <button type="button" class="toggle-contrasena" data-target="contrasena">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Confirmar contraseña -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="confirmarContrasena">
+                            <i class="fas fa-key"></i> CONFIRMAR CONTRASEÑA
+                        </label>
+                        <div class="input-wrapper contrasena-field">
+                            <input class="form-input-field" type="password" id="confirmarContrasena"
+                                placeholder="********" required>
+                            <button type="button" class="toggle-contrasena" data-target="confirmarContrasena">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Requisitos de contraseña -->
+                    <div class="contrasena-requirements">
+                        <div class="requirements-title">REQUISITOS DE CONTRASEÑA SEGURA:</div>
+                        <ul class="requirements-list">
+                            <li>Mínimo 8 caracteres</li>
+                            <li>Al menos una letra mayúscula</li>
+                            <li>Al menos un número</li>
+                            <li>Al menos un carácter especial (@, #, $, etc.)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Mensajes -->
+                    <div class="message-container" id="mainMessage"></div>
+
+                    <!-- Acciones -->
+                    <div class="action-buttons">
+                        <button type="submit" class="action-btn save-btn" id="registerBtn">
+                            <i class="fas fa-user-plus"></i>CREAR COLABORADOR
+                        </button>
+                        <button type="button" class="action-btn cancel-btn" id="cancelBtn">
+                            <i class="fas fa-times"></i>CANCELAR
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/navbarAdministrador.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script type="module" src="crearUsuarios.js"></script>
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/administrador/cualquier-pagina.html -->
+    <script src="/components/protector-admin.js" data-modulo="generales"> </script>
+</body>
+
+</html>

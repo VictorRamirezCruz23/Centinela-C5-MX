@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master SweetAlert2 - La Guía Completa</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        :root {
+            --primary: #4e73df;
+            --success: #1cc88a;
+            --danger: #e74a3b;
+            --dark: #5a5c69;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .section-title {
+            width: 100%;
+            text-align: left;
+            margin-top: 30px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            color: #333;
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            transition: 0.3s;
+        }
+
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        /* Colores por categoría */
+        .btn-basic { background-color: var(--primary); }
+        .btn-logic { background-color: var(--success); }
+        .btn-adv { background-color: #f6c23e; color: #333; }
+        .btn-special { background-color: var(--dark); }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 SweetAlert2: El Laboratorio Completo</h1>
+    <p>Prueba cada variante para decidir cuál se adapta mejor a tu flujo de usuario.</p>
+
+    <h3 class="section-title">1. Iconos Estándar (Feedback Visual)</h3>
+    <div class="grid-container">
+        <button class="btn-basic" onclick="alertaExito()">Éxito</button>
+        <button class="btn-basic" onclick="alertaError()">Error</button>
+        <button class="btn-basic" onclick="alertaInfo()">Información</button>
+        <button class="btn-basic" onclick="alertaPregunta()">Pregunta</button>
+    </div>
+
+    <h3 class="section-title">2. Lógica de Decisión (Los "Suicidas" o Críticos)</h3>
+    <div class="grid-container">
+        <button class="btn-logic" onclick="confirmarAccion()">Confirmación Doble</button>
+        <button class="btn-logic" onclick="alertaToast()">Notificación Toast</button>
+        <button class="btn-logic" onclick="alertaTimer()">Cierre Automático</button>
+    </div>
+
+    <h3 class="section-title">3. Formularios e Inputs (Captura de datos)</h3>
+    <div class="grid-container">
+        <button class="btn-adv" onclick="inputTexto()">Capturar Texto</button>
+        <button class="btn-adv" onclick="inputSelect()">Selección (Dropdown)</button>
+        <button class="btn-adv" onclick="inputVarios()">Varios Campos (HTML)</button>
+    </div>
+
+    <h3 class="section-title">4. Tipos Pro (AJAX, Cargas y Pasos)</h3>
+    <div class="grid-container">
+        <button class="btn-special" onclick="procesoCarga()">Loader de Carga</button>
+        <button class="btn-special" onclick="peticionAjax()">Petición Real (GitHub)</button>
+        <button class="btn-special" onclick="formularioPasos()">Multi-pasos (Wizard)</button>
+    </div>
+
+    <script>
+        /* =============================================
+           1. ALERTAS BÁSICAS CON ICONOS
+           ============================================= */
+        function alertaExito() {
+            Swal.fire('¡Logrado!', 'La operación fue exitosa', 'success');
+        }
+
+        function alertaError() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Algo salió muy mal',
+                footer: '<a href="#">¿Cómo solucionar este error?</a>'
+            });
+        }
+
+        function alertaInfo() {
+            Swal.fire('Info', 'Este es un mensaje informativo', 'info');
+        }
+
+        function alertaPregunta() {
+            Swal.fire('¿?', '¿Estás seguro de que quieres continuar?', 'question');
+        }
+
+        /* =============================================
+           2. LÓGICA Y CONFIRMACIÓN
+           ============================================= */
+        function confirmarAccion() {
+            Swal.fire({
+                title: '¿Deseas eliminar este registro?',
+                text: "Esta acción no se puede deshacer",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, ¡borrar!',
+                cancelButtonText: 'No, cancelar'
+            }).then((result) => {
+                // Si el usuario hace clic en el botón de confirmar
+                if (result.isConfirmed) {
+                    Swal.fire('¡Borrado!', 'El registro ha sido eliminado.', 'success');
+                }
+            });
+        }
+
+        function alertaToast() {
+            // Creamos una mezcla (mixin) para reutilizar estilos de notificaciones pequeñas
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+            Toast.fire({ icon: 'success', title: 'Cambiado con éxito' });
+        }
+
+        function alertaTimer() {
+            Swal.fire({
+                title: 'Alerta temporal',
+                html: 'Me cerraré en <b></b> milisegundos.',
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    // Actualizamos el contador en tiempo real dentro del HTML de la alerta
+                    const b = Swal.getHtmlContainer().querySelector('b');
+                    setInterval(() => { b.textContent = Swal.getTimerLeft() }, 100);
+                }
+            });
+        }
+
+        /* =============================================
+           3. INPUTS Y FORMULARIOS
+           ============================================= */
+        async function inputTexto() {
+            const { value: ipAddress } = await Swal.fire({
+                title: 'Escribe tu IP',
+                input: 'text',
+                inputLabel: 'Tu dirección IP pública',
+                inputValue: '192.168.1.1',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) return '¡Necesitas escribir algo!';
+                }
+            });
+            if (ipAddress) Swal.fire(`Tu IP es: ${ipAddress}`);
+        }
+
+        async function inputSelect() {
+            const { value: fruta } = await Swal.fire({
+                title: 'Selecciona una fruta',
+                input: 'select',
+                inputOptions: {
+                    'Manzana': 'Manzana',
+                    'Platano': 'Plátano',
+                    'Uva': 'Uva'
+                },
+                inputPlaceholder: 'Elige una...',
+                showCancelButton: true
+            });
+            if (fruta) Swal.fire(`Elegiste: ${fruta}`);
+        }
+
+        function inputVarios() {
+            Swal.fire({
+                title: 'Login de Sistema',
+                html: `
+                    <input id="swal-input1" class="swal2-input" placeholder="Usuario">
+                    <input id="swal-input2" type="password" class="swal2-input" placeholder="Password">
+                `,
+                focusConfirm: false,
+                preConfirm: () => {
+                    // Obtenemos los valores de los inputs manuales
+                    return [
+                        document.getElementById('swal-input1').value,
+                        document.getElementById('swal-input2').value
+                    ]
+                }
+            }).then((result) => {
+                Swal.fire(`User: ${result.value[0]}, Pass: ${result.value[1]}`);
+            });
+        }
+
+        /* =============================================
+           4. PROCESOS AVANZADOS (EL CORAZÓN DEL SISTEMA)
+           ============================================= */
+        
+        // Loader: Bloquea la pantalla mientras algo pasa
+        function procesoCarga() {
+            Swal.fire({
+                title: 'Sincronizando...',
+                text: 'Espere un momento mientras conectamos con el servidor',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading(); // Activa el spinner de carga
+                }
+            });
+            // Simulamos que el proceso termina en 3 segundos
+            setTimeout(() => { Swal.close(); }, 3000);
+        }
+
+        // AJAX: Busca un usuario real en la API de GitHub
+        function peticionAjax() {
+            Swal.fire({
+                title: 'Buscar Usuario GitHub',
+                input: 'text',
+                inputAttributes: { autocapitalize: 'off' },
+                showCancelButton: true,
+                confirmButtonText: 'Buscar',
+                showLoaderOnConfirm: true, // El botón de confirmar se vuelve un loader
+                preConfirm: (login) => {
+                    return fetch(`//api.github.com/users/${login}`)
+                        .then(response => {
+                            if (!response.ok) throw new Error(response.statusText);
+                            return response.json();
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(`Request failed: ${error}`);
+                        });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: `Resultado: ${result.value.login}`,
+                        imageUrl: result.value.avatar_url,
+                        text: `Seguidores: ${result.value.followers}`
+                    });
+                }
+            });
+        }
+
+        // Multi-pasos: Un pequeño flujo de configuración
+        async function formularioPasos() {
+            const steps = ['1', '2', '3'];
+            const swalQueueStep = Swal.mixin({
+                confirmButtonText: 'Siguiente &rarr;',
+                showCancelButton: true,
+                progressSteps: steps
+            });
+
+            const result1 = await swalQueueStep.fire({ title: 'Paso 1', text: 'Bienvenido al asistente', currentProgressStep: 0 });
+            if (result1.value) {
+                const result2 = await swalQueueStep.fire({ title: 'Paso 2', text: 'Configurando motor...', currentProgressStep: 1 });
+                if (result2.value) {
+                    await swalQueueStep.fire({ title: 'Paso 3', text: '¡Todo listo!', confirmButtonText: 'Finalizar', currentProgressStep: 2 });
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

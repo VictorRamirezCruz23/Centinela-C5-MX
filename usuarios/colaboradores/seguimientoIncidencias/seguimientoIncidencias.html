@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Incidencia | Centinela</title>
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Estilos modulo -->
+    <link rel="stylesheet" href="/usuarios/administrador/seguimientoIncidencias/seguimientoIncidencias.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Flatpickr CSS y JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+
+    <!-- SEO Básico -->
+    <meta name="description"
+        content="Centinela-MX es un sistema inteligente de seguridad para almacenamiento, monitoreo y predicción de incidencias. Plataforma confiable para prevención y análisis en tiempo real.">
+    <meta name="keywords"
+        content="centinela, centinela-mx, sistema de seguridad, seguridad inteligente, predicción de incidencias, monitoreo de seguridad, plataforma de seguridad, análisis de riesgos, prevención de incidentes">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app/" />
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Centinela-MX | Sistema Inteligente de Seguridad y Predicción">
+    <meta property="og:description"
+        content="Centinela-MX es una plataforma avanzada de seguridad para almacenamiento, monitoreo y predicción de incidencias en tiempo real.">
+    <meta property="og:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Vista previa oficial de Centinela-MX">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Logo oficial de Centinela-MX">
+    <meta property="og:site_name" content="Centinela-MX">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://centinela-mx.web.app">
+    <meta name="twitter:title" content="Centinela-MX | Seguridad Inteligente">
+    <meta name="twitter:description"
+        content="Sistema de seguridad inteligente para monitoreo, almacenamiento y predicción de incidencias.">
+    <meta name="twitter:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta name="twitter:creator" content="">
+
+    <!-- Schema.org / JSON-LD -->
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Centinela-MX",
+    "operatingSystem": "Web",
+    "applicationCategory": "SecurityApplication",
+    "description": "Centinela-MX es un sistema inteligente de seguridad para el almacenamiento, monitoreo y predicción de incidencias en tiempo real.",
+    "url": "https://centinela-mx.web.app",
+    "image": "https://centinela-mx.web.app/assets/images/logo.png",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Centinela-MX",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://centinela-mx.web.app/assets/images/logo.png"
+        }
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "MXN"
+    }
+    }
+    </script>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <br>
+
+    <!-- Contenedor principal -->
+    <div class="custom-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1 class="main-title">
+                    <i class="fas fa-history"></i>
+                    Seguimiento de Incidencia
+                </h1>
+                <div class="header-description-text">
+                    <i class="fas fa-clipboard-check"></i>
+                    "Agrega seguimiento y evidencias a la incidencia"
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- INFORMACIÓN DE LA INCIDENCIA (SOLO LECTURA) -->
+        <!-- ============================================= -->
+        <div class="form-row">
+            <div class="full-width">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                            <h5><i class="fas fa-info-circle"></i>Información de la Incidencia</h5>
+                            <div class="incidencia-id-container">
+                                <i class="fas fa-hashtag"></i>
+                                <span class="incidencia-id" id="incidenciaId">Cargando...</span>
+                            </div>
+                        </div>
+                        <button id="btnVolverLista" class="btn-volver">
+                            <i class="fas fa-arrow-left"></i>Volver
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid-2col">
+                            <!-- Columna 1 -->
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-building"></i> Organización:</span>
+                                <span class="info-value" id="infoOrganizacion">-</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-store"></i> Sucursal:</span>
+                                <span class="info-value" id="infoSucursal">-</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-tags"></i> Categoría:</span>
+                                <span class="info-value" id="infoCategoria">-</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-tag"></i> Subcategoría:</span>
+                                <span class="info-value" id="infoSubcategoria">-</span>
+                            </div>
+
+                            <!-- Columna 2 -->
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-exclamation-triangle"></i> Nivel de
+                                    Riesgo:</span>
+                                <span class="info-value" id="infoRiesgo">-</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-check-circle"></i> Estado:</span>
+                                <span class="info-value" id="infoEstado">-</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-calendar-alt"></i> Fecha Incidencia:</span>
+                                <span class="info-value" id="infoFechaInicio">-</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-user"></i> Reportado por:</span>
+                                <span class="info-value" id="infoReportadoPor">-</span>
+                            </div>
+
+                            <!-- Fila completa para descripción -->
+                            <div class="info-item full-width">
+                                <span class="info-label"><i class="fas fa-align-left"></i> Descripción:</span>
+                                <div class="info-description" id="infoDescripcion">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- EVIDENCIAS ORIGINALES (SOLO VISUALIZACIÓN) -->
+        <!-- ============================================= -->
+        <div class="form-row">
+            <div class="full-width">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-images"></i>Evidencias Originales</h5>
+                        <span class="badge-info" id="totalImagenesOriginales">0 imágenes</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="images-gallery" id="galeriaOriginal">
+                            <div class="no-images">
+                                <i class="fas fa-images"></i>
+                                <p>No hay evidencias originales</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- HISTORIAL DE SEGUIMIENTO (COLLAPSIBLE) -->
+        <!-- ============================================= -->
+        <div class="form-row">
+            <div class="full-width">
+                <div class="card">
+                    <div class="card-header collapsible-header" id="historialHeader" style="cursor: pointer;">
+                        <h5><i class="fas fa-history"></i>Historial de Seguimiento</h5>
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <span class="badge-info" id="totalSeguimientos">0 seguimientos</span>
+                            <i class="fas fa-chevron-down" id="historialToggle"
+                                style="color: var(--color-accent-primary); transition: transform 0.3s;"></i>
+                        </div>
+                    </div>
+                    <div class="card-body" id="historialContent">
+                        <div class="timeline-compact" id="timelineSeguimientos">
+                            <div class="timeline-empty">
+                                <i class="fas fa-clock"></i>
+                                <p>No hay seguimientos registrados</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- NUEVO SEGUIMIENTO -->
+        <!-- ============================================= -->
+        <div class="form-row">
+            <div class="full-width">
+                <div class="card highlight-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-plus-circle"></i>Agregar Nuevo Seguimiento</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="formSeguimiento">
+                            <div class="form-grid">
+                                <!-- Fecha y Hora -->
+                                <div class="full-width">
+                                    <label for="fechaSeguimiento" class="form-label">Fecha y Hora del Seguimiento
+                                        *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-calendar-alt"></i></span>
+                                        <input type="text" class="form-control" id="fechaSeguimiento"
+                                            placeholder="Selecciona fecha y hora" required>
+                                    </div>
+                                    <div class="form-help-text" id="rangoFechaHelp">
+                                        Debe ser entre la fecha de la incidencia y la fecha actual
+                                    </div>
+                                </div>
+
+                                <!-- Estado -->
+                                <div class="full-width">
+                                    <label for="estadoSeguimiento" class="form-label">Estado *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-check-circle"></i></span>
+                                        <select class="form-control" id="estadoSeguimiento" required>
+                                            <option value="pendiente">Pendiente</option>
+                                            <option value="finalizada">Finalizada</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-help-text">Actualiza el estado de la incidencia</div>
+                                </div>
+
+                                <!-- Descripción del seguimiento -->
+                                <div class="full-width">
+                                    <label for="descripcionSeguimiento" class="form-label">Descripción del Seguimiento
+                                        *</label>
+                                    <textarea class="form-control" id="descripcionSeguimiento" rows="4"
+                                        placeholder="Describe las acciones realizadas, novedades, o información adicional..."></textarea>
+                                    <div class="form-help-text">Detalla la información de este seguimiento</div>
+                                    <div class="char-limit-info">
+                                        <span class="char-counter" id="contadorCaracteres">0/500</span>
+                                    </div>
+                                </div>
+
+                                <!-- Evidencias del seguimiento -->
+                                <div class="full-width">
+                                    <label class="form-label">Evidencias del Seguimiento</label>
+                                    <div class="image-upload-section">
+                                        <div class="upload-area">
+                                            <input type="file" id="inputEvidencias" multiple accept="image/*"
+                                                style="display: none;">
+                                            <button type="button" class="btn-upload" id="btnAgregarEvidencias">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                                Agregar evidencias
+                                            </button>
+                                            <div class="upload-hint">
+                                                <i class="fas fa-info-circle"></i>
+                                                Formatos: JPG, PNG, GIF. Máximo 5MB por imagen. Puedes editar las
+                                                imágenes después de agregarlas.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Vista previa de evidencias -->
+                                    <div class="images-preview-container" id="evidenciasPreviewContainer"
+                                        style="display: none;">
+                                        <h6>
+                                            <i class="fas fa-images"></i>
+                                            Evidencias a subir (<span id="evidenciasCount">0</span>)
+                                        </h6>
+                                        <div class="images-grid" id="evidenciasPreview"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Botones de acción -->
+                                <div class="action-buttons-container">
+                                    <button type="button" class="btn btn-success" id="btnGuardarSeguimiento">
+                                        <i class="fas fa-save"></i>Guardar Seguimiento
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="btnCancelar">
+                                        <i class="fas fa-times"></i>Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script src="/components/navbarColaborador.js"></script>
+    <script src="/components/imagenEditorEvidencias.js"></script>
+    <script src="/components/footerColaborador.js"></script>
+    <script type="module" src="/usuarios/administrador/seguimientoIncidencias/seguimientoIncidencias.js"></script>
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/colaborador/incidencias/mis-incidencias.html -->
+    <script src="/components/protector-colaborador.js" data-modulo="incidencias">
+    </script>
+</body>
+
+</html>

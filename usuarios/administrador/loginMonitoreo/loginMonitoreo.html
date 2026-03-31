@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso a Power Manage | Centinela</title>
+
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="loginMonitoreo.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-shield-alt"></i> Acceso a monitoreo
+        </h1>
+        <div class="header-description">
+            Autentícate para gestionar tus paneles de seguridad
+        </div>
+    </div>
+
+    <div class="edit-main-container">
+        <div class="edit-wrapper">
+            <div class="edit-right-panel">
+                <header class="edit-header">
+                    <h1 class="edit-main-title">AUTENTICACIÓN MONITOREO</h1>
+                    <p class="edit-sub-title">
+                        Ingresa tu contraseña para acceder a los paneles vinculados
+                    </p>
+                </header>
+
+                <form class="edit-form-container" id="loginForm">
+                    <!-- Información de la cuenta -->
+                    <div class="info-card" id="cuentaInfo">
+                        <div class="info-header">
+                            <i class="fas fa-network-wired"></i>
+                            <span>Cuenta de Monitoreo</span>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-row">
+                                <span class="info-label">Email Monitoreo:</span>
+                                <span class="info-value" id="emailPowerManage">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Estado:</span>
+                                <span class="status-badge" id="estado">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="form-field-group">
+                        <label class="field-label" for="password">
+                            <i class="fas fa-key"></i> CONTRASEÑA MONITOREO
+                        </label>
+                        <div class="input-wrapper">
+                            <input class="form-input-field" type="password" id="password"
+                                placeholder="Ingresa tu contraseña de Monitoreo" autocomplete="current-password"
+                                required>
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="field-help">Contraseña que configuraste al crear la cuenta de monitoreo</small>
+                    </div>
+
+                    <!-- Botones -->
+                    <button type="submit" class="action-btn save-btn" id="btnLogin">
+                        <i class="fas fa-sign-in-alt"></i> ACCEDER A MONITOREO
+                    </button>
+                    
+                    <!-- Progreso -->
+                    <div id="progressContainer" style="display: none;">
+                        <div class="progress-info">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span id="progressMessage">Procesando...</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </form>
+
+                <footer class="back-btn-container">
+                    <a href="/usuarios/administrador/dashboard/dashboard.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i> VOLVER AL DASHBOARD
+                    </a>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script src="/components/navbarAdministrador.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script type="module" src="loginMonitoreo.js"></script>
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/administrador/cualquier-pagina.html -->
+    <script src="/components/protector-admin.js" data-modulo="monitoreo"> </script>
+</body>
+</body>
+
+</html>

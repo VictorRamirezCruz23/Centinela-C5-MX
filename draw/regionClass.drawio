@@ -1,0 +1,87 @@
+<mxfile host="65bd71144e">
+    <diagram id="Qxl3ybvhwGkYS0qaFIJV" name="Page-1">
+        <mxGraphModel dx="1066" dy="776" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="2000" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Region" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="300" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value=" ATRIBUTOS&#xa;- id: String (ID Firebase)&#xa;- nombre: String&#xa;- color: String (#0A2540)&#xa;- organizacion: String&#xa;- organizacionCamelCase: String&#xa;- fechaCreacion: Date&#xa;- fechaActualizacion: Date&#xa;- creadoPor: String (ID usuario)&#xa;- creadoPorEmail: String&#xa;- creadoPorNombre: String&#xa;- actualizadoPor: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
+                    <mxGeometry y="30" width="300" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value=" MÉTODOS DE UTILIDAD&#xa;- _convertirFecha(fecha): Date" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
+                    <mxGeometry y="220" width="300" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value=" GETTERS DE FECHAS&#xa;+ getFechaCreacionFormateada(locale): String&#xa;+ getFechaActualizacionFormateada(locale): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
+                    <mxGeometry y="260" width="300" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value=" COLOR Y RESUMEN&#xa;+ getColor(): String&#xa;+ getColorPreview(): String (HTML)&#xa;+ getResumen(): Object" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="2" vertex="1">
+                    <mxGeometry y="320" width="300" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="RegionManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="280" width="340" height="450" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value=" ATRIBUTOS&#xa;- regiones: Array&lt;Region&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="30" width="340" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value=" MÉTODOS CRUD BÁSICOS&#xa;+ createRegion(regionData, orgCC, creadorInfo): Promise&lt;Object&gt;&#xa;+ getRegionesByOrganizacion(orgCC): Promise&lt;Array&lt;Region&gt;&gt;&#xa;+ getRegionById(id, orgCC): Promise&lt;Region|null&gt;&#xa;+ updateRegion(id, data, orgCC, actualizadoPor): Promise&lt;boolean&gt;&#xa;+ existeRegionPorNombre(nombre, orgCC): Promise&lt;boolean&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="80" width="340" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value=" VALIDACIÓN CON SUCURSALES (NUEVO)&#xa;+ regionTieneSucursales(regionId, orgCC): Promise&lt;boolean&gt;&#xa;+ getSucursalesDeRegion(regionId, orgCC): Promise&lt;Array&gt;&#xa;+ deleteRegion(id, orgCC): Promise&lt;boolean&gt; (con validación)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="240" width="340" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value=" MÉTODOS DE BÚSQUEDA&#xa;+ buscarRegionesPorNombre(termino, orgCC): Promise&lt;Array&lt;Region&gt;&gt;&#xa;+ getTotalRegiones(orgCC): Promise&lt;number&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="340" width="340" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value=" CONSTRUCTOR&#xa;+ constructor(): inicializa regiones[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="8" vertex="1">
+                    <mxGeometry y="410" width="340" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value=" regiones_{organizacionCC}" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="820" y="90" width="260" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value=" ATRIBUTOS DEL DOCUMENTO&#xa;// Campos principales&#xa;nombre: String&#xa;color: String&#xa;&#xa;// Organización&#xa;organizacion: String&#xa;organizacionCamelCase: String&#xa;&#xa;// Metadatos de creación&#xa;creadoPor: String (ID usuario)&#xa;creadoPorEmail: String&#xa;creadoPorNombre: String&#xa;actualizadoPor: String&#xa;&#xa;// Timestamps&#xa;fechaCreacion: Timestamp&#xa;fechaActualizacion: Timestamp" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="16" vertex="1">
+                    <mxGeometry y="30" width="260" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value=" REFERENCIA A SUCURSALES" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="820" y="500" width="260" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value=" Colección: sucursales_{orgCC}&#xa;• ubicacion.regionId: String&#xa;  (referencia a ID de región)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="18" vertex="1">
+                    <mxGeometry y="30" width="260" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="" style="endArrow=block;endFill=1;endSize=8;startArrow=block;startFill=0;startSize=8;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" parent="1" source="8" target="2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="gestiona" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;" parent="20" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-0.3" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;" parent="1" source="2" target="16" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="mapea a" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" parent="22" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="0.5" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="24" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;" parent="1" source="8" target="16" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="lee/escribe" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" parent="24" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-0.2" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#b85450;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;startArrow=open;startFill=0;" parent="1" source="8" target="18" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="valida con" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#b85450;" parent="26" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="0.5" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

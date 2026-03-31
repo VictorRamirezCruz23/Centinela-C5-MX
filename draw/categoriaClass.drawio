@@ -1,0 +1,97 @@
+<mxfile host="65bd71144e">
+    <diagram id="TSNAXii4zUyJtGCzsTsE" name="Page-1">
+        <mxGraphModel dx="1066" dy="776" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="2000" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="29" value="Categoria" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="160" width="280" height="540" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value=" ATRIBUTOS&#xa;- id: String&#xa;- nombre: String&#xa;- descripcion: String&#xa;- color: String (#2f8cff)&#xa;- fechaCreacion: Date&#xa;- fechaActualizacion: Date&#xa;- subcategorias: Object&#xa;- organizacionCamelCase: String (memoria)&#xa;- organizacionNombre: String (memoria)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="29" vertex="1">
+                    <mxGeometry y="30" width="280" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value=" MÉTODOS DE UTILIDAD&#xa;- _convertirFecha(fecha): Date&#xa;- _formatearFecha(date): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="29" vertex="1">
+                    <mxGeometry y="190" width="280" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value=" GESTIÓN SUBCATEGORÍAS&#xa;+ agregarSubcategoria(nombre, desc, heredaColor, color): id&#xa;+ eliminarSubcategoria(subcatId): boolean&#xa;+ actualizarSubcategoria(id, datos): boolean&#xa;+ cambiarHerenciaColor(id, hereda, color): boolean&#xa;+ obtenerColorSubcategoria(id, colorCat): String&#xa;+ existeSubcategoria(nombre): boolean&#xa;+ getSubcategoriasAsArray(colorCat): Array&#xa;+ getCantidadSubcategorias(): number" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="29" vertex="1">
+                    <mxGeometry y="250" width="280" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value=" VALIDACIÓN Y GETTERS&#xa;+ validar(): {isValid, errores}&#xa;+ getFechaCreacionFormateada(): String&#xa;+ getFechaActualizacionFormateada(): String&#xa;+ toFirestore(): Object&#xa;+ toFirestoreCreate(): Object&#xa;+ toUI(): Object" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="29" vertex="1">
+                    <mxGeometry y="420" width="280" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="CategoriaManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="400" width="320" height="510" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value=" ATRIBUTOS&#xa;- categorias: Array&lt;Categoria&gt;&#xa;- organizacionNombre: String&#xa;- organizacionCamelCase: String&#xa;- nombreColeccion: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="34" vertex="1">
+                    <mxGeometry y="30" width="320" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value=" MÉTODOS PRIVADOS&#xa;- _cargarDatosOrganizacion(): void&#xa;- _generarCamelCase(texto): String&#xa;- _getCollectionName(org): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="34" vertex="1">
+                    <mxGeometry y="120" width="320" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value=" MÉTODOS CRUD&#xa;+ crearCategoria(data): Promise&lt;Categoria&gt;&#xa;+ obtenerCategoriasPorOrganizacion(org): Promise&lt;Array&gt;&#xa;+ obtenerCategoriaPorId(id, org): Promise&lt;Categoria|null&gt;&#xa;+ actualizarCategoria(id, datos, org): Promise&lt;Categoria&gt;&#xa;+ eliminarCategoria(id, org): Promise&lt;boolean&gt;&#xa;+ verificarCategoriaExistente(nombre, org, excludeId): Promise&lt;boolean&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="34" vertex="1">
+                    <mxGeometry y="200" width="320" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value=" GESTIÓN SUBCATEGORÍAS&#xa;+ agregarSubcategoria(catId, nombre, desc, heredaColor, color, org): Promise&lt;id&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="34" vertex="1">
+                    <mxGeometry y="360" width="320" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value=" CARGA Y CACHÉ&#xa;+ cargarTodasCategorias(): Promise&lt;Array&gt;&#xa;+ obtenerTodasCategorias(): Promise&lt;Array&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="34" vertex="1">
+                    <mxGeometry y="420" width="320" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value=" constructor() - Carga datos localStorage" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="34" vertex="1">
+                    <mxGeometry y="480" width="320" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="categorias_{organizacionCC}" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="40" width="260" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value=" ATRIBUTOS DEL DOCUMENTO&#xa;• nombre: String&#xa;• descripcion: String&#xa;• color: String&#xa;• subcategorias: {&#xa;    [id: string]: {&#xa;      nombre: string,&#xa;      descripcion: string,&#xa;      heredaColor: boolean,&#xa;      color: string|null,&#xa;      fechaCreacion: string,&#xa;      fechaActualizacion: string&#xa;    }&#xa;  }&#xa;• fechaCreacion: Timestamp&#xa;• fechaActualizacion: Timestamp" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="43" vertex="1">
+                    <mxGeometry y="30" width="260" height="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="" style="endArrow=block;endFill=1;endSize=8;startArrow=block;startFill=0;startSize=8;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" parent="1" source="34" target="29" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="gestiona" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;" parent="45" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-0.3" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="47" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;" parent="1" source="29" target="43" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="mapea a" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" parent="47" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="0.5" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="49" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;" parent="1" source="34" target="43" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="lee/escribe" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" parent="49" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-0.2" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="51" value="📋 SUBCATEGORÍA" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fillColor=#f8f8f8;strokeColor=#999999;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="100" width="260" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="{&#xa;  id: string (temporal),&#xa;  nombre: string,&#xa;  descripcion: string,&#xa;  heredaColor: boolean,&#xa;  color: string | null,&#xa;  fechaCreacion: string (ISO),&#xa;  fechaActualizacion: string (ISO),&#xa;  colorEfectivo: string (getter)&#xa;}" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="51" vertex="1">
+                    <mxGeometry y="30" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="34" target="51" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="790" y="370" as="sourcePoint"/>
+                        <mxPoint x="760" y="290" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="600" y="360"/>
+                            <mxPoint x="880" y="360"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="55" value="lee/escribe" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" parent="54" vertex="1" connectable="0">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-0.2" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,0 +1,79 @@
+<mxfile host="65bd71144e">
+    <diagram id="sdNEZr7LnMKmlrNuRv2q" name="Page-1">
+        <mxGraphModel dx="1103" dy="776" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="2000" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Area" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="40" width="300" height="460" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value=" ATRIBUTOS&#xa;- id: String (ID Firebase)&#xa;- nombreArea: String&#xa;- descripcion: String&#xa;- caracteristicas: String&#xa;- cargos: Object (Map&lt;string, Cargo&gt;)&#xa;- organizacionCamelCase: String&#xa;- creadoPor: String (ID usuario)&#xa;- actualizadoPor: String (ID usuario)&#xa;- responsable: String (ID usuario)&#xa;- responsableNombre: String&#xa;- estado: String (&#39;activa&#39;|&#39;inactiva&#39;)&#xa;- fechaCreacion: Date&#xa;- fechaActualizacion: Date" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="2">
+                    <mxGeometry y="30" width="300" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value=" MÉTODOS DE UTILIDAD&#xa;- _convertirFecha(fecha): Date&#xa;- _formatearFecha(date): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="2">
+                    <mxGeometry y="250" width="300" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value=" GESTIÓN DE CARGOS&#xa;+ getCantidadCargos(): number&#xa;+ getCargosAsArray(): Array&lt;Cargo&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="2">
+                    <mxGeometry y="310" width="300" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value=" GETTERS Y FIRESTORE&#xa;+ getFechaCreacionFormateada(): String&#xa;+ getFechaActualizacionFormateada(): String&#xa;+ toFirestore(): Object&#xa;+ toUI(): Object" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="2">
+                    <mxGeometry y="370" width="300" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="AreaManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="400" y="300" width="340" height="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value=" ATRIBUTOS&#xa;- areas: Array&lt;Area&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="8">
+                    <mxGeometry y="30" width="340" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value=" MÉTODOS PRIVADOS&#xa;- _getCollectionName(orgCC): String&#xa;- _generarIdFirebase(): String (simulado)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="8">
+                    <mxGeometry y="70" width="340" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value=" MÉTODOS CRUD&#xa;+ crearArea(areaData, userManager): Promise&lt;Area&gt;&#xa;+ actualizarArea(areaId, nuevosDatos, usuarioId, orgCC): Promise&lt;Area&gt;&#xa;+ eliminarArea(areaId, usuarioId, orgCC): Promise&lt;boolean&gt;&#xa;+ verificarAreaExistente(nombreArea, orgCC): Promise&lt;boolean&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="8">
+                    <mxGeometry y="130" width="340" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value=" MÉTODOS DE CONSULTA&#xa;+ getAreasByOrganizacion(orgCC): Promise&lt;Array&lt;Area&gt;&gt;&#xa;+ getAreaById(areaId, orgCC): Promise&lt;Area|null&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="8">
+                    <mxGeometry y="250" width="340" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value=" CONSTRUCTOR&#xa;+ constructor(): inicializa areas[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="8">
+                    <mxGeometry y="310" width="340" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="📂 areas_{organizacionCC}" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="820" y="40" width="280" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value=" ATRIBUTOS DEL DOCUMENTO&#xa;// Campos principales&#xa;nombreArea: String&#xa;descripcion: String&#xa;caracteristicas: String&#xa;&#xa;// Cargos (Objeto con IDs Firebase)&#xa;cargos: {&#xa;  [id: string]: {&#xa;    nombre: string,&#xa;    descripcion: string&#xa;  }&#xa;}&#xa;&#xa;// Metadatos&#xa;organizacionCamelCase: String&#xa;creadoPor: String (ID usuario)&#xa;actualizadoPor: String (ID usuario)&#xa;responsable: String (ID usuario)&#xa;responsableNombre: String&#xa;estado: String&#xa;&#xa;// Timestamps&#xa;fechaCreacion: Timestamp&#xa;fechaActualizacion: Timestamp" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="16">
+                    <mxGeometry y="30" width="280" height="370" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="📋 ESTRUCTURA DE CARGO" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fillColor=#f8f8f8;strokeColor=#999999;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="430" y="40" width="280" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value=" CARGO (objeto anidado)&#xa;{&#xa;  nombre: string,&#xa;  descripcion: string&#xa;}&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="18">
+                    <mxGeometry y="30" width="280" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="" style="endArrow=block;endFill=1;endSize=8;startArrow=block;startFill=0;startSize=8;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="8" target="2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="gestiona" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;" vertex="1" connectable="0" parent="20">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-0.3" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="2" target="16">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="mapea a" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" vertex="1" connectable="0" parent="22">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="0.5" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="24" value="" style="endArrow=open;dashed=1;endFill=0;strokeWidth=1;strokeColor=#666666;strokeDashPattern=6 3;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="8" target="16">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="lee/escribe" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#666666;" vertex="1" connectable="0" parent="24">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-0.2" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

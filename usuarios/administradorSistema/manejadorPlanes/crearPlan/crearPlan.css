@@ -1,0 +1,550 @@
+/* crearPlan.css - Estilos para gestión de planes */
+/* Siguiendo la línea visual de consumoGlobal.css */
+
+/* =============================================
+   VARIABLES - Heredadas del sistema
+   ============================================= */
+:root {
+    --breakpoint-xs: 480px;
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+}
+
+/* =============================================
+   CONTENEDOR PRINCIPAL
+   ============================================= */
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(1rem, 5vw, 2rem);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* =============================================
+   PAGE HEADER
+   ============================================= */
+.page-header {
+    margin-bottom: clamp(1.5rem, 5vw, 2.5rem);
+    padding-bottom: clamp(0.75rem, 3vw, 1.25rem);
+    text-align: center;
+}
+
+.page-header h1 {
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(1.5rem, 6vw, 2.8rem);
+    color: var(--color-text-primary);
+    margin-bottom: clamp(0.5rem, 2vw, 0.75rem);
+    text-shadow: 0 0 10px var(--color-accent-primary), 0 0 20px var(--color-accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 3vw, 1rem);
+    flex-wrap: wrap;
+}
+
+.page-header h1 i {
+    color: var(--color-text-primary);
+    filter: drop-shadow(0 0 8px var(--color-accent-primary));
+    font-size: clamp(1.2rem, 5vw, 2rem);
+}
+
+.page-header .header-description {
+    color: var(--color-text-secondary);
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+    max-width: min(90%, 900px);
+    margin: 0 auto;
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+    line-height: 1.5;
+}
+
+/* =============================================
+   FORMULARIO CENTRADO
+   ============================================= */
+.formulario-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+}
+
+.formulario-col {
+    width: 100%;
+    max-width: 700px;
+}
+
+/* =============================================
+   CARD
+   ============================================= */
+.card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-normal);
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
+}
+
+.card-header {
+    background: rgba(20, 20, 20, 0.95);
+    border-bottom: 1px solid var(--color-border-light);
+    padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
+}
+
+.card-header h5 {
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(0.75rem, 3vw, 1rem);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(4px, 2vw, 8px);
+    flex-wrap: wrap;
+}
+
+.card-header h5 i {
+    color: var(--color-accent-primary);
+    font-size: clamp(0.8rem, 3vw, 1rem);
+}
+
+.card-body {
+    padding: clamp(1rem, 4vw, 1.5rem);
+}
+
+/* =============================================
+   FORMULARIO
+   ============================================= */
+.plan-form {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 3vw, 1.25rem);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: var(--color-text-primary);
+    font-size: clamp(0.7rem, 3vw, 0.85rem);
+    font-weight: 500;
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-group label i {
+    color: var(--color-accent-primary);
+    width: 20px;
+}
+
+.form-control {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    padding: clamp(0.6rem, 3vw, 0.85rem) clamp(0.75rem, 3vw, 1rem);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+    font-size: clamp(0.85rem, 3.5vw, 1rem);
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 0 2px rgba(0, 207, 255, 0.1);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.75rem, 2vw, 1rem);
+}
+
+@media (max-width: 480px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}
+
+/* Color Picker */
+.color-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.color-picker {
+    width: 50px;
+    height: 40px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    background: var(--color-bg-secondary);
+    cursor: pointer;
+    padding: 0;
+}
+
+.color-picker::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.color-picker::-webkit-color-swatch {
+    border: none;
+    border-radius: var(--border-radius-medium);
+}
+
+.color-value {
+    color: var(--color-text-secondary);
+    font-family: monospace;
+    font-size: 0.85rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--border-radius-medium);
+    border: 1px solid var(--color-border-light);
+}
+
+/* Checkboxes de Módulos - MISMO TAMAÑO */
+.modulos-checkboxes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 640px) {
+    .modulos-checkboxes {
+        grid-template-columns: 1fr;
+    }
+}
+
+.checkbox-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: block;
+}
+
+.checkbox-card input {
+    display: none;
+}
+
+.checkbox-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: clamp(1rem, 3vw, 1.5rem) clamp(0.75rem, 2vw, 1rem);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    transition: all 0.2s ease;
+    text-align: center;
+    min-height: 140px;
+    height: 100%;
+    justify-content: center;
+}
+
+.checkbox-content i {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    color: var(--color-text-secondary);
+}
+
+.checkbox-content strong {
+    color: var(--color-text-primary);
+    font-size: clamp(0.9rem, 3.5vw, 1rem);
+}
+
+.checkbox-content small {
+    color: var(--color-text-secondary);
+    font-size: clamp(0.65rem, 2.5vw, 0.75rem);
+    line-height: 1.4;
+}
+
+.checkbox-card input:checked + .checkbox-content {
+    background: rgba(13, 202, 240, 0.1);
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 15px rgba(13, 202, 240, 0.2);
+}
+
+.checkbox-card input:checked + .checkbox-content i {
+    color: var(--color-accent-primary);
+}
+
+.checkbox-card:hover .checkbox-content {
+    border-color: var(--color-accent-primary);
+    transform: translateY(-2px);
+}
+
+/* Info Tip */
+.info-tip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(13, 202, 240, 0.05);
+    border-radius: var(--border-radius-medium);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin-top: 0.5rem;
+}
+
+.info-tip i {
+    color: var(--color-accent-primary);
+}
+
+/* Botones */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.btn-primary, .btn-secondary {
+    padding: clamp(0.6rem, 3vw, 0.85rem) clamp(1rem, 4vw, 1.5rem);
+    border-radius: var(--border-radius-medium);
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(0.7rem, 3vw, 0.9rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border: 1px solid var(--color-accent-primary);
+    color: var(--color-text-primary);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(13, 202, 240, 0.3);
+    border-color: #ffffff;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--color-border-light);
+    color: var(--color-text-secondary);
+}
+
+.btn-secondary:hover {
+    border-color: var(--color-accent-primary);
+    color: var(--color-text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* =============================================
+   LISTADO DE PLANES
+   ============================================= */
+.planes-listado {
+    margin-top: clamp(1rem, 3vw, 1.5rem);
+}
+
+.planes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--color-text-secondary);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.plan-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large);
+    padding: 1rem;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.plan-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--plan-color, var(--color-accent-primary));
+}
+
+.plan-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.plan-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.plan-header i {
+    font-size: 1.8rem;
+    color: var(--plan-color, var(--color-accent-primary));
+}
+
+.plan-header h4 {
+    color: var(--color-text-primary);
+    font-size: 1.1rem;
+    margin: 0;
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+}
+
+.plan-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-accent-primary);
+    margin-bottom: 0.5rem;
+}
+
+.plan-price small {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+}
+
+.plan-desc {
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.plan-modules-badge {
+    display: inline-block;
+    background: rgba(13, 202, 240, 0.1);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.7rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-accent-primary);
+}
+
+.plan-stats {
+    margin-bottom: 0.75rem;
+}
+
+.badge-permisos {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+}
+
+.plan-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-light);
+}
+
+.btn-edit, .btn-delete {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--border-radius-medium);
+    transition: all 0.2s ease;
+    font-size: 0.8rem;
+}
+
+.btn-edit {
+    color: var(--color-accent-primary);
+}
+
+.btn-edit:hover {
+    background: rgba(13, 202, 240, 0.1);
+    transform: scale(1.05);
+}
+
+.btn-delete {
+    color: #ef4444;
+}
+
+.btn-delete:hover {
+    background: rgba(239, 68, 68, 0.1);
+    transform: scale(1.05);
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+.footer-datetime {
+    text-align: right;
+    margin-top: clamp(1.5rem, 5vw, 2rem);
+    padding: clamp(0.75rem, 3vw, 1rem);
+    color: #6c757d;
+    font-size: clamp(0.7rem, 3vw, 0.9rem);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+}
+
+.footer-datetime i {
+    margin-right: 8px;
+    color: var(--color-accent-primary);
+}
+
+/* =============================================
+   ANIMACIONES
+   ============================================= */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card, .plan-card { animation: slideIn 0.3s ease; }
+
+/* =============================================
+   UTILIDADES
+   ============================================= */
+.text-success {
+    color: #10b981;
+}
+
+.text-danger {
+    color: #ef4444;
+}
+
+.label-block {
+    display: block !important;
+    margin-bottom: 0.75rem;
+}

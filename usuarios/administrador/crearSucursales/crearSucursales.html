@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Sucursal | Centinela</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Icono en barra de titulo -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <!-- Archivo para PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Estilos modulo -->
+    <link rel="stylesheet" href="crearScucursales.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- SEO Básico -->
+    <meta name="description"
+        content="Centinela-MX es un sistema inteligente de seguridad para almacenamiento, monitoreo y predicción de incidencias. Plataforma confiable para prevención y análisis en tiempo real.">
+    <meta name="keywords"
+        content="centinela, centinela-mx, sistema de seguridad, seguridad inteligente, predicción de incidencias, monitoreo de seguridad, plataforma de seguridad, análisis de riesgos, prevención de incidentes">
+    <meta name="author" content="Centinela-MX">
+    <link rel="canonical" href="https://centinela-mx.web.app/" />
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://centinela-mx.web.app">
+    <meta property="og:title" content="Centinela-MX | Sistema Inteligente de Seguridad y Predicción">
+    <meta property="og:description"
+        content="Centinela-MX es una plataforma avanzada de seguridad para almacenamiento, monitoreo y predicción de incidencias en tiempo real.">
+    <meta property="og:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Vista previa oficial de Centinela-MX">
+    <meta property="og:image" content="https://centinela-mx.web.app/assets/images/logo.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="Logo oficial de Centinela-MX">
+    <meta property="og:site_name" content="Centinela-MX">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://centinela-mx.web.app">
+    <meta name="twitter:title" content="Centinela-MX | Seguridad Inteligente">
+    <meta name="twitter:description"
+        content="Sistema de seguridad inteligente para monitoreo, almacenamiento y predicción de incidencias.">
+    <meta name="twitter:image" content="https://centinela-mx.web.app/img/centinela-mx-og.png">
+    <meta name="twitter:creator" content="">
+
+    <!-- Schema.org / JSON-LD -->
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Centinela-MX",
+    "operatingSystem": "Web",
+    "applicationCategory": "SecurityApplication",
+    "description": "Centinela-MX es un sistema inteligente de seguridad para el almacenamiento, monitoreo y predicción de incidencias en tiempo real.",
+    "url": "https://centinela-mx.web.app",
+    "image": "https://centinela-mx.web.app/assets/images/logo.png",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Centinela-MX",
+        "logo": {
+        "@type": "ImageObject",
+        "url": "https://centinela-mx.web.app/assets/images/logo.png"
+        }
+    },
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "MXN"
+    }
+    }
+    </script>
+
+    <style>
+        /* Estilos adicionales para los botones dentro del mapa */
+        .map-footer-buttons {
+            padding: 20px;
+            background: var(--color-bg-secondary);
+            border-top: 1px solid var(--color-border-light);
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .map-footer-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .map-footer-buttons .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+    <br>
+
+    <!-- Contenedor principal -->
+    <div class="custom-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1 class="main-title">
+                    <i class="fas fa-plus-circle"></i>
+                    Crear Nueva Sucursal
+                </h1>
+                <div class="header-description-text">
+                    <i class="fas fa-store-alt"></i>
+                    "Complete el formulario para registrar una nueva sucursal en su organización"
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- FORMULARIO: INFORMACIÓN DE LA SUCURSAL -->
+        <!-- ============================================= -->
+        <div class="form-row">
+            <div class="full-width">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-edit"></i>Información de la Sucursal</h5>
+                        <button id="btnVolverLista" class="btn-volver">
+                            <i class="fas fa-arrow-left"></i>Volver a la lista
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <form id="sucursalForm">
+                            <!-- INFORMACIÓN BÁSICA -->
+                            <h6 class="section-title"><i class="fas fa-info-circle"></i>Información Básica</h6>
+
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label for="nombreSucursal" class="form-label">Nombre de la Sucursal *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-store"></i></span>
+                                        <input type="text" class="form-control" id="nombreSucursal"
+                                            placeholder="Ej: Sucursal Centro, Matriz Principal, etc." required>
+                                    </div>
+                                    <div class="form-help-text">Nombre único para identificar la sucursal</div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="tipoSucursal" class="form-label">Tipo de Sucursal *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-building"></i></span>
+                                        <input type="text" class="form-control" id="tipoSucursal"
+                                            placeholder="Ej: Matriz, Sucursal, Oficina, Bodega" required>
+                                    </div>
+                                    <div class="form-help-text">Ej: Matriz, Sucursal, Oficina, Bodega</div>
+                                </div>
+                            </div>
+
+                            <!-- UBICACIÓN -->
+                            <h6 class="section-title" style="margin-top: 20px;"><i
+                                    class="fas fa-map-marker-alt"></i>Ubicación</h6>
+
+                            <div class="form-grid">
+                                <div class="form-field">
+                                    <label for="regionSucursal" class="form-label">Región *</label>
+                                    <select id="regionSucursal" class="select-region" required>
+                                        <option value="">-- Cargando regiones... --</option>
+                                    </select>
+                                    <div class="form-help-text">Seleccione la región donde se ubica</div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="zonaSucursal" class="form-label">Zona</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-layer-group"></i></span>
+                                        <input type="text" class="form-control" id="zonaSucursal"
+                                            placeholder="Ej: Norte, Sur, Centro">
+                                    </div>
+                                    <div class="form-help-text">Opcional</div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="estadoSucursal" class="form-label">Estado *</label>
+                                    <select id="estadoSucursal" class="select-estado" required>
+                                        <option value="">-- Cargando estados... --</option>
+                                    </select>
+                                    <div class="form-help-text">Seleccione el estado</div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="ciudadSucursal" class="form-label">Ciudad *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-city"></i></span>
+                                        <input type="text" class="form-control" id="ciudadSucursal"
+                                            placeholder="Ej: Monterrey, Guadalajara, CDMX" required>
+                                    </div>
+                                    <div class="form-help-text">Ciudad donde se encuentra</div>
+                                </div>
+
+                                <div class="full-width">
+                                    <label for="direccionSucursal" class="form-label">Dirección *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-road"></i></span>
+                                        <input type="text" class="form-control" id="direccionSucursal"
+                                            placeholder="Calle, número, colonia, código postal" required>
+                                    </div>
+                                    <div class="form-help-text">Dirección completa</div><br>
+                                </div>
+                            </div>
+
+                            <!-- CONTACTO -->
+                            <h6 class="section-title" style="margin-top: 20px;"><i class="fas fa-phone-alt"></i>Contacto
+                            </h6>
+
+                            <div class="form-field">
+                                <label for="contactoSucursal" class="form-label">Teléfono de Contacto *</label>
+                                <div class="input-group">
+                                    <span class="input-group-icon"><i class="fas fa-phone"></i></span>
+                                    <input type="tel" class="form-control" id="contactoSucursal"
+                                        placeholder="Ej: 8112345678" required>
+                                </div>
+                                <div class="form-help-text">
+                                    <i class="fas fa-info-circle"></i>
+                                    10 dígitos, solo números
+                                </div>
+                            </div>
+                             <!-- NÚMEROS DE EMERGENCIA -->
+                            <div class="form-field">
+                                <!-- NÚMEROS DE EMERGENCIA -->
+                                <h6 class="section-title" style="margin-top: 20px;">
+                                    <i class="fas fa-phone-alt"></i>Números de Emergencia
+                                    <span class="optional-badge">Opcional</span>
+                                </h6>
+
+                                <div class="emergency-container">
+                                    <div id="emergencyList" class="emergency-list">
+                                        <!-- Aquí se mostrarán los números agregados -->
+                                    </div>
+                                    
+                                    <div class="emergency-add">
+                                        <div class="emergency-add-field">
+                                            <label class="emergency-add-label">
+                                                <i class="fas fa-building"></i> Institución / Dependencia
+                                            </label>
+                                            <input type="text" id="emergencyInstitucion" class="emergency-add-input" 
+                                                placeholder="Ej: Policía Local, Bomberos, Cruz Roja">
+                                        </div>
+                                        <div class="emergency-add-field">
+                                            <label class="emergency-add-label">
+                                                <i class="fas fa-phone"></i> Número telefónico
+                                            </label>
+                                            <input type="tel" id="emergencyTelefono" class="emergency-add-input" 
+                                                placeholder="Ej: 911, 8112345678">
+                                        </div>
+                                        <div>
+                                            <button type="button" id="btnAddEmergency" class="btn-add-emergency">
+                                                <i class="fas fa-plus"></i> Agregar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- COORDENADAS -->
+                            <h6 class="section-title" style="margin-top: 20px;"><i
+                                    class="fas fa-globe-americas"></i>Coordenadas</h6>
+
+                            <div class="coordenadas-grid">
+                                <div class="form-field">
+                                    <label for="latitudSucursal" class="form-label">Latitud *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-arrow-up"></i></span>
+                                        <input type="number" step="any" class="form-control" id="latitudSucursal"
+                                            placeholder="Ej: 25.686614" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="longitudSucursal" class="form-label">Longitud *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-icon"><i class="fas fa-arrow-left"></i></span>
+                                        <input type="number" step="any" class="form-control" id="longitudSucursal"
+                                            placeholder="Ej: -100.316112" required>
+                                    </div>
+                                </div>
+
+                                <div class="coordenadas-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Formato decimal (grados). Ejemplo: 25.686614, -100.316112</span>
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- MAPA CON BOTONES DENTRO DEL CONTENEDOR -->
+        <!-- ============================================= -->
+        <div class="map-container">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-map-marked-alt"></i>Ubicación en el Mapa</h5>
+                    <div class="map-status">
+                        <i class="fas fa-circle"></i>
+                        <span>Haz clic en el mapa para colocar el marcador</span>
+                    </div>
+                </div>
+                <div class="card-body" style="padding: 0;">
+                    <div class="map-wrapper">
+                        <div id="sucursalMap"></div>
+
+                        <!-- Overlay con botones de control -->
+                        <div class="map-overlay">
+                            <button class="map-button" id="btnCentrarMapa" title="Centrar en ubicación actual">
+                                <i class="fas fa-crosshairs"></i>
+                                <span>Centrar</span>
+                            </button>
+                            <button class="map-button" id="btnBuscarDireccion" title="Buscar dirección en el mapa">
+                                <i class="fas fa-search-location"></i>
+                                <span>Buscar</span>
+                            </button>
+                            <button class="map-button" id="btnObtenerUbicacion" title="Usar mi ubicación actual">
+                                <i class="fas fa-location-arrow"></i>
+                                <span>Mi ubicación</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Panel de coordenadas en tiempo real -->
+                    <div class="map-coordinates-panel">
+                        <div class="coordinates-display">
+                            <div class="coord-item">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Latitud:</span>
+                                <span class="coord-value" id="mapLatitud">25.686614</span>
+                            </div>
+                            <div class="coord-item">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Longitud:</span>
+                                <span class="coord-value" id="mapLongitud">-100.316112</span>
+                            </div>
+                        </div>
+                        <div class="map-status">
+                            <i class="fas fa-mouse-pointer"></i>
+                            <span>Arrastra el marcador para ajustar</span>
+                        </div>
+                    </div>
+
+                    <!-- ============================================= -->
+                    <!-- BOTONES DE ACCIÓN DENTRO DEL MAPA (ABAJO) -->
+                    <!-- ============================================= -->
+                    <div class="map-footer-buttons">
+                        <button type="button" class="btn btn-success" id="crearSucursalBtn">
+                            <i class="fas fa-check"></i>Crear Sucursal
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="cancelarBtn">
+                            <i class="fas fa-times"></i>Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Scripts -->
+    <script type="module" src="/components/autenticador.js"></script>
+    <script type="module" src="/components/navbarAdministrador.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script type="module" src="crearSucursales.js"></script>
+
+    <!-- Protector de pagina -->
+    <!-- /usuarios/administrador/cualquier-pagina.html -->
+    <script src="/components/protector-admin.js" data-modulo="generales"> </script>
+</body>
+</body>
+
+</html>

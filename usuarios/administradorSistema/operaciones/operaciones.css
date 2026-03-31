@@ -1,0 +1,901 @@
+/* operaciones.css - VERSIÓN COMPLETA */
+
+/* =============================================
+   operacionesEstadisticas.css - GRÁFICAS CON FILTROS POR FECHAS
+   ============================================= */
+
+/* =============================================
+   ESTILOS BASE
+   ============================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--color-bg-primary);
+    font-family: var(--font-family-secondary);
+    color: var(--color-text-secondary);
+    min-height: 100vh;
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.admin-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px;
+    width: 100%;
+}
+
+/* =============================================
+   HEADER
+   ============================================= */
+.page-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-family: var(--font-family-primary);
+    font-size: 2rem;
+    color: var(--color-text-primary);
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px var(--color-accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.page-header h1 i {
+    filter: drop-shadow(0 0 8px var(--color-accent-primary));
+    font-size: 1.8rem;
+}
+
+.header-description {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* =============================================
+   FILTROS Y CONTROLES
+   ============================================= */
+.filtros-container {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large);
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+.filtros-header {
+    background: rgba(20, 20, 20, 0.95);
+    border-bottom: 1px solid var(--color-border-light);
+    padding: 10px 18px;
+}
+
+.filtros-header h5 {
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filtros-header h5 i {
+    color: var(--color-accent-primary);
+}
+
+.filtros-body {
+    padding: 15px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.filtro-grupo {
+    flex: 1;
+    min-width: 180px;
+}
+
+.filtro-grupo label {
+    display: block;
+    color: var(--color-text-primary);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-family: var(--font-family-primary);
+    letter-spacing: 0.5px;
+}
+
+.filtro-select, .filtro-input {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-secondary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.filtro-select:focus, .filtro-input:focus {
+    outline: none;
+    border-color: var(--color-accent-primary);
+}
+
+.filtro-input {
+    cursor: text;
+}
+
+.filtro-rango {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.filtro-rango span {
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+}
+
+.filtro-acciones {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-aplicar, .btn-limpiar, .btn-actualizar, .btn-excel {
+    padding: 8px 16px;
+    border-radius: var(--border-radius-medium);
+    font-family: var(--font-family-primary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: var(--transition-normal);
+}
+
+.btn-aplicar {
+    background: linear-gradient(145deg, var(--color-accent-primary), #00a0cc);
+    border: none;
+    color: white;
+}
+
+.btn-aplicar:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-normal);
+    filter: brightness(1.1);
+}
+
+.btn-limpiar {
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    color: var(--color-text-secondary);
+}
+
+.btn-limpiar:hover {
+    transform: translateY(-2px);
+    background: var(--color-bg-secondary);
+}
+
+.btn-actualizar {
+    background: linear-gradient(145deg, var(--color-bg-tertiary), var(--color-bg-secondary));
+    border: 1px solid var(--color-accent-primary);
+    color: var(--color-text-primary);
+}
+
+.btn-actualizar:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-normal);
+}
+
+.btn-excel {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-accent-primary);
+    color: white;
+}
+
+.btn-excel:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-normal);
+}
+
+.fecha-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--border-radius-medium);
+    border: 1px solid var(--color-border-light);
+    height: 36px;
+    white-space: nowrap;
+}
+
+.fecha-info i {
+    color: var(--color-accent-primary);
+    font-size: 0.75rem;
+}
+
+.fecha-info span {
+    color: var(--color-text-secondary);
+    font-size: 0.6rem;
+    font-family: var(--font-family-primary);
+    text-transform: uppercase;
+}
+
+.fecha-info strong {
+    color: var(--color-text-primary);
+    font-size: 0.7rem;
+    font-family: var(--font-family-secondary);
+}
+
+/* =============================================
+   GRIDS
+   ============================================= */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.storage-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.charts-grid-2col {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.charts-grid-1col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.tables-grid-1col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+/* =============================================
+   TARJETAS DE MÉTRICAS
+   ============================================= */
+.metric-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large);
+    padding: 0.9rem;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-normal);
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-normal);
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+}
+
+.metric-card.firestore::before { background: #3b82f6; }
+.metric-card.storage::before { background: #10b981; }
+.metric-card.pdf::before { background: #ef4444; }
+.metric-card.imagen::before { background: #8b5cf6; }
+.metric-card.total::before { background: var(--color-accent-primary); }
+
+.metric-title {
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.metric-title i {
+    color: var(--color-accent-primary);
+    font-size: 0.8rem;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+    font-family: var(--font-family-primary);
+}
+
+.metric-subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.6rem;
+    font-family: var(--font-family-secondary);
+}
+
+.metric-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    opacity: 0.1;
+    color: var(--color-text-primary);
+    pointer-events: none;
+}
+
+.size-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-accent-primary);
+    border-radius: 10px;
+    font-size: 0.6rem;
+    color: var(--color-accent-primary);
+}
+
+/* =============================================
+   CARDS - CONTENEDORES DE GRÁFICAS
+   ============================================= */
+.card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large);
+    overflow: hidden;
+    transition: var(--transition-normal);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-normal);
+}
+
+.card-header {
+    background: rgba(20, 20, 20, 0.95);
+    border-bottom: 1px solid var(--color-border-light);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.card-header h5 {
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.5px;
+}
+
+.card-header h5 i {
+    color: var(--color-accent-primary);
+    font-size: 0.8rem;
+}
+
+.filtro-activo-badge {
+    font-size: 0.65rem;
+    background: rgba(0, 207, 255, 0.2);
+    padding: 3px 8px;
+    border-radius: 12px;
+    color: var(--color-accent-primary);
+}
+
+.card-body {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 350px;
+}
+
+/* =============================================
+   GRÁFICAS - DIMENSIONES FIJAS
+   ============================================= */
+.grafica-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#graficoTiposArchivo {
+    width: 400px !important;
+    height: 350px !important;
+    display: block;
+}
+
+#graficoAlmacenamientoPorEmpresa {
+    width: 500px !important;
+    height: 400px !important;
+    display: block;
+}
+
+#graficoDocumentosPorEmpresa {
+    width: 600px !important;
+    height: 350px !important;
+    display: block;
+}
+
+/* =============================================
+   TABLAS RESPONSIVE
+   ============================================= */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: var(--border-radius-medium);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--color-text-secondary);
+    font-size: 11px;
+    min-width: 600px;
+}
+
+.table th {
+    background: rgba(20, 20, 20, 0.95);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary);
+    font-size: 9px;
+    text-transform: uppercase;
+    padding: 8px 6px;
+    text-align: left;
+    border-bottom: 2px solid var(--color-border-light);
+}
+
+.table td {
+    padding: 8px 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table tbody tr:hover {
+    background: rgba(0, 207, 255, 0.05);
+}
+
+/* =============================================
+   MENSAJE SIN DATOS
+   ============================================= */
+.empty-data {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--color-text-muted);
+}
+
+.empty-data i {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    opacity: 0.3;
+}
+
+.empty-data p {
+    font-size: 1rem;
+    margin-top: 15px;
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+.footer-datetime {
+    text-align: right;
+    margin-top: 15px;
+    padding: 10px;
+    color: var(--color-text-muted);
+    border-top: 1px solid var(--color-border-light);
+    font-size: 0.7rem;
+}
+
+.footer-datetime i {
+    margin-right: 5px;
+    color: var(--color-accent-primary);
+}
+
+/* =============================================
+   LOADING SPINNER
+   ============================================= */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,.1);
+    border-radius: 50%;
+    border-top-color: var(--color-accent-primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* =============================================
+   BARRA DE PROGRESO
+   ============================================= */
+#progressContainer {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-accent-primary);
+    border-radius: 8px;
+    padding: 12px;
+    min-width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 1200px) {
+    #graficoAlmacenamientoPorEmpresa {
+        width: 450px !important;
+        height: 380px !important;
+    }
+    
+    #graficoTiposArchivo {
+        width: 380px !important;
+        height: 330px !important;
+    }
+    
+    #graficoDocumentosPorEmpresa {
+        width: 550px !important;
+        height: 330px !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .admin-container {
+        padding: 20px;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .storage-metrics-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+    
+    .charts-grid-2col {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .page-header h1 {
+        font-size: 1.6rem;
+    }
+    
+    #graficoAlmacenamientoPorEmpresa {
+        width: 420px !important;
+        height: 360px !important;
+    }
+    
+    #graficoTiposArchivo {
+        width: 350px !important;
+        height: 300px !important;
+    }
+    
+    #graficoDocumentosPorEmpresa {
+        width: 500px !important;
+        height: 300px !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .storage-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filtros-body {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filtro-acciones {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .filtro-rango {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filtro-rango span {
+        text-align: center;
+    }
+    
+    .fecha-info {
+        justify-content: center;
+        white-space: normal;
+        flex-wrap: wrap;
+        padding: 6px 10px;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 12px;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .storage-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .metric-card {
+        padding: 0.7rem;
+    }
+    
+    .metric-value {
+        font-size: 1.2rem;
+    }
+    
+    .metric-icon {
+        font-size: 1.5rem;
+        right: 10px;
+    }
+    
+    .page-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    #graficoAlmacenamientoPorEmpresa {
+        width: 380px !important;
+        height: 320px !important;
+    }
+    
+    #graficoTiposArchivo {
+        width: 300px !important;
+        height: 260px !important;
+    }
+    
+    #graficoDocumentosPorEmpresa {
+        width: 420px !important;
+        height: 280px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-container {
+        padding: 10px;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .storage-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .page-header h1 i {
+        font-size: 1.2rem;
+    }
+    
+    .header-description {
+        font-size: 0.75rem;
+    }
+    
+    .metric-card {
+        padding: 0.6rem;
+    }
+    
+    .metric-value {
+        font-size: 1.1rem;
+    }
+    
+    .card-header {
+        padding: 8px 12px;
+    }
+    
+    .card-header h5 {
+        font-size: 0.65rem;
+    }
+    
+    .card-body {
+        padding: 12px;
+    }
+    
+    #graficoAlmacenamientoPorEmpresa {
+        width: 280px !important;
+        height: 280px !important;
+    }
+    
+    #graficoTiposArchivo {
+        width: 240px !important;
+        height: 220px !important;
+    }
+    
+    #graficoDocumentosPorEmpresa {
+        width: 320px !important;
+        height: 260px !important;
+    }
+    
+    .table {
+        font-size: 9px;
+        min-width: 500px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 5px 4px;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-tertiary);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-accent-primary);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-primary);
+}
+/* =============================================
+   ESTILOS PARA GRÁFICAS (consistente con estadisticas)
+   ============================================= */
+
+/* Contenedores de gráficas */
+.grafica-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 300px;
+}
+
+/* Dimensiones fijas para gráficas */
+#graficoTiposArchivo,
+#graficoAlmacenamientoPorEmpresa,
+#graficoDocumentosPorEmpresa {
+    width: 100% !important;
+    max-width: 500px;
+    height: auto !important;
+    max-height: 300px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Badges para valores en tablas */
+.badge-value {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin-right: 6px;
+}
+
+.badge-info {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+}
+
+.badge-warning {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.badge-success {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.badge-secondary {
+    background: rgba(107, 114, 128, 0.2);
+    color: #9ca3af;
+}
+
+.badge-primary {
+    background: rgba(0, 207, 255, 0.2);
+    color: #00cfff;
+}
+
+.porcentaje-badge {
+    font-size: 0.6rem;
+    color: #6c757d;
+    margin-left: 4px;
+}
+
+/* Responsive para gráficas */
+@media (max-width: 768px) {
+    #graficoTiposArchivo,
+    #graficoAlmacenamientoPorEmpresa,
+    #graficoDocumentosPorEmpresa {
+        max-width: 100%;
+        height: auto !important;
+    }
+    
+    .grafica-wrapper {
+        min-height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grafica-wrapper {
+        min-height: 220px;
+    }
+}

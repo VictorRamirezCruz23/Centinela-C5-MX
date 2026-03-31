@@ -1,0 +1,770 @@
+/* consumoGlobal.css - Estilos para panel global de consumo */
+/* VERSIÓN SUPER RESPONSIVE - Adaptable a cualquier dispositivo */
+
+/* =============================================
+   VARIABLES GLOBALES
+   ============================================= */
+:root {
+    --breakpoint-xs: 480px;
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+}
+
+/* =============================================
+   CONTENEDOR PRINCIPAL
+   ============================================= */
+.admin-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: clamp(1rem, 5vw, 2rem);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* =============================================
+   PAGE HEADER
+   ============================================= */
+.page-header {
+    margin-bottom: clamp(1.5rem, 5vw, 2.5rem);
+    padding-bottom: clamp(0.75rem, 3vw, 1.25rem);
+    text-align: center;
+}
+
+.page-header h1 {
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(1.5rem, 6vw, 2.8rem);
+    color: var(--color-text-primary);
+    margin-bottom: clamp(0.5rem, 2vw, 0.75rem);
+    text-shadow: 0 0 10px var(--color-accent-primary), 0 0 20px var(--color-accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 3vw, 1rem);
+    flex-wrap: wrap;
+    word-break: break-word;
+}
+
+.page-header h1 i {
+    color: var(--color-text-primary);
+    filter: drop-shadow(0 0 8px var(--color-accent-primary));
+    font-size: clamp(1.2rem, 5vw, 2rem);
+}
+
+.page-header .header-description {
+    color: var(--color-text-secondary);
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+    max-width: min(90%, 900px);
+    margin: 0 auto;
+    text-align: center;
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+    line-height: 1.5;
+    padding: 0 1rem;
+}
+
+/* =============================================
+   SELECTOR DE EMPRESA
+   ============================================= */
+.empresa-selector-container {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-normal);
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    overflow: hidden;
+}
+
+.selector-header {
+    background: rgba(20, 20, 20, 0.95);
+    border-bottom: 1px solid var(--color-border-light);
+    padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
+}
+
+.selector-header h5 {
+    color: var(--color-text-primary) !important;
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(0.75rem, 3vw, 0.95rem);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.selector-header h5 i {
+    color: var(--color-accent-primary);
+    font-size: clamp(0.8rem, 3vw, 1rem);
+}
+
+.selector-body {
+    padding: clamp(1rem, 4vw, 1.5rem);
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 3vw, 1.25rem);
+    align-items: flex-end;
+}
+
+.selector-grupo {
+    flex: 3 1 280px;
+    min-width: min(100%, 260px);
+}
+
+.selector-grupo label {
+    display: block;
+    color: var(--color-text-primary) !important;
+    font-size: clamp(0.65rem, 2.5vw, 0.75rem);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-weight: 500;
+}
+
+.selector-select {
+    width: 100%;
+    padding: clamp(0.6rem, 3vw, 0.85rem) clamp(0.75rem, 3vw, 1rem);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    color: var(--color-text-primary) !important;
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+    font-size: clamp(0.85rem, 3.5vw, 1rem);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: clamp(12px, 3vw, 16px);
+}
+
+.selector-select:focus {
+    outline: none;
+    border-color: var(--color-accent-primary);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 2px rgba(0, 207, 255, 0.1);
+}
+
+.selector-select option {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    padding: clamp(0.5rem, 2vw, 0.75rem);
+}
+
+.selector-acciones {
+    display: flex;
+    gap: clamp(0.5rem, 2vw, 0.75rem);
+    align-items: center;
+    flex: 2 1 280px;
+    flex-wrap: wrap;
+}
+
+.btn-cargar,
+.btn-actualizar,
+.btn-pdf {
+    padding: clamp(0.6rem, 3vw, 0.85rem) clamp(0.75rem, 3vw, 1rem);
+    border-radius: var(--border-radius-medium);
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(0.7rem, 3vw, 0.9rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(4px, 2vw, 8px);
+    transition: all 0.2s ease;
+    flex: 1;
+    min-width: fit-content;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .btn-cargar,
+    .btn-actualizar,
+    .btn-pdf {
+        white-space: normal;
+        word-break: keep-all;
+        padding: 0.6rem 0.75rem;
+    }
+    
+    .selector-acciones {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .selector-acciones button {
+        width: 100%;
+    }
+}
+
+.btn-cargar {
+    background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border: 1px solid var(--color-accent-primary);
+    color: var(--color-text-primary) !important;
+}
+
+.btn-cargar:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(145deg, #1a1a1a, #100f0f);
+    box-shadow: 0 0 20px rgba(192, 192, 192, 0.3);
+    border-color: #ffffff;
+}
+
+.btn-actualizar {
+    background: transparent;
+    border: 1px solid var(--color-border-light);
+    color: var(--color-text-primary) !important;
+}
+
+.btn-actualizar:hover {
+    border-color: var(--color-accent-primary);
+    color: var(--color-text-primary) !important;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-pdf {
+    background: linear-gradient(145deg, #8b0000, #a52a2a);
+    border: 1px solid #ff6b6b;
+    color: white !important;
+}
+
+.btn-pdf:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+    border-color: #ffffff;
+    background: linear-gradient(145deg, #a52a2a, #8b0000);
+}
+
+/* =============================================
+   INFO DE EMPRESA SELECCIONADA
+   ============================================= */
+.empresa-info {
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    animation: slideIn 0.3s ease;
+}
+
+.info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(1rem, 4vw, 1.5rem);
+    padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
+    background: rgba(20, 20, 20, 0.7);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large);
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 3vw, 1rem);
+}
+
+.info-header h3 {
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.5rem, 2vw, 0.75rem);
+    flex-wrap: wrap;
+    word-break: break-word;
+}
+
+.info-header h3 i {
+    color: var(--color-accent-primary);
+    font-size: clamp(1rem, 4vw, 1.5rem);
+}
+
+.ultima-actualizacion {
+    color: var(--color-text-secondary);
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+    font-size: clamp(0.75rem, 3vw, 1rem);
+    background: rgba(0, 0, 0, 0.3);
+    padding: clamp(0.4rem, 2vw, 0.6rem) clamp(0.75rem, 3vw, 1rem);
+    border-radius: 30px;
+    border: 1px solid var(--color-border-light);
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .info-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .ultima-actualizacion {
+        white-space: normal;
+        word-break: break-word;
+    }
+}
+
+/* =============================================
+   GRIDS PARA MÉTRICAS - SUPER RESPONSIVE
+   ============================================= */
+.metrics-grid {
+    display: grid;
+    gap: clamp(0.75rem, 3vw, 1.25rem);
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+}
+
+/* Responsive grid con breakpoints inteligentes */
+@media (min-width: 1536px) {
+    .metrics-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+@media (min-width: 1280px) and (max-width: 1535px) {
+    .metrics-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 639px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =============================================
+   TARJETAS DE MÉTRICAS
+   ============================================= */
+.metric-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: clamp(0.75rem, 3vw, 1.25rem);
+    padding: clamp(1rem, 4vw, 1.5rem);
+    box-shadow: var(--shadow-normal);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-large);
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: clamp(3px, 1vw, 5px);
+    height: 100%;
+}
+
+.metric-card.firestore::before { background: #3b82f6; }
+.metric-card.storage::before { background: #f97316; }
+.metric-card.functions::before { background: #8b5cf6; }
+.metric-card.auth::before { background: #10b981; }
+.metric-card.fcm::before { background: #ec4899; }
+.metric-card.total::before { background: #0dcaf0; }
+
+.metric-title {
+    color: #6c757d;
+    font-size: clamp(0.75rem, 3vw, 1rem);
+    font-weight: 500;
+    margin-bottom: clamp(0.5rem, 2vw, 0.75rem);
+    display: flex;
+    align-items: center;
+    gap: clamp(4px, 2vw, 8px);
+    flex-wrap: wrap;
+}
+
+.metric-title i {
+    color: var(--color-accent-primary);
+    flex-shrink: 0;
+    font-size: clamp(0.8rem, 3vw, 1rem);
+}
+
+.metric-value {
+    font-size: clamp(1.5rem, 8vw, 2.8rem);
+    font-weight: 700;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: clamp(0.5rem, 2vw, 0.75rem);
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    word-break: break-word;
+}
+
+.metric-subtitle {
+    color: #adb5bd;
+    font-size: clamp(0.65rem, 2.5vw, 0.85rem);
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.metric-icon {
+    position: absolute;
+    right: clamp(10px, 4vw, 20px);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    opacity: 0.1;
+    color: white;
+    pointer-events: none;
+}
+
+/* =============================================
+   CHARTS ROW - SUPER RESPONSIVE
+   ============================================= */
+.charts-row {
+    display: grid;
+    gap: clamp(1rem, 3vw, 1.5rem);
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+}
+
+@media (min-width: 1024px) {
+    .charts-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1023px) {
+    .charts-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =============================================
+   CARD
+   ============================================= */
+.card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-normal);
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
+}
+
+.card-header {
+    background: rgba(20, 20, 20, 0.95);
+    border-bottom: 1px solid var(--color-border-light);
+    padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
+}
+
+.card-header h5 {
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary, 'Orbitron', sans-serif);
+    font-size: clamp(0.75rem, 3vw, 1rem);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(4px, 2vw, 8px);
+    flex-wrap: wrap;
+}
+
+.card-header h5 i {
+    color: var(--color-accent-primary);
+    font-size: clamp(0.8rem, 3vw, 1rem);
+}
+
+.card-body {
+    padding: clamp(1rem, 4vw, 1.5rem);
+}
+
+/* =============================================
+   GRÁFICAS - RESPONSIVE
+   ============================================= */
+canvas {
+    max-width: 100%;
+    height: auto !important;
+    display: block;
+}
+
+#graficoEmpresaDistribucion,
+#graficoEmpresaTipos {
+    width: 100% !important;
+    height: clamp(250px, 40vw, 300px) !important;
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+.footer-datetime {
+    text-align: right;
+    margin-top: clamp(1.5rem, 5vw, 2rem);
+    padding: clamp(0.75rem, 3vw, 1rem);
+    color: #6c757d;
+    font-size: clamp(0.7rem, 3vw, 0.9rem);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: var(--font-family-secondary, 'Rajdhani', sans-serif);
+}
+
+.footer-datetime i {
+    margin-right: 8px;
+    color: var(--color-accent-primary);
+}
+
+/* =============================================
+   ANIMACIONES
+   ============================================= */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card, .empresa-info { animation: slideIn 0.3s ease; }
+
+/* =============================================
+   LOADING
+   ============================================= */
+.loading-spinner {
+    text-align: center;
+    padding: clamp(2rem, 8vw, 3rem);
+    color: var(--color-text-secondary);
+}
+
+.loading-spinner i {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    color: var(--color-accent-primary);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* =============================================
+   NOTIFICACIÓN FLOTANTE RESPONSIVE
+   ============================================= */
+#updateIndicator {
+    position: fixed;
+    top: clamp(0.5rem, 3vw, 1rem);
+    right: clamp(0.5rem, 3vw, 1rem);
+    background: #10b981;
+    color: white;
+    padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 3vw, 1.25rem);
+    border-radius: clamp(6px, 2vw, 8px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 9999;
+    font-size: clamp(0.7rem, 3vw, 0.85rem);
+    display: flex;
+    align-items: center;
+    gap: clamp(4px, 2vw, 8px);
+    max-width: 90%;
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    #updateIndicator {
+        white-space: normal;
+        text-align: center;
+        top: auto;
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        width: auto;
+        justify-content: center;
+    }
+}
+
+/* =============================================
+   TABLAS (si se usan en otros lugares)
+   ============================================= */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: var(--border-radius-medium);
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: var(--color-accent-primary);
+    border-radius: 10px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--color-text-secondary);
+    font-size: clamp(0.7rem, 3vw, 0.85rem);
+    min-width: 500px;
+}
+
+.table th,
+.table td {
+    padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.5rem, 2vw, 0.75rem) !important;
+}
+
+/* Badges para valores */
+.badge-value {
+    display: inline-block;
+    padding: clamp(2px, 1vw, 4px) clamp(4px, 2vw, 8px);
+    border-radius: 12px;
+    font-size: clamp(0.6rem, 2.5vw, 0.7rem);
+    font-weight: 500;
+}
+
+.badge-success { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+.badge-warning { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.badge-danger { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+.badge-info { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+.badge-secondary { background: rgba(107, 114, 128, 0.2); color: #9ca3af; }
+
+/* =============================================
+   UTILIDADES RESPONSIVE
+   ============================================= */
+.hide-on-mobile {
+    display: inline-block;
+}
+
+@media (max-width: 640px) {
+    .hide-on-mobile {
+        display: none;
+    }
+}
+
+.text-center-mobile {
+    text-align: center;
+}
+
+@media (max-width: 640px) {
+    .text-center-mobile {
+        text-align: center;
+    }
+}
+
+/* =============================================
+   RESPONSIVE FINAL - AJUSTES EXTREMOS
+   ============================================= */
+
+/* Pantallas muy pequeñas (menos de 360px) */
+@media (max-width: 360px) {
+    .admin-container {
+        padding: 0.75rem;
+    }
+    
+    .metric-card {
+        padding: 0.75rem;
+    }
+    
+    .metric-value {
+        font-size: 1.4rem;
+    }
+    
+    .metric-icon {
+        font-size: 1.8rem;
+        right: 10px;
+    }
+    
+    .selector-body {
+        padding: 0.75rem;
+    }
+    
+    .btn-cargar,
+    .btn-actualizar,
+    .btn-pdf {
+        font-size: 0.65rem;
+        padding: 0.5rem;
+    }
+}
+
+/* Pantallas horizontales en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+    .metrics-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .charts-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .page-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .metric-card {
+        padding: 0.5rem;
+    }
+    
+    .metric-value {
+        font-size: 1.2rem;
+    }
+    
+    .metric-icon {
+        font-size: 1.5rem;
+    }
+}
+
+/* Pantallas táctiles grandes (tablets) */
+@media (min-width: 768px) and (max-width: 1024px) and (pointer: coarse) {
+    .btn-cargar,
+    .btn-actualizar,
+    .btn-pdf {
+        padding: 0.75rem 1rem;
+    }
+    
+    .metric-card {
+        padding: 1rem;
+    }
+}
+
+/* Pantallas muy grandes (TVs, monitores ultra wide) */
+@media (min-width: 1920px) {
+    .admin-container {
+        max-width: 1800px;
+        padding: 2rem;
+    }
+    
+    .metrics-grid {
+        gap: 1.5rem;
+    }
+    
+    .metric-card {
+        padding: 1.75rem;
+    }
+    
+    .metric-value {
+        font-size: 3rem;
+    }
+    
+    .metric-icon {
+        font-size: 4rem;
+    }
+}
