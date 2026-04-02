@@ -301,9 +301,9 @@
         </div>
 
         <!-- ============================================= -->
-        <!-- SECCIÓN 2: IMÁGENES Y EVIDENCIAS -->
+        <!-- SECCIÓN 2: IMÁGENES Y EVIDENCIAS (INICIALMENTE OCULTA) -->
         <!-- ============================================= -->
-        <div class="form-row" style="margin-top: 20px;">
+        <div class="form-row" id="seccionEvidencias" style="margin-top: 20px; display: none;">
             <div class="full-width">
                 <div class="card">
                     <div class="card-header">
@@ -345,14 +345,18 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- BOTONES DE ACCIÓN -->
-                        <div class="action-buttons-container">
-                            <button type="button" class="btn btn-secondary" id="btnCancelar">
-                                <i class="fas fa-times"></i>Cancelar
-                            </button>
-                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón Cancelar fuera de la sección de evidencias -->
+        <div class="form-row" style="margin-top: 20px;">
+            <div class="full-width">
+                <div class="action-buttons-container">
+                    <button type="button" class="btn btn-secondary" id="btnCancelar">
+                        <i class="fas fa-times"></i>Cancelar
+                    </button>
                 </div>
             </div>
         </div>
@@ -396,7 +400,7 @@
     <script type="module" src="crearIncidencias.js"></script>
 
     <!-- Protector de pagina -->
-
+    <script src="/components/protector-admin.js" data-modulo="incidencias"> </script>
 </body>
 
 </html>

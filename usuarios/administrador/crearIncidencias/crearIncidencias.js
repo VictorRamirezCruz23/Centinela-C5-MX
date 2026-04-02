@@ -1,10 +1,13 @@
-// crearIncidencias.js - VERSIÓN CON CORRECCIONES
+// crearIncidencias.js - VERSIÓN CON EVIDENCIAS OCULTAS HASTA DESCRIPCIÓN > 20 CARACTERES
 // 1. Campo Nivel de Riesgo: "Selecciona el nivel de riesgo" como primera opción (valor vacío)
 // 2. Campo Estado: "Selecciona el estado" como primera opción (valor vacío)
 // 3. Al seleccionar Estado, avance automático al campo Fecha
+// 4. Sección de Evidencias Fotográficas OCULTA inicialmente
+// 5. Sección de Evidencias se muestra SOLO cuando la descripción tenga más de 20 caracteres
 
 const LIMITES = {
-    DETALLES_INCIDENCIA: 1000
+    DETALLES_INCIDENCIA: 1000,
+    MIN_CARACTERES_EVIDENCIAS: 20  // Mínimo de caracteres para mostrar evidencias
 };
 
 class CrearIncidenciaController {
@@ -315,10 +318,38 @@ class CrearIncidenciaController {
                     'Los detalles'
                 );
                 this._actualizarContador('detallesIncidencia', 'contadorCaracteres', LIMITES.DETALLES_INCIDENCIA);
+
+                // NUEVA FUNCIONALIDAD: Mostrar/ocultar evidencias según longitud de la descripción
+                this._verificarMostrarEvidencias();
             });
         }
 
         this._actualizarContador('detallesIncidencia', 'contadorCaracteres', LIMITES.DETALLES_INCIDENCIA);
+    }
+
+    /**
+     * Verifica si la descripción tiene más de 20 caracteres para mostrar la sección de evidencias
+     */
+    _verificarMostrarEvidencias() {
+        const detallesInput = document.getElementById('detallesIncidencia');
+        const seccionEvidencias = document.getElementById('seccionEvidencias');
+
+        if (!detallesInput || !seccionEvidencias) return;
+
+        const longitud = detallesInput.value.trim().length;
+        const mostrar = longitud >= LIMITES.MIN_CARACTERES_EVIDENCIAS;
+
+        if (mostrar && seccionEvidencias.style.display === 'none') {
+            seccionEvidencias.style.display = 'block';
+            // Scroll suave hasta la sección de evidencias
+            setTimeout(() => {
+                seccionEvidencias.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+            console.log('📸 Sección de evidencias mostrada (descripción > 20 caracteres)');
+        } else if (!mostrar && seccionEvidencias.style.display === 'block') {
+            seccionEvidencias.style.display = 'none';
+            console.log('📸 Sección de evidencias ocultada (descripción ≤ 20 caracteres)');
+        }
     }
 
     _actualizarContador(inputId, counterId, limite) {
@@ -716,23 +747,27 @@ class CrearIncidenciaController {
             });
         }
 
-        // Configurar evento input para descripción (mostrar botón cuando tenga texto)
+        // Configurar evento input para descripción (mostrar botón cuando tenga texto y verificar evidencias)
         const detallesInput = document.getElementById('detallesIncidencia');
         if (detallesInput) {
             detallesInput.addEventListener('input', () => {
-                if (detallesInput.value.trim().length >= 10) {
-                    const btnContainer = document.getElementById('btnFinalizarContainer');
-                    if (btnContainer) {
-                        btnContainer.style.display = 'block';
-                    }
+                const longitud = detallesInput.value.trim().length;
+                const btnContainer = document.getElementById('btnFinalizarContainer');
+
+                // Mostrar botón cuando tenga al menos 10 caracteres
+                if (longitud >= 10) {
+                    if (btnContainer) btnContainer.style.display = 'block';
                 } else {
-                    const btnContainer = document.getElementById('btnFinalizarContainer');
-                    if (btnContainer && detallesInput.value.trim().length === 0) {
-                        btnContainer.style.display = 'none';
-                    }
+                    if (btnContainer && longitud === 0) btnContainer.style.display = 'none';
                 }
+
+                // Verificar si mostrar evidencias (ya se hace en _verificarMostrarEvidencias)
+                // Esta función ya es llamada desde _inicializarValidaciones
             });
         }
+
+        // Verificar estado inicial de evidencias (por si acaso)
+        this._verificarMostrarEvidencias();
     }
 
     /**
@@ -1342,6 +1377,10 @@ class CrearIncidenciaController {
             const el = document.getElementById(id);
             if (el) el.style.display = 'none';
         });
+
+        // Ocultar sección de evidencias
+        const seccionEvidencias = document.getElementById('seccionEvidencias');
+        if (seccionEvidencias) seccionEvidencias.style.display = 'none';
 
         const btnContainer = document.getElementById('btnFinalizarContainer');
         if (btnContainer) btnContainer.style.display = 'none';
