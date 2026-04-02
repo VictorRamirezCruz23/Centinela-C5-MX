@@ -1,6 +1,7 @@
 // ========== permisos.js - GESTIÓN DE PERMISOS ==========
 // Basado en la estructura de categorias.js - VERSIÓN CON LOCALSTORAGE ÚNICAMENTE
-// ACTUALIZADO: Incluye módulos Usuarios, Estadísticas, Tareas, Permisos y Login/Monitoreo
+// ACTUALIZADO: Incluye módulos Usuarios, Estadísticas, Tareas, Permisos, Login/Monitoreo
+// Y lógica de plan para Incidencias y Mapa de Alertas
 
 // ========== VARIABLES GLOBALES ==========
 let permisoManager = null;
@@ -30,7 +31,8 @@ const nombresModulos = {
     estadisticas: 'Estadísticas',
     tareas: 'Tareas',
     permisos: 'Permisos',
-    loginMonitoreo: 'Login/Monitoreo'
+    loginMonitoreo: 'LoginMonitoreo',
+    monitoreo: 'Mapa Alertas'
 };
 
 // Módulos fijos (siempre visibles)
@@ -40,7 +42,7 @@ const modulosFijos = ['areas', 'categorias', 'sucursales', 'regiones', 'usuarios
 const modulosDinamicos = ['incidencias', 'monitoreo'];
 
 // Orden de los módulos para mostrar
-const ordenModulos = ['areas', 'categorias', 'sucursales', 'regiones', 'incidencias', 'usuarios', 'estadisticas', 'tareas', 'permisos', 'loginMonitoreo'];
+const ordenModulos = ['areas', 'categorias', 'sucursales', 'regiones', 'incidencias', 'usuarios', 'estadisticas', 'tareas', 'permisos', 'loginMonitoreo', 'monitoreo'];
 
 // ========== INICIALIZACIÓN ==========
 document.addEventListener('DOMContentLoaded', async function () {
@@ -583,7 +585,6 @@ function showLoadingState() {
                 <div style="text-align:center;">
                     <i class="fas fa-spinner fa-spin" style="font-size:48px; color:var(--color-accent-primary); margin-bottom:16px;"></i>
                     <h5 style="color:white;">Cargando permisos...</h5>
-                    <p style="color:var(--color-text-dim);">Obteniendo datos desde Firebase</p>
                 </div>
             </td>
         </tr>
