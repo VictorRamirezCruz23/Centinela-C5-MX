@@ -865,7 +865,7 @@ class CrearIncidenciaController {
                 </div>
             `;
             return;
-        }
+        }3
 
         let html = '';
         this.imagenesSeleccionadas.forEach((img, index) => {
