@@ -731,6 +731,8 @@ function setupSaveHandler(elements, userManager) {
                 text: 'Datos actualizados correctamente',
                 timer: 3000,
                 showConfirmButton: false
+            }).then(() => {
+                window.location.href = '../usuarios/usuarios.html';
             });
 
             showMessage(elements.mainMessage, 'success', 'Cambios guardados exitosamente');
