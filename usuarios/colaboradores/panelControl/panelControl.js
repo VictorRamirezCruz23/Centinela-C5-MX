@@ -84,6 +84,16 @@ const ACCESO_RAPIDO_CONFIG = [
         url: '/usuarios/colaboradores/mapaAlertas/mapaAlertas.html',
         permiso: 'monitoreo',
         brillo: false
+    },
+    {
+        id: 'loginMonitoreo',
+        titulo: 'Login Monitoreo',
+        descripcion: 'Acceso a cuentas de monitoreo',
+        icono: 'fa-sign-in-alt',
+        color: 'green',
+        url: '/usuarios/colaboradores/loginMonitoreo/loginMonitoreo.html',
+        permiso: 'loginMonitoreo',
+        brillo: false
     }
 ];
 
@@ -158,8 +168,7 @@ const COLUMNAS_CONFIG = [
         color: '#ffcc00',
         permisos: ['tareas'],
         tarjetas: [
-            { modulo: 'tareasLista', titulo: 'Mis Tareas', descripcion: 'Ver tareas asignadas', icono: 'fa-list-check', color: 'yellow', url: '/usuarios/colaboradores/tareas/tareas.html' },
-            { modulo: 'tareasNueva', titulo: 'Nueva Tarea', descripcion: 'Crear nueva tarea', icono: 'fa-plus-circle', color: 'yellow', url: '/usuarios/colaboradores/tareas/tareas.html' }
+            { modulo: 'tareasLista', titulo: 'Mis Tareas', descripcion: 'Ver tareas asignadas', icono: 'fa-list-check', color: 'yellow', url: '/usuarios/colaboradores/tareas/tareas.html' }
         ]
     },
     {
@@ -170,6 +179,16 @@ const COLUMNAS_CONFIG = [
         tarjetas: [
             { modulo: 'mapaAlertas', titulo: 'Mapa de Alertas', descripcion: 'Visualización en tiempo real', icono: 'fa-map', color: 'danger', url: '/usuarios/colaboradores/mapaAlertas/mapaAlertas.html' },
             { modulo: 'tableroControl', titulo: 'Tablero de Control', descripcion: 'Cuentas de monitoreo', icono: 'fa-dashboard', color: 'danger', url: '/usuarios/colaboradores/loginMonitoreo/loginMonitoreo.html' }
+        ]
+    },
+    // FILA 4 - MÓDULOS DE ADMINISTRACIÓN
+    {
+        titulo: 'PANEL DE PERMISOS',
+        icono: 'fa-lock',
+        color: '#ff4d00',
+        permisos: ['permisos'],
+        tarjetas: [
+            { modulo: 'permisosLista', titulo: 'Configurar Permisos', descripcion: 'Gestionar permisos por cargo', icono: 'fa-key', color: 'danger', url: '/usuarios/colaboradores/permisos/permisos.html' }
         ]
     }
 ];
@@ -193,6 +212,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         } catch (error) { }
 
         await obtenerPermisosUsuario();
+
+        // Verificar si el usuario tiene algún permiso
+        const tieneAlgunPermiso = Object.values(permisosUsuario).some(valor => valor === true);
+
+        if (!tieneAlgunPermiso) {
+            mostrarSinPermisos();
+            return;
+        }
 
         renderizarKPIs();
         renderizarAccesoRapido();
@@ -236,7 +263,7 @@ async function obtenerPermisosUsuario() {
             permisosUsuario = {
                 areas: true, categorias: true, sucursales: true, regiones: true,
                 incidencias: true, usuarios: true, estadisticas: true, tareas: true,
-                monitoreo: true, permisos: true, admin: true
+                monitoreo: true, permisos: true, loginMonitoreo: true, admin: true
             };
             return;
         }
@@ -245,7 +272,7 @@ async function obtenerPermisosUsuario() {
             permisosUsuario = {
                 areas: false, categorias: false, sucursales: false, regiones: false,
                 incidencias: true, usuarios: false, estadisticas: false, tareas: false,
-                monitoreo: false, permisos: false, admin: false
+                monitoreo: false, permisos: false, loginMonitoreo: false, admin: false
             };
             return;
         }
@@ -265,7 +292,9 @@ async function obtenerPermisosUsuario() {
                     estadisticas: permiso.puedeAcceder('estadisticas'),
                     tareas: permiso.puedeAcceder('tareas'),
                     monitoreo: permiso.puedeAcceder('monitoreo'),
-                    permisos: false, admin: false
+                    permisos: permiso.puedeAcceder('permisos'),
+                    loginMonitoreo: permiso.puedeAcceder('loginMonitoreo'),
+                    admin: false
                 };
                 return;
             }
@@ -274,14 +303,26 @@ async function obtenerPermisosUsuario() {
         permisosUsuario = {
             areas: false, categorias: false, sucursales: false, regiones: false,
             incidencias: true, usuarios: false, estadisticas: false, tareas: false,
-            monitoreo: false, permisos: false, admin: false
+            monitoreo: false, permisos: false, loginMonitoreo: false, admin: false
         };
     } catch (error) {
         permisosUsuario = {
             areas: false, categorias: false, sucursales: false, regiones: false,
             incidencias: true, usuarios: false, estadisticas: false, tareas: false,
-            monitoreo: false, permisos: false, admin: false
+            monitoreo: false, permisos: false, loginMonitoreo: false, admin: false
         };
+    }
+}
+
+// ========== MOSTRAR MENSAJE DE SIN PERMISOS ==========
+function mostrarSinPermisos() {
+    const container = document.querySelector('.right-layout');
+    if (container) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 80px 20px;">
+                <p style="color: #ffaa88; font-size: 1.2rem;">No tienes permisos habilitados por el administrador</p>
+            </div>
+        `;
     }
 }
 
@@ -409,7 +450,8 @@ function renderizarColumnas() {
                     'tareas': 'tareas',
                     'monitoreo': 'monitoreo',
                     'mapa': 'monitoreo',
-                    'tablero': 'monitoreo'
+                    'tablero': 'monitoreo',
+                    'permisos': 'permisos'
                 };
 
                 const moduloKey = moduloMap[moduloBase] || moduloBase;
