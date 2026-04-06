@@ -1806,7 +1806,7 @@ class NavbarComplete {
                     </div>
                     <a href="../estadisticas/estadisticas.html" class="gestionar-dropdown-option" id="estadisticasBtn" style="width: 100%;">
                         <i class="fa-solid fa-chart-simple"></i>
-                        <span>Estadísticas de Incidencias</span>
+                        <span>Estadísticas</span>
                     </a>
                 </div>
 

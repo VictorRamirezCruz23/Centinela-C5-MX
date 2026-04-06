@@ -1,7 +1,7 @@
 // ========== panelControl.js - PANEL DE CONTROL COLABORADOR ==========
 // CON ACCESO RÁPIDO Y MÓDULOS EN 3 COLUMNAS
 // AGREGADO: MÓDULO MERCANCÍA PERDIDA (LISTA, CREAR, ESTADÍSTICAS DE EXTRAVÍO)
-// UBICADO DESPUÉS DEL MÓDULO DE ESTADÍSTICAS
+// UBICADO EN LA PRIMERA POSICIÓN (ANTES DE ÁREAS)
 
 let permisoManager = null;
 let usuarioActual = null;
@@ -100,7 +100,44 @@ const ACCESO_RAPIDO_CONFIG = [
 ];
 
 // Configuración de módulos agrupados por columnas
+// ========== MÓDULO MERCANCÍA PERDIDA EN PRIMERA POSICIÓN ==========
 const COLUMNAS_CONFIG = [
+    // PRIMERO: MÓDULO MERCANCÍA PERDIDA
+    {
+        titulo: 'SECCION DE EXTRAVIO',
+        icono: 'fa-box-open',
+        color: '#ff8c00',
+        permisos: ['incidenciasRecuperacion', 'incidencias'],
+        tarjetas: [
+            {
+                modulo: 'incidenciasRecuperacionLista',
+                titulo: 'Lista de extravíos',
+                descripcion: 'Ver todos los registros de mercancía perdida',
+                icono: 'fa-list',
+                color: 'orange',
+                url: '/usuarios/colaborador/incidenciasRecuperacion/incidenciasRecuperacion.html',
+                permisoEspecifico: 'incidenciasRecuperacion'
+            },
+            {
+                modulo: 'crearIncidenciasRecuperacion',
+                titulo: 'Crear extravío',
+                descripcion: 'Registrar nueva mercancía perdida',
+                icono: 'fa-plus-circle',
+                color: 'orange',
+                url: '/usuarios/colaborador/crearIncidenciasRecuperacion/crearIncidenciasRecuperacion.html',
+                permisoEspecifico: 'crearIncidenciasRecuperacion'
+            },
+            {
+                modulo: 'estadisticasIncidenciasRecuperacion',
+                titulo: 'Estadísticas de extravío',
+                descripcion: 'Análisis de pérdidas y recuperaciones',
+                icono: 'fa-chart-line',
+                color: 'orange',
+                url: '/usuarios/colaborador/estadisticasIncidenciasRecuperacion/estadisticasIncidenciasRecuperacion.html',
+                permisoEspecifico: 'estadisticasIncidenciasRecuperacion'
+            }
+        ]
+    },
     // FILA 1 - MÓDULOS PRINCIPALES
     {
         titulo: 'PANEL DE ÁREAS',
@@ -161,42 +198,6 @@ const COLUMNAS_CONFIG = [
         tarjetas: [
             { modulo: 'estadisticasVer', titulo: 'Ver Estadísticas', descripcion: 'Visualizar reportes y gráficas', icono: 'fa-chart-simple', color: 'purple', url: '/usuarios/colaboradores/estadisticas/estadisticas.html' },
             { modulo: 'reportes', titulo: 'Reportes', descripcion: 'Generar reportes personalizados', icono: 'fa-file-alt', color: 'purple', url: '/usuarios/colaboradores/reportes/reportes.html' }
-        ]
-    },
-    // ========== MÓDULO MERCANCÍA PERDIDA (UBICADO DESPUÉS DE ESTADÍSTICAS) ==========
-    {
-        titulo: 'MERCANCÍA PERDIDA',
-        icono: 'fa-box-open',
-        color: '#ff8c00',
-        permisos: ['incidenciasRecuperacion', 'incidencias'],
-        tarjetas: [
-            {
-                modulo: 'incidenciasRecuperacionLista',
-                titulo: 'Lista de extravíos',
-                descripcion: 'Ver todos los registros de mercancía perdida',
-                icono: 'fa-list',
-                color: 'orange',
-                url: '/usuarios/colaborador/incidenciasRecuperacion/incidenciasRecuperacion.html',
-                permisoEspecifico: 'incidenciasRecuperacion'
-            },
-            {
-                modulo: 'crearIncidenciasRecuperacion',
-                titulo: 'Crear extravío',
-                descripcion: 'Registrar nueva mercancía perdida',
-                icono: 'fa-plus-circle',
-                color: 'orange',
-                url: '/usuarios/colaborador/crearIncidenciasRecuperacion/crearIncidenciasRecuperacion.html',
-                permisoEspecifico: 'crearIncidenciasRecuperacion'
-            },
-            {
-                modulo: 'estadisticasIncidenciasRecuperacion',
-                titulo: 'Estadísticas de extravío',
-                descripcion: 'Análisis de pérdidas y recuperaciones',
-                icono: 'fa-chart-line',
-                color: 'orange',
-                url: '/usuarios/colaborador/estadisticasIncidenciasRecuperacion/estadisticasIncidenciasRecuperacion.html',
-                permisoEspecifico: 'estadisticasIncidenciasRecuperacion'
-            }
         ]
     },
     // FILA 3 - MÓDULOS DE TAREAS Y MONITOREO
