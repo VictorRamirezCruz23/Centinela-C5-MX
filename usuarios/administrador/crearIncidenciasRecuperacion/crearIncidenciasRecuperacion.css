@@ -611,7 +611,7 @@ body {
     padding: 20px;
     background: var(--color-bg-tertiary);
     border-radius: var(--border-radius-medium);
-    border: 2px dashed var(--color-border-light);
+    border: 2px dashed #ffffff !important; /* Cambiado a blanco sólido */
 }
 
 .upload-area {
@@ -621,6 +621,44 @@ body {
     gap: 15px;
 }
 
+/* =============================================
+   EDITOR DE IMÁGENES - MODIFICADO
+   ============================================= */
+.image-upload-section {
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--border-radius-medium);
+    border: 2px dashed #ffffff !important; /* Cambiado a blanco sólido */
+}
+
+/* Asegurar que el borde punteado siempre sea blanco */
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Eliminar cualquier cambio de color en hover para el borde punteado */
+.image-upload-section:hover {
+    border-color: #ffffff !important; /* Mantener blanco al hacer hover */
+}
+
+/* Estilos para preview de imágenes - mantener borde original */
+.preview-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--border-radius-small);
+    overflow: hidden;
+    border: 2px solid var(--color-border-light);
+    transition: all 0.3s ease;
+}
+
+.preview-item:hover {
+    border-color: var(--color-accent-primary);
+    transform: scale(1.02);
+}
 .btn-upload {
     background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
     border: 1px solid var(--color-accent-primary);
