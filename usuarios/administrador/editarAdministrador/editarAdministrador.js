@@ -256,14 +256,13 @@ function updateUI(elements, user) {
 
     // ✅ ACTUALIZAR TELÉFONO - SIEMPRE MUESTRA EL CAMPO (aunque esté vacío)
     if (elements.telefono) {
-        elements.telefono.value = user.telefono || '';
-        console.log('📞 Teléfono cargado para administrador:', user.telefono || '(vacío)');
+        elements.telefono.value = user.telefono || ''; 
     }
 
     if (elements.organizationName && user.organizacion) {
         elements.organizationName.value = user.organizacion;
     }
-
+ 
     if (elements.position) {
         elements.position.value = user.rol === 'administrador' ? 'Administrador' : 'Usuario';
     }
