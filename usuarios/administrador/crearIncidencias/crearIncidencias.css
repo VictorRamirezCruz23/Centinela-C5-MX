@@ -1369,3 +1369,305 @@ select:not(.field-disabled):focus {
     border-color: var(--color-accent-primary);
     box-shadow: 0 0 0 2px rgba(0, 207, 255, 0.2);
 }
+/* =============================================
+   VALIDACIÓN DE IMÁGENES OBLIGATORIAS
+   ============================================= */
+
+/* Highlight para sección de imágenes cuando falta evidencia */
+.highlight-section {
+    animation: highlightPulse 0.6s ease-in-out 3;
+    background: rgba(255, 193, 7, 0.08);
+    border-radius: var(--border-radius-medium);
+    padding: 15px;
+    margin: -5px -5px 0 -5px;
+    border-left: 3px solid var(--color-warning);
+}
+
+@keyframes highlightPulse {
+    0% {
+        background-color: rgba(255, 193, 7, 0);
+        box-shadow: none;
+        border-left-color: transparent;
+    }
+    50% {
+        background-color: rgba(255, 193, 7, 0.15);
+        box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+        border-left-color: var(--color-warning);
+    }
+    100% {
+        background-color: rgba(255, 193, 7, 0);
+        box-shadow: none;
+        border-left-color: transparent;
+    }
+}
+
+/* Animación de shake para el dropzone cuando falta imagen */
+.shake-animation {
+    animation: shakeDropzone 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shakeDropzone {
+    0%, 100% { 
+        transform: translateX(0); 
+    }
+    10%, 30%, 50%, 70%, 90% { 
+        transform: translateX(-4px); 
+    }
+    20%, 40%, 60%, 80% { 
+        transform: translateX(4px); 
+    }
+}
+
+/* Dropzone con estado de error (cuando falta imagen) */
+.drop-zone.error-state {
+    border-color: var(--color-danger) !important;
+    border-style: solid !important;
+    background: rgba(220, 53, 69, 0.05);
+    animation: shakeDropzone 0.5s ease-in-out;
+}
+
+.drop-zone.error-state i {
+    color: var(--color-danger);
+}
+
+.drop-zone.error-state p {
+    color: var(--color-danger);
+}
+
+/* Badde de campo obligatorio para el dropzone */
+.drop-zone {
+    position: relative;
+    border: 2px dashed var(--color-border-light);
+    border-radius: var(--border-radius-medium);
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--color-bg-tertiary);
+    margin-bottom: 1.5rem;
+}
+
+.drop-zone .required-badge {
+    position: absolute;
+    top: -12px;
+    right: 15px;
+    background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border: 1px solid var(--color-warning);
+    color: var(--color-warning);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-family: var(--font-family-primary);
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+    box-shadow: var(--shadow-small);
+}
+
+.drop-zone .required-badge i {
+    font-size: 10px;
+    color: var(--color-warning);
+    margin: 0;
+}
+
+.drop-zone:hover {
+    border-color: var(--color-accent-primary);
+    background: rgba(0, 207, 255, 0.02);
+    transform: translateY(-1px);
+}
+
+.drop-zone:hover .required-badge {
+    border-color: var(--color-accent-primary);
+    color: var(--color-accent-primary);
+}
+
+.drop-zone:hover .required-badge i {
+    color: var(--color-accent-primary);
+}
+
+.drop-zone.drag-over {
+    border-color: var(--color-success);
+    border-style: solid;
+    background: rgba(40, 167, 69, 0.05);
+}
+
+.drop-zone.drag-over .required-badge {
+    border-color: var(--color-success);
+    color: var(--color-success);
+}
+
+.drop-zone.drag-over .required-badge i {
+    color: var(--color-success);
+}
+
+/* Indicador visual en el título de la sección de imágenes */
+.section-title i.fa-image {
+    transition: all 0.3s ease;
+}
+
+.section-title.required-highlight i.fa-image {
+    color: var(--color-warning);
+    filter: drop-shadow(0 0 4px var(--color-warning));
+    animation: iconPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+}
+
+/* Tooltip flotante para indicar que las imágenes son obligatorias */
+.image-required-tooltip {
+    position: fixed;
+    background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border: 1px solid var(--color-warning);
+    color: var(--color-text-primary);
+    padding: 8px 15px;
+    border-radius: var(--border-radius-medium);
+    font-size: 12px;
+    font-family: var(--font-family-secondary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10000;
+    box-shadow: var(--shadow-normal);
+    backdrop-filter: blur(8px);
+    animation: tooltipFadeIn 0.3s ease;
+    pointer-events: none;
+}
+
+.image-required-tooltip i {
+    color: var(--color-warning);
+    font-size: 14px;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mensaje de advertencia persistente en la sección de imágenes */
+.image-warning-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 193, 7, 0.1);
+    border-left: 3px solid var(--color-warning);
+    border-radius: var(--border-radius-small);
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    animation: slideIn 0.3s ease;
+}
+
+.image-warning-message i {
+    color: var(--color-warning);
+    font-size: 16px;
+}
+
+.image-warning-message strong {
+    color: var(--color-warning);
+    font-family: var(--font-family-primary);
+}
+
+/* Contador de imágenes con indicador de obligatorio */
+.images-count-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.images-count-badge .required-star {
+    color: var(--color-warning);
+    font-size: 12px;
+}
+
+#imagenesCount {
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-radius: 20px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+#imagenesCount.zero-images {
+    border-color: var(--color-warning);
+    color: var(--color-warning);
+    animation: pulseWarning 1s ease-in-out infinite;
+}
+
+@keyframes pulseWarning {
+    0%, 100% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+        text-shadow: 0 0 4px var(--color-warning);
+    }
+}
+
+/* Estilo para el botón de crear cuando falta imagen (opcional) */
+.btn-success.disabled-by-images {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(0.2);
+}
+
+/* Responsive para mensajes de validación */
+@media (max-width: 768px) {
+    .drop-zone .required-badge {
+        top: -10px;
+        right: 10px;
+        font-size: 9px;
+        padding: 3px 10px;
+    }
+    
+    .drop-zone .required-badge i {
+        font-size: 9px;
+    }
+    
+    .image-warning-message {
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+    
+    .highlight-section {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .drop-zone .required-badge {
+        position: static;
+        display: inline-flex;
+        margin-top: 10px;
+        justify-content: center;
+        width: auto;
+    }
+    
+    .drop-zone {
+        padding: 1.5rem;
+    }
+}

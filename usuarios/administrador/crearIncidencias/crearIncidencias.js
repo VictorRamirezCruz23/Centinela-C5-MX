@@ -24,7 +24,7 @@ class CrearIncidenciaController {
         this.AreaManager = null;
         this.notificacionManager = null;
         this.notificacionSucursalManager = null;
-        
+
         this.pdfGenerator = null;
 
         this._init();
@@ -71,7 +71,7 @@ class CrearIncidenciaController {
             try {
                 const { generadorIPH } = await import('/components/iph-generator.js');
                 this.pdfGenerator = generadorIPH;
-                console.log('✅ PDFGenerator inicializado correctamente');
+
                 return true;
             } catch (error) {
                 console.error('Error inicializando PDFGenerator:', error);
@@ -95,7 +95,7 @@ class CrearIncidenciaController {
             await this._cargarSucursalesParaNotificacion();
             await this._initNotificacionManager();
             await this._initNotificacionSucursalManager();
-            
+
             await this._initPDFGenerator();
 
             this._configurarOrganizacion();
@@ -147,8 +147,6 @@ class CrearIncidenciaController {
             
             if (imageFiles.length > 0) {
                 this._procesarImagenes(imageFiles);
-                // Notificación silenciosa - solo console.log
-                console.log(`${imageFiles.length} imagen(es) agregadas por arrastrar`);
             }
         });
         
@@ -162,7 +160,6 @@ class CrearIncidenciaController {
             this._manejarPegarImagen(e);
         });
         
-        console.log('✅ Drag & drop y paste configurados');
     }
 
     _crearDropZone() {
@@ -217,7 +214,6 @@ class CrearIncidenciaController {
         if (imageFiles.length > 0) {
             event.preventDefault();
             this._procesarImagenes(imageFiles);
-            console.log(`${imageFiles.length} imagen(es) pegadas`);
         }
     }
 
@@ -454,7 +450,6 @@ class CrearIncidenciaController {
                 );
 
                 this.areas = areasObtenidas.filter(area => area.estado === 'activa');
-                console.log('✅ Áreas activas cargadas:', this.areas.length);
             }
         } catch (error) {
             console.error('Error cargando áreas:', error);
@@ -470,8 +465,7 @@ class CrearIncidenciaController {
             this.sucursalesParaNotificar = await sucursalManager.getSucursalesByOrganizacion(
                 this.usuarioActual.organizacionCamelCase
             );
-            
-            console.log('✅ Sucursales cargadas para notificaciones:', this.sucursalesParaNotificar.length);
+        
         } catch (error) {
             console.error('Error cargando sucursales:', error);
             this.sucursalesParaNotificar = [];
@@ -939,11 +933,7 @@ class CrearIncidenciaController {
 
         this._actualizarVistaPreviaImagenes();
         document.getElementById('inputImagenes').value = '';
-        
-        // Solo log en consola, sin SweetAlert
-        if (archivosValidos.length > 0) {
-            console.log(`${archivosValidos.length} imagen(es) agregadas correctamente`);
-        }
+
     }
 
     _actualizarVistaPreviaImagenes() {
@@ -1288,7 +1278,6 @@ class CrearIncidenciaController {
                     returnBlob: true,
                     diagnosticar: false
                 });
-                console.log(`📦 PDF generado: ${(pdfBlob.size / 1024).toFixed(2)} KB`);
             } catch (pdfError) {
                 console.error('Error generando PDF:', pdfError);
                 throw new Error('No se pudo generar el PDF');
@@ -1321,10 +1310,11 @@ class CrearIncidenciaController {
                 []
             );
             
-            console.log('✅ Incidencia creada:', nuevaIncidencia.id);
             
-            // Subir imágenes usando el manager
-            if (datos.imagenes.length > 0) {
+            // SUBIR IMÁGENES SOLO SI HAY (OPCIONAL)
+            let imagenesSubidas = [];
+
+            if (datos.imagenes && datos.imagenes.length > 0) {
                 Swal.update({
                     title: 'Subiendo imágenes...',
                     text: `Subiendo ${datos.imagenes.length} imagen(es)...`
@@ -1346,21 +1336,42 @@ class CrearIncidenciaController {
                     };
                 });
                 
-                const imagenesSubidas = await Promise.all(uploadPromises);
+                imagenesSubidas = await Promise.all(uploadPromises);
                 
                 // Actualizar Firestore con las URLs de las imágenes
-                // En _guardarIncidencia, línea ~584
-            // Usa el método de la clase
-            await this.incidenciaManager.actualizarImagenes(
-                nuevaIncidencia.id,
-                imagenesSubidas,
-                this.usuarioActual.organizacionCamelCase,
-                this.usuarioActual.id,
-                this.usuarioActual.nombreCompleto
-            );
+                await this.incidenciaManager.actualizarImagenes(
+                    nuevaIncidencia.id,
+                    imagenesSubidas,
+                    this.usuarioActual.organizacionCamelCase,
+                    this.usuarioActual.id,
+                    this.usuarioActual.nombreCompleto
+                );
                 
                 nuevaIncidencia.imagenes = imagenesSubidas;
-                console.log(`✅ ${imagenesSubidas.length} imágenes subidas`);
+            } else {
+                // Sin imágenes, asignar array vacío
+                nuevaIncidencia.imagenes = [];
+            }
+
+            // SUBIR PDF SOLO SI SE GENERÓ CORRECTAMENTE
+            if (pdfBlob && pdfBlob.size > 0) {
+                Swal.update({
+                    title: 'Subiendo PDF...',
+                    text: 'Guardando el documento PDF...'
+                });
+                
+                const pdfFile = new File([pdfBlob], `incidencia_${nuevaIncidencia.id}.pdf`, { type: 'application/pdf' });
+                const rutaPDF = `incidencias_${this.usuarioActual.organizacionCamelCase}/${nuevaIncidencia.id}/pdf/incidencia_${nuevaIncidencia.id}.pdf`;
+                
+                const resultadoPDF = await this.incidenciaManager.subirArchivo(pdfFile, rutaPDF);
+                
+                await this.incidenciaManager.actualizarPDF(
+                    nuevaIncidencia.id,
+                    resultadoPDF.url,
+                    this.usuarioActual.organizacionCamelCase,
+                    this.usuarioActual.id,
+                    this.usuarioActual.nombreCompleto
+                );
             }
             
             // Subir PDF
@@ -1382,7 +1393,6 @@ class CrearIncidenciaController {
             this.usuarioActual.nombreCompleto
         );
             
-            console.log('✅ PDF subido exitosamente:', resultadoPDF.url);
             
             Swal.close();
             
@@ -1437,8 +1447,8 @@ class CrearIncidenciaController {
                 title: '¡Incidencia creada!',
                 html: `
                     <div style="text-align: left;">
-                        <p>✅ Incidencia guardada con ${nuevaIncidencia.imagenes?.length || 0} imagen(es).</p>
-                        <p>✅ El PDF se ha generado correctamente.</p>
+                        <p>Incidencia guardada ${nuevaIncidencia.imagenes?.length > 0 ? `con ${nuevaIncidencia.imagenes.length} imagen(es)` : 'sin imágenes'}.</p>
+                        ${pdfBlob && pdfBlob.size > 0 ? '<p>El PDF se ha generado correctamente.</p>' : '<p>No se pudo generar el PDF, pero la incidencia se guardó.</p>'}
                         <p>${mensajeCanalizacion}</p>
                     </div>
                 `,
@@ -1545,8 +1555,6 @@ class CrearIncidenciaController {
                 nombre: suc.nombre
             }));
 
-            console.log('📨 Enviando notificaciones a sucursales:', sucursalesFormateadas);
-
             Swal.fire({
                 title: 'Enviando notificaciones...',
                 text: 'Notificando a colaboradores de las sucursales y administradores',
@@ -1575,9 +1583,9 @@ class CrearIncidenciaController {
             Swal.close();
 
             if (resultado.success) {
-                let mensaje = `✅ Notificaciones enviadas:`;
-                mensaje += `<br>👥 ${resultado.totalColaboradores} colaboradores en ${resultado.sucursales} sucursales`;
-                mensaje += `<br>👑 ${resultado.totalAdministradores} administradores`;
+                let mensaje = `Notificaciones enviadas:`;
+                mensaje += `<br>${resultado.totalColaboradores} colaboradores en ${resultado.sucursales} sucursales`;
+                mensaje += `<br>${resultado.totalAdministradores} administradores`;
                 
                 if (resultado.push && resultado.push.enviados > 0) {
                     mensaje += `<br>📱 Push: ${resultado.push.enviados}/${resultado.push.total} enviados`;
@@ -1591,7 +1599,7 @@ class CrearIncidenciaController {
                     showConfirmButton: false
                 });
             } else {
-                console.error('❌ Error:', resultado.error);
+                console.error('Error:', resultado.error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -1720,8 +1728,6 @@ class CrearIncidenciaController {
                 nombre: area.nombre
             }));
 
-            console.log('📨 Enviando notificaciones a áreas:', areasFormateadas);
-
             Swal.fire({
                 title: 'Enviando notificaciones...',
                 text: 'Notificando a colaboradores de las áreas y administradores',
@@ -1749,9 +1755,9 @@ class CrearIncidenciaController {
             Swal.close();
 
             if (resultado.success) {
-                let mensaje = `✅ Notificaciones enviadas:`;
-                mensaje += `<br>👥 ${resultado.totalColaboradores} colaboradores en ${resultado.areas} áreas`;
-                mensaje += `<br>👑 ${resultado.totalAdministradores} administradores`;
+                let mensaje = `Notificaciones enviadas:`;
+                mensaje += `<br> ${resultado.totalColaboradores} colaboradores en ${resultado.areas} áreas`;
+                mensaje += `<br> ${resultado.totalAdministradores} administradores`;
 
                 if (resultado.push && resultado.push.enviados > 0) {
                     mensaje += `<br>📱 Push: ${resultado.push.enviados}/${resultado.push.total} enviados`;
@@ -1765,7 +1771,7 @@ class CrearIncidenciaController {
                     showConfirmButton: false
                 });
             } else {
-                console.error('❌ Error:', resultado.error);
+                console.error('Error:', resultado.error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
