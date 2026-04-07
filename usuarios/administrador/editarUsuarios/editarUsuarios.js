@@ -1,5 +1,5 @@
 // editUser.js - Editor de colaboradores (VERSIÓN COMPLETA CON TELÉFONO)
-// CON REGISTRO DE BITÁCORA
+// CON REGISTRO DE BITÁCORA - SIN CONEXIÓN DIRECTA A FIREBASE
 import { UserManager } from '/clases/user.js';
 import { AreaManager } from '/clases/area.js';
 
@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         await inicializarManagers();
         const userManager = new UserManager();
         iniciarEditor(userManager);
+        console.log('Editor de usuarios cargado exitosamente');
     } catch (error) {
         console.error('❌ Error cargando módulos:', error);
         mostrarErrorConfiguracion(error);
@@ -21,17 +22,12 @@ async function inicializarManagers() {
     try {
         const { HistorialUsuarioManager } = await import('/clases/historialUsuario.js');
         historialManager = new HistorialUsuarioManager();
-        console.log('📋 HistorialManager inicializado para editar usuarios');
-    } catch (error) {
-        console.error('Error inicializando historialManager:', error);
-    }
-
-    try {
+        
         const { SucursalManager } = await import('/clases/sucursal.js');
         sucursalManager = new SucursalManager();
-        console.log('🏢 SucursalManager inicializado para editar usuarios');
+        
     } catch (error) {
-        console.error('Error inicializando sucursalManager:', error);
+        console.error('Error inicializando managers:', error);
     }
 }
 
@@ -53,7 +49,6 @@ async function registrarEdicionColaborador(colaboradorOriginal, datosActualizado
                 fechaEdicion: new Date().toISOString()
             }
         });
-        console.log(`✅ Edición de colaborador "${colaboradorOriginal.nombreCompleto}" registrada en bitácora`);
     } catch (error) {
         console.error('Error registrando edición de colaborador:', error);
     }
@@ -81,7 +76,6 @@ async function registrarCambioEstadoColaborador(colaborador, nuevoEstado, estado
                 fechaCambio: new Date().toISOString()
             }
         });
-        console.log(`✅ Cambio de estado de colaborador "${colaborador.nombreCompleto}" registrado en bitácora`);
     } catch (error) {
         console.error('Error registrando cambio de estado de colaborador:', error);
     }
@@ -105,7 +99,6 @@ async function registrarInhabilitacionColaborador(colaborador, usuarioActual) {
                 razon: 'Inhabilitado desde el panel de edición'
             }
         });
-        console.log(`✅ Inhabilitación de colaborador "${colaborador.nombreCompleto}" registrada en bitácora`);
     } catch (error) {
         console.error('Error registrando inhabilitación de colaborador:', error);
     }
@@ -128,7 +121,6 @@ async function registrarCambioFotoPerfil(colaborador, usuarioActual) {
                 fechaCambio: new Date().toISOString()
             }
         });
-        console.log(`✅ Cambio de foto de perfil de colaborador "${colaborador.nombreCompleto}" registrado en bitácora`);
     } catch (error) {
         console.error('Error registrando cambio de foto de perfil:', error);
     }
@@ -153,13 +145,12 @@ async function registrarCambioSucursal(colaborador, sucursalAnterior, sucursalNu
                 fechaCambio: new Date().toISOString()
             }
         });
-        console.log(`✅ Cambio de sucursal de colaborador "${colaborador.nombreCompleto}" registrado en bitácora`);
     } catch (error) {
         console.error('Error registrando cambio de sucursal:', error);
     }
 }
 
-// ✅ Registrar cambio de teléfono
+// Registrar cambio de teléfono
 async function registrarCambioTelefono(colaborador, telefonoAnterior, telefonoNuevo, usuarioActual) {
     if (!historialManager) return;
 
@@ -178,7 +169,6 @@ async function registrarCambioTelefono(colaborador, telefonoAnterior, telefonoNu
                 fechaCambio: new Date().toISOString()
             }
         });
-        console.log(`✅ Cambio de teléfono de colaborador "${colaborador.nombreCompleto}" registrado en bitácora`);
     } catch (error) {
         console.error('Error registrando cambio de teléfono:', error);
     }
@@ -228,7 +218,6 @@ async function iniciarEditor(userManager) {
         let usuarioActual = obtenerUsuarioActual();
 
         if (!usuarioActual) {
-            console.warn('No hay información de usuario, usando valores por defecto');
             usuarioActual = {
                 id: `usuario_${Date.now()}`,
                 uid: `usuario_${Date.now()}`,
@@ -248,9 +237,8 @@ async function iniciarEditor(userManager) {
         configurarCambioPassword(elements, userManager);
         configurarEliminacion(elements, userManager);
         configurarSelectorStatus(elements);
-        configurarFiltroNumerico(elements); // ✅ Configurar filtro para teléfono
+        configurarFiltroNumerico(elements);
 
-        // Cargar áreas (esto también cargará sucursales si el área es sucursales)
         await cargarAreas(elements);
 
     } catch (error) {
@@ -260,10 +248,8 @@ async function iniciarEditor(userManager) {
     }
 }
 
-// ✅ Filtro solo números para teléfono - MEJORADO Y GARANTIZADO
 function configurarFiltroNumerico(elements) {
     if (elements.telefono) {
-        // Evento input - filtra cualquier caracter no numérico
         elements.telefono.addEventListener('input', function (e) {
             let originalValue = this.value;
             let filteredValue = originalValue.replace(/[^0-9]/g, '');
@@ -275,7 +261,6 @@ function configurarFiltroNumerico(elements) {
             }
         });
 
-        // Evento paste - solo pega números
         elements.telefono.addEventListener('paste', function (e) {
             e.preventDefault();
             const pastedText = (e.clipboardData || window.clipboardData).getData('text');
@@ -287,7 +272,6 @@ function configurarFiltroNumerico(elements) {
             }
         });
 
-        // Evento keypress - solo permite teclas numéricas
         elements.telefono.addEventListener('keypress', function (e) {
             if (e.ctrlKey || e.altKey || e.metaKey) return;
             if (e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Tab' || 
@@ -300,7 +284,6 @@ function configurarFiltroNumerico(elements) {
     }
 }
 
-// Obtener usuario actual
 function obtenerUsuarioActual() {
     try {
         const adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
@@ -345,7 +328,6 @@ function generarCamelCase(texto) {
         .replace(/[^a-zA-Z0-9]/g, '');
 }
 
-// Funciones de utilidad
 function obtenerIdDesdeURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const collaboratorId = urlParams.get('id');
@@ -379,7 +361,7 @@ function obtenerElementosDOM() {
 
         fullName: document.getElementById('fullName'),
         email: document.getElementById('email'),
-        telefono: document.getElementById('telefono'), // ✅ Elemento teléfono
+        telefono: document.getElementById('telefono'),
         organizationName: document.getElementById('organizationName'),
         areaSelect: document.getElementById('areaSelect'),
         cargoEnAreaSelect: document.getElementById('cargoEnAreaSelect'),
@@ -443,12 +425,6 @@ async function cargarDatosColaborador(userManager, collaboratorId, elements) {
             throw new Error('Colaborador no encontrado');
         }
 
-        // 🔴 LOG IMPORTANTE - Verificar datos
-        console.log('🔴🔴🔴 DATOS DEL COLABORADOR DESDE USERMANAGER:');
-        console.log('   - sucursalAsignadaId:', collaborator.sucursalAsignadaId);
-        console.log('   - sucursalAsignadaNombre:', collaborator.sucursalAsignadaNombre);
-        console.log('   - telefono:', collaborator.telefono);
-
         window.currentCollaborator = collaborator;
         window.colaboradorOriginal = JSON.parse(JSON.stringify(collaborator));
 
@@ -493,10 +469,8 @@ function actualizarInterfaz(elements, collaborator) {
         elements.email.value = collaborator.correoElectronico;
     }
 
-    // ✅ ACTUALIZAR TELÉFONO - SIEMPRE MUESTRA EL CAMPO (aunque esté vacío)
     if (elements.telefono) {
         elements.telefono.value = collaborator.telefono || '';
-        console.log('📞 Teléfono cargado:', collaborator.telefono || '(vacío)');
     }
 
     if (elements.organizationName && collaborator.organizacion) {
@@ -525,7 +499,6 @@ function actualizarInterfaz(elements, collaborator) {
         });
     }
 
-    // Foto de perfil
     if (collaborator.fotoUsuario) {
         const profileUrl = collaborator.getFotoUrl();
         if (elements.profileImage) {
@@ -544,7 +517,6 @@ function actualizarInterfaz(elements, collaborator) {
         }
     }
 
-    // Logo de organización
     if (collaborator.fotoOrganizacion) {
         const orgUrl = collaborator.fotoOrganizacion;
         if (elements.orgImage) {
@@ -611,8 +583,6 @@ function mostrarMensaje(element, type, text) {
     }
 }
 
-// ========== FUNCIONES PARA CARGAR ÁREAS Y SUCURSALES ==========
-
 async function cargarAreas(elements) {
     if (!elements.areaSelect) return;
 
@@ -654,25 +624,18 @@ async function cargarAreas(elements) {
             if (areaExiste) {
                 elements.areaSelect.value = collaborator.areaAsignadaId;
 
-                // Disparar evento change para cargar cargos
                 const event = new Event('change', { bubbles: true });
                 elements.areaSelect.dispatchEvent(event);
 
-                // Verificar si es área sucursales
                 const areaNombre = elements.areaSelect.options[elements.areaSelect.selectedIndex]?.getAttribute('data-nombre') || '';
                 const esAreaSucursales = areaNombre.toLowerCase() === 'sucursales' || areaNombre.toLowerCase() === 'sucursal';
 
-                console.log('🔴 Área seleccionada:', areaNombre, 'esAreaSucursales:', esAreaSucursales);
-                console.log('🔴 Sucursal asignada del colaborador:', collaborator.sucursalAsignadaId, collaborator.sucursalAsignadaNombre);
-
                 if (esAreaSucursales && collaborator.sucursalAsignadaId) {
-                    console.log('🏢 Área sucursales detectada, forzando carga de sucursal asignada:', collaborator.sucursalAsignadaId);
                     setTimeout(() => {
                         cargarSucursales(elements);
                     }, 300);
                 }
 
-                // Seleccionar cargo
                 const seleccionarCargo = () => {
                     if (collaborator.cargo && collaborator.cargo.id) {
                         const cargoSelect = elements.cargoEnAreaSelect;
@@ -680,7 +643,6 @@ async function cargarAreas(elements) {
                             const option = Array.from(cargoSelect.options).find(opt => opt.value === collaborator.cargo.id);
                             if (option) {
                                 cargoSelect.value = option.value;
-                                console.log('✅ Cargo seleccionado por ID:', collaborator.cargo.id);
                                 return true;
                             }
                         }
@@ -692,7 +654,6 @@ async function cargarAreas(elements) {
                         );
                         if (optionPorNombre) {
                             elements.cargoEnAreaSelect.value = optionPorNombre.value;
-                            console.log('✅ Cargo seleccionado por nombre:', collaborator.cargo.nombre);
                             return true;
                         }
                     }
@@ -729,7 +690,6 @@ function cargarCargosPorArea(elements) {
     elements.cargoEnAreaSelect.innerHTML = '';
     elements.cargoEnAreaSelect.disabled = true;
 
-    // Ocultar campo de sucursal por defecto
     if (elements.sucursalContainer) {
         elements.sucursalContainer.style.display = 'none';
     }
@@ -766,11 +726,9 @@ function cargarCargosPorArea(elements) {
 
     elements.cargoEnAreaSelect.disabled = false;
 
-    // Verificar si el área seleccionada es "sucursales" para mostrar el campo de sucursal
     const esAreaSucursales = areaNombre.toLowerCase() === 'sucursales' || areaNombre.toLowerCase() === 'sucursal';
 
     if (esAreaSucursales) {
-        console.log('🏢 Área "sucursales" seleccionada, cargando sucursales...');
         cargarSucursales(elements);
     }
 }
@@ -783,27 +741,16 @@ async function cargarSucursales(elements) {
         const collaborator = window.currentCollaborator;
 
         if (!usuarioActual || !usuarioActual.organizacionCamelCase) {
-            console.warn('No se pudo cargar sucursales: organización no disponible');
             return;
         }
 
-        // Guardar el ID de la sucursal asignada ANTES de cargar
         const sucursalAsignadaId = collaborator.sucursalAsignadaId;
         const sucursalAsignadaNombre = collaborator.sucursalAsignadaNombre;
-
-        console.log('🔴🔴🔴 CARGANDO SUCURSALES - DATOS DEL COLABORADOR:');
-        console.log('   - sucursalAsignadaId:', sucursalAsignadaId);
-        console.log('   - sucursalAsignadaNombre:', sucursalAsignadaNombre);
 
         elements.sucursalSelect.innerHTML = '<option value="">Cargando sucursales...</option>';
         elements.sucursalSelect.disabled = true;
 
         const sucursales = await sucursalManager.getSucursalesByOrganizacion(usuarioActual.organizacionCamelCase);
-
-        console.log('🔴 SUCURSALES DISPONIBLES EN LA BASE DE DATOS:');
-        sucursales.forEach(s => {
-            console.log(`   - ID: ${s.id}, Nombre: ${s.nombre}`);
-        });
 
         if (sucursales.length === 0) {
             elements.sucursalSelect.innerHTML = '<option value="">No hay sucursales disponibles</option>';
@@ -812,7 +759,6 @@ async function cargarSucursales(elements) {
             }
             elements.sucursalSelect.disabled = true;
         } else {
-            // Construir opciones
             let options = '<option value="">Selecciona una sucursal (opcional)</option>';
             let sucursalEncontrada = false;
             let valorSeleccionado = '';
@@ -822,7 +768,6 @@ async function cargarSucursales(elements) {
                 if (isSelected) {
                     sucursalEncontrada = true;
                     valorSeleccionado = sucursal.id;
-                    console.log(`✅✅✅ SUCURSAL ENCONTRADA PARA SELECCIONAR: ${sucursal.nombre} (${sucursal.id})`);
                 }
                 const selectedAttr = isSelected ? 'selected' : '';
                 options += `<option value="${sucursal.id}" data-nombre="${sucursal.nombre}" data-ciudad="${sucursal.ciudad}" ${selectedAttr}>${sucursal.nombre} - ${sucursal.ciudad || 'Sin ciudad'}</option>`;
@@ -833,18 +778,14 @@ async function cargarSucursales(elements) {
 
             if (sucursalAsignadaId && sucursalEncontrada) {
                 elements.sucursalSelect.value = valorSeleccionado;
-                console.log('✅ Sucursal forzada en el select, valor actual:', elements.sucursalSelect.value);
-                console.log('✅ Texto seleccionado:', elements.sucursalSelect.options[elements.sucursalSelect.selectedIndex]?.text);
             }
 
             if (sucursalAsignadaId) {
                 if (sucursalEncontrada) {
-                    console.log('✅ Sucursal seleccionada en el select:', elements.sucursalSelect.value);
                     if (elements.sucursalHint) {
                         elements.sucursalHint.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i> Sucursal asignada: ' + sucursalAsignadaNombre;
                     }
                 } else {
-                    console.warn('⚠️ Sucursal asignada NO ENCONTRADA en la lista:', sucursalAsignadaId);
                     if (elements.sucursalHint) {
                         elements.sucursalHint.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #ff9800;"></i> La sucursal asignada "' + sucursalAsignadaNombre + '" ya no existe. Selecciona una nueva.';
                     }
@@ -880,7 +821,6 @@ function configurarSelectoresAreaCargo(elements) {
     });
 }
 
-// Handlers básicos
 function configurarHandlersBasicos(elements) {
     if (elements.cancelBtn) {
         elements.cancelBtn.addEventListener('click', () => {
@@ -915,7 +855,6 @@ function configurarSelectorStatus(elements) {
     });
 }
 
-// Configurar foto de perfil
 function configurarFotoPerfil(elements, userManager) {
     if (!elements.profileCircle) return;
 
@@ -1033,7 +972,6 @@ async function guardarFotoPerfil(imageBase64, elements, userManager) {
     }
 }
 
-// ✅ Guardar cambios - INCLUYE TELÉFONO
 function configurarGuardado(elements, userManager) {
     if (!elements.saveChangesBtn || !window.currentCollaborator) return;
 
@@ -1105,7 +1043,6 @@ function configurarGuardado(elements, userManager) {
             }
         }
 
-        // ✅ OBTENER TELÉFONO
         const nuevoTelefono = elements.telefono?.value.trim() || '';
         const telefonoOriginal = colaboradorOriginal.telefono || '';
 
@@ -1129,7 +1066,6 @@ function configurarGuardado(elements, userManager) {
             });
         }
 
-        // ✅ DETECTAR CAMBIO DE TELÉFONO
         if (telefonoOriginal !== nuevoTelefono) {
             cambios.push({
                 campo: 'teléfono',
@@ -1235,12 +1171,10 @@ function configurarGuardado(elements, userManager) {
                 updateData.sucursalAsignadaId = sucursalId;
                 updateData.sucursalAsignadaNombre = sucursalNombre;
                 updateData.sucursalAsignadaCiudad = sucursalCiudad;
-                console.log('💾 Guardando sucursal:', { sucursalId, sucursalNombre, sucursalCiudad });
             } else {
                 updateData.sucursalAsignadaId = null;
                 updateData.sucursalAsignadaNombre = null;
                 updateData.sucursalAsignadaCiudad = null;
-                console.log('🗑️ Limpiando sucursal (área no es sucursales)');
             }
 
             await userManager.updateUser(
@@ -1252,7 +1186,6 @@ function configurarGuardado(elements, userManager) {
 
             await registrarEdicionColaborador(colaboradorOriginal, nuevosDatos, cambios, usuarioActual);
 
-            // ✅ REGISTRAR CAMBIO DE TELÉFONO SI APLICA
             const telefonoCambio = cambios.find(c => c.campo === 'teléfono');
             if (telefonoCambio) {
                 await registrarCambioTelefono(colaboradorOriginal, telefonoCambio.anterior, telefonoCambio.nuevo, usuarioActual);
@@ -1306,7 +1239,7 @@ function configurarGuardado(elements, userManager) {
     });
 }
 
-// Cambiar contraseña
+// ✅ MÉTODO ACTUALIZADO - USANDO UserManager en lugar de conexión directa
 function configurarCambioPassword(elements, userManager) {
     if (!elements.changePasswordBtn) return;
 
@@ -1351,55 +1284,51 @@ function configurarCambioPassword(elements, userManager) {
         });
 
         try {
-            const firebaseModule = await import('/config/firebase-config.js');
-            const { sendPasswordResetEmail } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js");
-
-            const actionCodeSettings = {
-                url: window.location.origin + '/verifyEmail.html',
-                handleCodeInApp: false
-            };
-
-            await sendPasswordResetEmail(firebaseModule.auth, userEmail, actionCodeSettings);
+            // ✅ USAR EL MÉTODO DE UserManager en lugar de conexión directa
+            const resultado = await userManager.enviarCorreoRecuperacion(userEmail);
 
             Swal.close();
 
-            await Swal.fire({
-                icon: 'success',
-                title: '¡Enlace enviado exitosamente!',
-                html: `
-                    <div>
-                        <p><strong>Destinatario:</strong> ${userEmail}</p>
-                        <p><strong>Válido por:</strong> 1 hora</p>
-                        <p>El colaborador recibirá instrucciones para restablecer su contraseña.</p>
-                    </div>
-                `,
-                confirmButtonText: 'ENTENDIDO',
-                allowOutsideClick: false,
-                showCloseButton: true
-            });
+            if (resultado.success) {
+                await Swal.fire({
+                    icon: 'success',
+                    title: '¡Enlace enviado exitosamente!',
+                    html: `
+                        <div>
+                            <p><strong>Destinatario:</strong> ${userEmail}</p>
+                            <p><strong>Válido por:</strong> 1 hora</p>
+                            <p>El colaborador recibirá instrucciones para restablecer su contraseña.</p>
+                        </div>
+                    `,
+                    confirmButtonText: 'ENTENDIDO',
+                    allowOutsideClick: false,
+                    showCloseButton: true
+                });
+            } else {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Error al enviar',
+                    text: resultado.message || 'Ocurrió un error al enviar el correo',
+                    confirmButtonText: 'ENTENDIDO'
+                });
+            }
 
         } catch (error) {
             Swal.close();
-
             console.error('❌ Error enviando correo:', error);
 
             let errorMessage = 'Ocurrió un error al enviar el correo';
 
-            switch (error.code) {
-                case 'auth/user-not-found':
-                    errorMessage = 'Usuario no encontrado';
-                    break;
-                case 'auth/invalid-email':
-                    errorMessage = 'Correo inválido';
-                    break;
-                case 'auth/too-many-requests':
-                    errorMessage = 'Demasiados intentos';
-                    break;
-                case 'auth/network-request-failed':
-                    errorMessage = 'Error de conexión';
-                    break;
-                default:
-                    errorMessage = 'Error del sistema';
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = 'Usuario no encontrado';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Correo inválido';
+            } else if (error.code === 'auth/too-many-requests') {
+                errorMessage = 'Demasiados intentos';
+            } else if (error.code === 'auth/network-request-failed') {
+                errorMessage = 'Error de conexión';
+            } else if (error.message) {
+                errorMessage = error.message;
             }
 
             Swal.fire({
@@ -1412,7 +1341,6 @@ function configurarCambioPassword(elements, userManager) {
     });
 }
 
-// Eliminar/inhabilitar
 function configurarEliminacion(elements, userManager) {
     if (!elements.deleteBtn) return;
 
