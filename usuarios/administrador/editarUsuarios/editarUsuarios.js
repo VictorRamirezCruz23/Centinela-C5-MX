@@ -1,4 +1,4 @@
-// editUser.js - Editor de colaboradores (VERSIÓN COMPLETA CON TELÉFONO)
+// editUser.js - Editor de colaboradores (VERSIÓN COMPLETA CON TELÉFONO Y CÓDIGO)
 // CON REGISTRO DE BITÁCORA
 import { UserManager } from '/clases/user.js';
 import { AreaManager } from '/clases/area.js';
@@ -159,7 +159,7 @@ async function registrarCambioSucursal(colaborador, sucursalAnterior, sucursalNu
     }
 }
 
-// ✅ Registrar cambio de teléfono
+// Registrar cambio de teléfono
 async function registrarCambioTelefono(colaborador, telefonoAnterior, telefonoNuevo, usuarioActual) {
     if (!historialManager) return;
 
@@ -181,6 +181,31 @@ async function registrarCambioTelefono(colaborador, telefonoAnterior, telefonoNu
         console.log(`✅ Cambio de teléfono de colaborador "${colaborador.nombreCompleto}" registrado en bitácora`);
     } catch (error) {
         console.error('Error registrando cambio de teléfono:', error);
+    }
+}
+
+// Registrar cambio de código
+async function registrarCambioCodigo(colaborador, codigoAnterior, codigoNuevo, usuarioActual) {
+    if (!historialManager) return;
+
+    try {
+        await historialManager.registrarActividad({
+            usuario: usuarioActual,
+            tipo: 'editar',
+            modulo: 'usuarios',
+            descripcion: `Cambió código de colaborador: ${colaborador.nombreCompleto || colaborador.nombre}`,
+            detalles: {
+                colaboradorId: colaborador.id,
+                colaboradorNombre: colaborador.nombreCompleto || colaborador.nombre,
+                colaboradorEmail: colaborador.correoElectronico,
+                codigoAnterior: codigoAnterior || 'Sin código',
+                codigoNuevo: codigoNuevo || 'Sin código',
+                fechaCambio: new Date().toISOString()
+            }
+        });
+        console.log(`✅ Cambio de código de colaborador "${colaborador.nombreCompleto}" registrado en bitácora`);
+    } catch (error) {
+        console.error('Error registrando cambio de código:', error);
     }
 }
 
@@ -208,6 +233,112 @@ async function verificarLimiteSucursal(sucursalId, organizacionCamelCase, colabo
         console.error('Error verificando límite de sucursal:', error);
         return true;
     }
+}
+
+// ========== FUNCIONES PARA CÓDIGO DE COLABORADOR ==========
+
+/**
+ * Valida que el código tenga formato correcto y sea único en la organización
+ * Si el código está vacío, retorna válido (es opcional)
+ */
+async function validarCodigoColaboradorEdicion(codigo, organizacionCamelCase, colaboradorIdActual) {
+    // Si está vacío, es válido (campo opcional)
+    if (!codigo || codigo.trim() === '') {
+        return { valido: true, mensaje: '' };
+    }
+    
+    // Validar formato: 3 dígitos exactos
+    if (!/^\d{3}$/.test(codigo)) {
+        return { valido: false, mensaje: 'El código debe tener exactamente 3 dígitos (001-999)' };
+    }
+    
+    const numero = parseInt(codigo, 10);
+    if (numero < 1 || numero > 999) {
+        return { valido: false, mensaje: 'El código debe estar entre 001 y 999' };
+    }
+    
+    try {
+        const userManager = new UserManager();
+        const colaboradores = await userManager.getColaboradoresByOrganizacion(organizacionCamelCase, true);
+        
+        // Verificar si el código ya existe (excluyendo al colaborador actual)
+        const existe = colaboradores.some(col => 
+            col.codigoColaborador === codigo && col.id !== colaboradorIdActual
+        );
+        
+        if (existe) {
+            return { valido: false, mensaje: `El código ${codigo} ya está en uso por otro colaborador` };
+        }
+        
+        return { valido: true, mensaje: '' };
+        
+    } catch (error) {
+        console.error('Error validando código:', error);
+        return { valido: true, mensaje: '' };
+    }
+}
+
+/**
+ * Configurar validación del código en tiempo real
+ */
+function configurarValidacionCodigo(elements, organizacionCamelCase, colaboradorId) {
+    if (!elements.codigoColaborador) return;
+    
+    elements.codigoColaborador.addEventListener('input', async function(e) {
+        // Limitar a solo números
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3);
+        
+        // Si está vacío, resetear estilos
+        if (this.value.length === 0) {
+            this.style.borderColor = '';
+            const hint = this.closest('.form-field-group')?.querySelector('.field-hint');
+            if (hint) {
+                hint.style.color = '';
+                hint.innerHTML = `<i class="fas fa-info-circle"></i> Código único de 3 dígitos (001-999). Déjalo vacío si no quieres asignar código.`;
+            }
+            return;
+        }
+        
+        // Validar formato solo si tiene contenido
+        if (this.value.length === 3) {
+            const validacion = await validarCodigoColaboradorEdicion(this.value, organizacionCamelCase, colaboradorId);
+            if (!validacion.valido) {
+                this.style.borderColor = 'var(--color-danger, #dc3545)';
+                const hint = this.closest('.form-field-group')?.querySelector('.field-hint');
+                if (hint) {
+                    hint.style.color = 'var(--color-danger, #dc3545)';
+                    hint.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${validacion.mensaje}`;
+                }
+            } else {
+                this.style.borderColor = 'var(--color-success, #28a745)';
+                const hint = this.closest('.form-field-group')?.querySelector('.field-hint');
+                if (hint) {
+                    hint.style.color = '';
+                    hint.innerHTML = `<i class="fas fa-check-circle"></i> Código válido y disponible`;
+                }
+            }
+        } else {
+            this.style.borderColor = 'var(--color-warning, #ff9800)';
+            const hint = this.closest('.form-field-group')?.querySelector('.field-hint');
+            if (hint) {
+                hint.style.color = 'var(--color-warning, #ff9800)';
+                hint.innerHTML = `<i class="fas fa-info-circle"></i> El código debe tener exactamente 3 dígitos`;
+            }
+        }
+    });
+    
+    // Evento blur para limpiar códigos incompletos
+    elements.codigoColaborador.addEventListener('blur', function() {
+        if (this.value.length > 0 && this.value.length !== 3) {
+            this.value = '';
+            this.style.borderColor = '';
+            const hint = this.closest('.form-field-group')?.querySelector('.field-hint');
+            if (hint) {
+                hint.style.color = '';
+                hint.innerHTML = `<i class="fas fa-info-circle"></i> Código único de 3 dígitos (001-999). Déjalo vacío si no quieres asignar código.`;
+            }
+        }
+    });
 }
 
 // ==================== VARIABLES GLOBALES ====================
@@ -248,7 +379,10 @@ async function iniciarEditor(userManager) {
         configurarCambioPassword(elements, userManager);
         configurarEliminacion(elements, userManager);
         configurarSelectorStatus(elements);
-        configurarFiltroNumerico(elements); // ✅ Configurar filtro para teléfono
+        configurarFiltroNumerico(elements);
+        
+        // Configurar validación del código
+        configurarValidacionCodigo(elements, usuarioActual.organizacionCamelCase, collaboratorId);
 
         // Cargar áreas (esto también cargará sucursales si el área es sucursales)
         await cargarAreas(elements);
@@ -260,10 +394,9 @@ async function iniciarEditor(userManager) {
     }
 }
 
-// ✅ Filtro solo números para teléfono - MEJORADO Y GARANTIZADO
+// Filtro solo números para teléfono
 function configurarFiltroNumerico(elements) {
     if (elements.telefono) {
-        // Evento input - filtra cualquier caracter no numérico
         elements.telefono.addEventListener('input', function (e) {
             let originalValue = this.value;
             let filteredValue = originalValue.replace(/[^0-9]/g, '');
@@ -275,7 +408,6 @@ function configurarFiltroNumerico(elements) {
             }
         });
 
-        // Evento paste - solo pega números
         elements.telefono.addEventListener('paste', function (e) {
             e.preventDefault();
             const pastedText = (e.clipboardData || window.clipboardData).getData('text');
@@ -287,7 +419,6 @@ function configurarFiltroNumerico(elements) {
             }
         });
 
-        // Evento keypress - solo permite teclas numéricas
         elements.telefono.addEventListener('keypress', function (e) {
             if (e.ctrlKey || e.altKey || e.metaKey) return;
             if (e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Tab' || 
@@ -378,8 +509,9 @@ function obtenerElementosDOM() {
         orgPlaceholder: document.getElementById('orgPlaceholder'),
 
         fullName: document.getElementById('fullName'),
+        codigoColaborador: document.getElementById('codigoColaborador'),
         email: document.getElementById('email'),
-        telefono: document.getElementById('telefono'), // ✅ Elemento teléfono
+        telefono: document.getElementById('telefono'),
         organizationName: document.getElementById('organizationName'),
         areaSelect: document.getElementById('areaSelect'),
         cargoEnAreaSelect: document.getElementById('cargoEnAreaSelect'),
@@ -443,11 +575,11 @@ async function cargarDatosColaborador(userManager, collaboratorId, elements) {
             throw new Error('Colaborador no encontrado');
         }
 
-        // 🔴 LOG IMPORTANTE - Verificar datos
         console.log('🔴🔴🔴 DATOS DEL COLABORADOR DESDE USERMANAGER:');
         console.log('   - sucursalAsignadaId:', collaborator.sucursalAsignadaId);
         console.log('   - sucursalAsignadaNombre:', collaborator.sucursalAsignadaNombre);
         console.log('   - telefono:', collaborator.telefono);
+        console.log('   - codigoColaborador:', collaborator.codigoColaborador || '(vacío)');
 
         window.currentCollaborator = collaborator;
         window.colaboradorOriginal = JSON.parse(JSON.stringify(collaborator));
@@ -489,11 +621,15 @@ function actualizarInterfaz(elements, collaborator) {
         elements.fullName.value = collaborator.nombreCompleto;
     }
 
+    if (elements.codigoColaborador) {
+        elements.codigoColaborador.value = collaborator.codigoColaborador || '';
+        console.log('🔢 Código cargado:', collaborator.codigoColaborador || '(vacío)');
+    }
+
     if (elements.email && collaborator.correoElectronico) {
         elements.email.value = collaborator.correoElectronico;
     }
 
-    // ✅ ACTUALIZAR TELÉFONO - SIEMPRE MUESTRA EL CAMPO (aunque esté vacío)
     if (elements.telefono) {
         elements.telefono.value = collaborator.telefono || '';
         console.log('📞 Teléfono cargado:', collaborator.telefono || '(vacío)');
@@ -654,11 +790,9 @@ async function cargarAreas(elements) {
             if (areaExiste) {
                 elements.areaSelect.value = collaborator.areaAsignadaId;
 
-                // Disparar evento change para cargar cargos
                 const event = new Event('change', { bubbles: true });
                 elements.areaSelect.dispatchEvent(event);
 
-                // Verificar si es área sucursales
                 const areaNombre = elements.areaSelect.options[elements.areaSelect.selectedIndex]?.getAttribute('data-nombre') || '';
                 const esAreaSucursales = areaNombre.toLowerCase() === 'sucursales' || areaNombre.toLowerCase() === 'sucursal';
 
@@ -672,7 +806,6 @@ async function cargarAreas(elements) {
                     }, 300);
                 }
 
-                // Seleccionar cargo
                 const seleccionarCargo = () => {
                     if (collaborator.cargo && collaborator.cargo.id) {
                         const cargoSelect = elements.cargoEnAreaSelect;
@@ -729,7 +862,6 @@ function cargarCargosPorArea(elements) {
     elements.cargoEnAreaSelect.innerHTML = '';
     elements.cargoEnAreaSelect.disabled = true;
 
-    // Ocultar campo de sucursal por defecto
     if (elements.sucursalContainer) {
         elements.sucursalContainer.style.display = 'none';
     }
@@ -766,7 +898,6 @@ function cargarCargosPorArea(elements) {
 
     elements.cargoEnAreaSelect.disabled = false;
 
-    // Verificar si el área seleccionada es "sucursales" para mostrar el campo de sucursal
     const esAreaSucursales = areaNombre.toLowerCase() === 'sucursales' || areaNombre.toLowerCase() === 'sucursal';
 
     if (esAreaSucursales) {
@@ -787,7 +918,6 @@ async function cargarSucursales(elements) {
             return;
         }
 
-        // Guardar el ID de la sucursal asignada ANTES de cargar
         const sucursalAsignadaId = collaborator.sucursalAsignadaId;
         const sucursalAsignadaNombre = collaborator.sucursalAsignadaNombre;
 
@@ -812,7 +942,6 @@ async function cargarSucursales(elements) {
             }
             elements.sucursalSelect.disabled = true;
         } else {
-            // Construir opciones
             let options = '<option value="">Selecciona una sucursal (opcional)</option>';
             let sucursalEncontrada = false;
             let valorSeleccionado = '';
@@ -1033,7 +1162,7 @@ async function guardarFotoPerfil(imageBase64, elements, userManager) {
     }
 }
 
-// ✅ Guardar cambios - INCLUYE TELÉFONO
+// Guardar cambios - INCLUYE TELÉFONO Y CÓDIGO
 function configurarGuardado(elements, userManager) {
     if (!elements.saveChangesBtn || !window.currentCollaborator) return;
 
@@ -1105,14 +1234,17 @@ function configurarGuardado(elements, userManager) {
             }
         }
 
-        // ✅ OBTENER TELÉFONO
         const nuevoTelefono = elements.telefono?.value.trim() || '';
         const telefonoOriginal = colaboradorOriginal.telefono || '';
+        
+        const nuevoCodigo = elements.codigoColaborador?.value.trim() || '';
+        const codigoOriginal = colaboradorOriginal.codigoColaborador || '';
 
         const cambios = [];
         const nuevosDatos = {
             nombreCompleto: elements.fullName.value.trim(),
             telefono: nuevoTelefono,
+            codigoColaborador: nuevoCodigo,
             status: elements.statusInput.value === 'active',
             areaAsignadaId: elements.areaSelect?.value || null,
             cargo: cargoObjeto,
@@ -1120,6 +1252,23 @@ function configurarGuardado(elements, userManager) {
             sucursalAsignadaNombre: sucursalNombre,
             sucursalAsignadaCiudad: sucursalCiudad
         };
+
+        // VALIDAR UNICIDAD DEL CÓDIGO
+        const codigoValidacion = await validarCodigoColaboradorEdicion(
+            nuevoCodigo,
+            collaborator.organizacionCamelCase || usuarioActual.organizacionCamelCase,
+            collaborator.id
+        );
+
+        if (!codigoValidacion.valido) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Código inválido',
+                text: codigoValidacion.mensaje,
+                confirmButtonText: 'CORREGIR'
+            });
+            return;
+        }
 
         if (colaboradorOriginal.nombreCompleto !== nuevosDatos.nombreCompleto) {
             cambios.push({
@@ -1129,12 +1278,19 @@ function configurarGuardado(elements, userManager) {
             });
         }
 
-        // ✅ DETECTAR CAMBIO DE TELÉFONO
         if (telefonoOriginal !== nuevoTelefono) {
             cambios.push({
                 campo: 'teléfono',
                 anterior: telefonoOriginal || 'No registrado',
                 nuevo: nuevoTelefono || 'No registrado'
+            });
+        }
+
+        if (codigoOriginal !== nuevoCodigo) {
+            cambios.push({
+                campo: 'código',
+                anterior: codigoOriginal || 'Sin código',
+                nuevo: nuevoCodigo || 'Sin código'
             });
         }
 
@@ -1187,6 +1343,7 @@ function configurarGuardado(elements, userManager) {
         let confirmHtml = `
             <div>
                 <p><strong>Nombre:</strong> ${elements.fullName.value}</p>
+                <p><strong>Código:</strong> ${nuevoCodigo || 'Sin código'}</p>
                 <p><strong>Teléfono:</strong> ${nuevoTelefono || 'No especificado'}</p>
                 <p><strong>Área asignada:</strong> ${areaNombre}</p>
                 <p><strong>Cargo en el área:</strong> ${cargoNombre}</p>
@@ -1226,6 +1383,7 @@ function configurarGuardado(elements, userManager) {
             const updateData = {
                 nombreCompleto: elements.fullName.value.trim(),
                 telefono: nuevoTelefono,
+                codigoColaborador: nuevoCodigo,
                 status: elements.statusInput.value === 'active',
                 cargo: cargoObjeto,
                 areaAsignadaId: elements.areaSelect?.value || null
@@ -1252,10 +1410,14 @@ function configurarGuardado(elements, userManager) {
 
             await registrarEdicionColaborador(colaboradorOriginal, nuevosDatos, cambios, usuarioActual);
 
-            // ✅ REGISTRAR CAMBIO DE TELÉFONO SI APLICA
             const telefonoCambio = cambios.find(c => c.campo === 'teléfono');
             if (telefonoCambio) {
                 await registrarCambioTelefono(colaboradorOriginal, telefonoCambio.anterior, telefonoCambio.nuevo, usuarioActual);
+            }
+
+            const codigoCambio = cambios.find(c => c.campo === 'código');
+            if (codigoCambio) {
+                await registrarCambioCodigo(colaboradorOriginal, codigoCambio.anterior, codigoCambio.nuevo, usuarioActual);
             }
 
             const sucursalCambio = cambios.find(c => c.campo === 'sucursal');
