@@ -64,8 +64,7 @@ class EditarRegionController {
     async _initHistorialManager() {
         try {
             const { HistorialUsuarioManager } = await import('/clases/historialUsuario.js');
-            this.historialManager = new HistorialUsuarioManager();
-            console.log('📋 HistorialManager inicializado para editar regiones');
+            this.historialManager = new HistorialUsuarioManager();            
         } catch (error) {
             console.error('Error inicializando historialManager:', error);
         }
@@ -90,8 +89,7 @@ class EditarRegionController {
                     cambios: cambios,
                     fechaEdicion: new Date().toISOString()
                 }
-            });
-            console.log(`✅ Edición de región "${datosActualizados.nombre || this.regionOriginal?.nombre}" registrada en bitácora`);
+            });            
         } catch (error) {
             console.error('Error registrando edición de región:', error);
         }

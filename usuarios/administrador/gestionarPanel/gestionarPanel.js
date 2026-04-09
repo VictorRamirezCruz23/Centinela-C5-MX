@@ -27,8 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if ('Notification' in window) {
         if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
             Notification.requestPermission();
-        }
-        console.log('📢 Permiso de notificaciones:', Notification.permission);
+        }        
     }
     
     await initGestionPanel();
@@ -357,8 +356,7 @@ async function cargarEventos() {
         let eventos = await response.json();
         
         if (!response.ok) throw new Error(eventos.error_message);
-        
-        console.log(`📊 Eventos obtenidos: ${eventos.length}`);
+                
         
         // Ordenar de más reciente a más antiguo
         eventos = eventos.sort((a, b) => {
@@ -373,8 +371,7 @@ async function cargarEventos() {
                 return !existe;
             });
             
-            if (nuevosEventos.length > 0) {
-                console.log(`🆕 Nuevos eventos detectados: ${nuevosEventos.length}`);
+            if (nuevosEventos.length > 0) {                
                 for (const evento of nuevosEventos) {
                     mostrarNotificacionEvento(evento);
                 }
@@ -452,7 +449,6 @@ async function cargarEventos() {
 }
 
 function mostrarNotificacionEvento(evento) {
-    console.log(`🔔 Mostrando notificación: ${evento.description}`);
     
     let titulo = '';
     let cuerpo = '';
@@ -557,7 +553,7 @@ async function cargarDispositivos() {
         
         if (!response.ok) throw new Error(dispositivos.error_message);
         
-        console.log(`📊 Dispositivos obtenidos: ${dispositivos.length}`);
+        
         
         const dispositivosList = document.getElementById('dispositivosList');
         const dispositivosCount = document.getElementById('dispositivosCount');

@@ -602,7 +602,7 @@ async function cargarIncidencias() {
         }
 
         // Debug: Verificar que los tiempos promedio se cargaron correctamente
-        console.log('Tiempos promedio calculados:', datos.tiemposPromedio);
+
 
     } catch (error) {
         console.error('Error al cargar incidencias:', error);
@@ -751,8 +751,7 @@ function procesarDatosGraficas(incidencias) {
         .slice(0, 8);  // Mostrar hasta 8 colaboradores
 
     // Debug: Verificar resultados
-    console.log('Incidencias finalizadas:', incidenciasFinalizadas.length);
-    console.log('Tiempos resolución calculados:', tiemposPromedio);
+
 
     // =============================================
     // DATOS DE COLABORADORES PARA LA TABLA

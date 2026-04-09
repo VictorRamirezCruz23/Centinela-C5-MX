@@ -58,8 +58,7 @@ class CrearRegionController {
     async _initHistorialManager() {
         try {
             const { HistorialUsuarioManager } = await import('/clases/historialUsuario.js');
-            this.historialManager = new HistorialUsuarioManager();
-            console.log('📋 HistorialManager inicializado para regiones');
+            this.historialManager = new HistorialUsuarioManager();            
         } catch (error) {
             console.error('Error inicializando historialManager:', error);
         }
@@ -81,8 +80,7 @@ class CrearRegionController {
                     regionColor: datos.color,
                     fechaCreacion: new Date().toISOString()
                 }
-            });
-            console.log(`✅ Creación de región "${datos.nombre}" registrada en bitácora`);
+            });            
         } catch (error) {
             console.error('Error registrando creación de región:', error);
         }
