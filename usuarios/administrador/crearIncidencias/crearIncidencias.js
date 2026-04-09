@@ -473,52 +473,55 @@ class CrearIncidenciaController {
     }
 
     _cargarUsuario() {
-        try {
-            const adminInfo = localStorage.getItem('adminInfo');
-            if (adminInfo) {
-                const adminData = JSON.parse(adminInfo);
-                this.usuarioActual = {
-                    id: adminData.id || adminData.uid || `admin_${Date.now()}`,
-                    uid: adminData.uid || adminData.id,
-                    nombreCompleto: adminData.nombreCompleto || 'Administrador',
-                    organizacion: adminData.organizacion || 'Sin organización',
-                    organizacionCamelCase: adminData.organizacionCamelCase ||
-                        this._generarCamelCase(adminData.organizacion),
-                    correo: adminData.correoElectronico || '',
-                    email: adminData.correoElectronico || ''
-                };
-                return;
-            }
-
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-            if (userData && Object.keys(userData).length > 0) {
-                this.usuarioActual = {
-                    id: userData.uid || userData.id || `user_${Date.now()}`,
-                    uid: userData.uid || userData.id,
-                    nombreCompleto: userData.nombreCompleto || userData.nombre || 'Usuario',
-                    organizacion: userData.organizacion || userData.empresa || 'Sin organización',
-                    organizacionCamelCase: userData.organizacionCamelCase ||
-                        this._generarCamelCase(userData.organizacion || userData.empresa),
-                    correo: userData.correo || userData.email || ''
-                };
-                return;
-            }
-
+    try {
+        const adminInfo = localStorage.getItem('adminInfo');
+        if (adminInfo) {
+            const adminData = JSON.parse(adminInfo);
             this.usuarioActual = {
-                id: `admin_${Date.now()}`,
-                uid: `admin_${Date.now()}`,
-                nombreCompleto: 'Administrador',
-                organizacion: 'Mi Organización',
-                organizacionCamelCase: 'miOrganizacion',
-                correo: 'admin@centinela.com',
-                email: 'admin@centinela.com'
+                id: adminData.id || adminData.uid || `admin_${Date.now()}`,
+                uid: adminData.uid || adminData.id,
+                nombreCompleto: adminData.nombreCompleto || 'Administrador',
+                organizacion: adminData.organizacion || 'Sin organización',
+                organizacionCamelCase: adminData.organizacionCamelCase ||
+                    this._generarCamelCase(adminData.organizacion),
+                correo: adminData.correoElectronico || '',
+                email: adminData.correoElectronico || '',
+                codigoColaborador: adminData.codigoColaborador || ''  // ← AGREGAR ESTA LÍNEA
             };
-
-        } catch (error) {
-            console.error('Error cargando usuario:', error);
-            throw error;
+            return;
         }
+
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        if (userData && Object.keys(userData).length > 0) {
+            this.usuarioActual = {
+                id: userData.uid || userData.id || `user_${Date.now()}`,
+                uid: userData.uid || userData.id,
+                nombreCompleto: userData.nombreCompleto || userData.nombre || 'Usuario',
+                organizacion: userData.organizacion || userData.empresa || 'Sin organización',
+                organizacionCamelCase: userData.organizacionCamelCase ||
+                    this._generarCamelCase(userData.organizacion || userData.empresa),
+                correo: userData.correo || userData.email || '',
+                codigoColaborador: userData.codigoColaborador || ''  // ← AGREGAR ESTA LÍNEA
+            };
+            return;
+        }
+
+        this.usuarioActual = {
+            id: `admin_${Date.now()}`,
+            uid: `admin_${Date.now()}`,
+            nombreCompleto: 'Administrador',
+            organizacion: 'Mi Organización',
+            organizacionCamelCase: 'miOrganizacion',
+            correo: 'admin@centinela.com',
+            email: 'admin@centinela.com',
+            codigoColaborador: ''  // ← AGREGAR ESTA LÍNEA
+        };
+
+    } catch (error) {
+        console.error('Error cargando usuario:', error);
+        throw error;
     }
+}
 
     _generarCamelCase(texto) {
         if (!texto || typeof texto !== 'string') return 'sinOrganizacion';
@@ -1065,6 +1068,7 @@ class CrearIncidenciaController {
             fechaInicio: fechaObj,
             detalles: datos.detalles,
             reportadoPorNombre: this.usuarioActual.nombreCompleto,
+            reportadoPorCodigo: this.usuarioActual.codigoColaborador || '', // ← NUEVO CAMPO
             imagenes: evidenciasProcesadas,
             fechaCreacion: new Date(),
             getEstadoTexto: () => datos.estado === 'pendiente' ? 'Pendiente' : 'Finalizada',

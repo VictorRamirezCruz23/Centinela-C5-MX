@@ -191,6 +191,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 sucursalAsignadaNombre: user.sucursalAsignadaNombre || '',
                 sucursalAsignadaCiudad: user.sucursalAsignadaCiudad || '',
 
+                
+                // ✅ NUEVO: GUARDAR CÓDIGO DEL COLABORADOR ← AGREGAR ESTA LÍNEA
+                codigoColaborador: user.codigoColaborador || '',
+                
                 // ✅ GUARDAR EL PLAN (ID del documento en colección 'planes')
                 plan: planId,
                 planId: planId, // Por compatibilidad

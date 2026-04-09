@@ -129,6 +129,30 @@ class IPHGenerator extends PDFBaseGenerator {
         }
         return 'No especificado';
     }
+    async obtenerUsuarioConCodigo(usuarioId) {
+    if (!usuarioId) return null;
+    
+    // Verificar cache
+    if (this.usuariosCodigoCache && this.usuariosCodigoCache[usuarioId]) {
+        return this.usuariosCodigoCache[usuarioId];
+    }
+    
+    try {
+        // Importar UserManager dinámicamente
+        const { UserManager } = await import('/clases/user.js');
+        const userManager = new UserManager();
+        const user = await userManager.getUserById(usuarioId);
+        
+        // Guardar en cache
+        if (!this.usuariosCodigoCache) this.usuariosCodigoCache = {};
+        this.usuariosCodigoCache[usuarioId] = user;
+        
+        return user;
+    } catch (error) {
+        console.error('Error obteniendo usuario con código:', error);
+        return null;
+    }
+}
 
     /**
      * Limita el texto del comentario a un máximo de caracteres y líneas
@@ -886,8 +910,34 @@ class IPHGenerator extends PDFBaseGenerator {
         const sucursalNombre = incidencia.sucursalNombre || this.obtenerNombreSucursal(incidencia.sucursalId);
         pdf.text(`Sucursal: ${sucursalNombre}`, margen + 6, yPos + 24);
 
-        const nombreReportante = incidencia.reportadoPorNombre || this.obtenerNombreUsuario(incidencia.reportadoPorId);
-        pdf.text(`Reportado por: ${nombreReportante}`, margen + 6, yPos + 32);
+
+
+
+
+// Obtener código del colaborador desde incidencia
+let codigoReportante = '';
+
+// Primero intentar usar reportadoPorCodigo (si viene en la incidencia)
+if (incidencia.reportadoPorCodigo && incidencia.reportadoPorCodigo.trim() !== '') {
+    codigoReportante = incidencia.reportadoPorCodigo;
+} 
+// Si no tiene código, usar el nombre
+else if (incidencia.reportadoPorNombre) {
+    codigoReportante = incidencia.reportadoPorNombre;
+}
+// Último recurso: buscar por ID
+else if (incidencia.reportadoPorId) {
+    codigoReportante = this.obtenerNombreUsuario(incidencia.reportadoPorId);
+} 
+else {
+    codigoReportante = 'No especificado';
+}
+
+pdf.text(`Reportado por operador: ${codigoReportante}`, margen + 6, yPos + 32);
+
+
+
+
 
         pdf.restoreGraphicsState();
         yPos += alturaIdentificacion + CONFIG.ESPACIO_ENTRE_BLOQUES;
