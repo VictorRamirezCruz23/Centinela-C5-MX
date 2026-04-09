@@ -18,7 +18,7 @@
     <!-- Archivo para PWA -->
     <link rel="manifest" href="/manifest.json">
     <!-- Estilos modulo -->
-    <link rel="stylesheet" href="crearUsuarios.css">
+    <link rel="stylesheet" href="./crearUsuarios.css">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -154,6 +154,13 @@
                     </div>
 
                     <p class="photo-info" id="orgInfoText">Logo heredado del administrador</p>
+                    
+                </section>
+                <section>
+                    <h2 class="section-title">
+                        <i class="fas fa-info-circle fa-beat-fade"></i> Creando Colaborador
+                    </h2>
+                    <div class="message-container" id="mainMessage"></div>
                 </section>
 
                 <!-- Botón volver -->
@@ -314,16 +321,15 @@
                         </ul>
                     </div>
 
-                    <!-- Mensajes -->
-                    <div class="message-container" id="mainMessage"></div>
+                    
 
                     <!-- Acciones -->
                     <div class="action-buttons">
                         <button type="submit" class="action-btn save-btn" id="registerBtn">
-                            <i class="fas fa-user-plus"></i>CREAR COLABORADOR
+                            <i class="fas fa-user-plus"></i>Crear colaborador
                         </button>
                         <button type="button" class="action-btn cancel-btn" id="cancelBtn">
-                            <i class="fas fa-times"></i>CANCELAR
+                            <i class="fas fa-times"></i>Cancelar
                         </button>
                     </div>
                 </form>
@@ -331,7 +337,6 @@
         </div>
     </div>
     <br>
-
     <!-- Scripts -->
     <script type="module" src="/components/autenticador.js"></script>
     <script type="module" src="/components/cargadorTemas.js"></script>
@@ -339,9 +344,7 @@
     <script src="/components/footerAdministrador.js"></script>
     <script type="module" src="/components/particulas.js"></script>
     <script type="module" src="crearUsuarios.js"></script>
-    <script type="module" src="/components/autenticador.js"></script>
-    <script src="/components/protector-admin.js"> </script>
-
+    <script src="/components/protector-admin.js" data-modulo="usuarios"></script>
 </body>
 
 </html>

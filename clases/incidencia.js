@@ -1220,94 +1220,95 @@ class IncidenciaManager {
         }
     }
 
-    async agregarSeguimiento(incidenciaId, usuarioId, usuarioNombre, descripcion, archivos = [], organizacionCamelCase, evidenciasConComentarios = [], fechaSeleccionada, usuarioActual = null) {
-        try {
-            const incidencia = await this.getIncidenciaById(incidenciaId, organizacionCamelCase);
-            if (!incidencia) {
-                throw new Error('Incidencia no encontrada');
-            }
-
-            const seguimientoCount = Object.keys(incidencia.seguimiento || {}).length;
-            const seguimientoId = `SEG${seguimientoCount + 1}`;
-
-            const evidenciasUrls = [];
-            if (archivos.length > 0) {
-                for (let i = 0; i < archivos.length; i++) {
-                    const file = archivos[i];
-                    const comentario = evidenciasConComentarios[i]?.comentario || '';
-
-                    const timestamp = Date.now();
-                    const nombreArchivo = `${timestamp}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
-                    const rutaStorage = `incidencias_${organizacionCamelCase}/${incidenciaId}/seguimiento/${seguimientoId}/${nombreArchivo}`;
-
-                    const resultado = await this.subirArchivo(file, rutaStorage);
-
-                    evidenciasUrls.push({
-                        url: resultado.url,
-                        comentario: comentario
-                    });
-                }
-            }
-
-            const fechaSeguimiento = fechaSeleccionada || new Date();
-
-            const nuevoSeguimiento = {
-                usuarioId,
-                usuarioNombre,
-                descripcion,
-                evidencias: evidenciasUrls,
-                fecha: fechaSeguimiento
-            };
-
-            const collectionName = this._getCollectionName(organizacionCamelCase);
-            const incidenciaRef = doc(db, collectionName, incidenciaId);
-
-            const seguimientoActualizado = {
-                ...incidencia.seguimiento,
-                [seguimientoId]: nuevoSeguimiento
-            };
-
-            await consumo.registrarFirestoreActualizacion(collectionName, incidenciaId);
-            await updateDoc(incidenciaRef, {
-                seguimiento: seguimientoActualizado,
-                fechaActualizacion: serverTimestamp(),
-                actualizadoPor: usuarioId,
-                actualizadoPorNombre: usuarioNombre
-            });
-
-            const incidenciaIndex = this.incidencias.findIndex(i => i.id === incidenciaId);
-            if (incidenciaIndex !== -1) {
-                this.incidencias[incidenciaIndex].seguimiento = seguimientoActualizado;
-                this.incidencias[incidenciaIndex].fechaActualizacion = new Date();
-                this.incidencias[incidenciaIndex].actualizadoPor = usuarioId;
-                this.incidencias[incidenciaIndex].actualizadoPorNombre = usuarioNombre;
-            }
-
-            if (usuarioActual) {
-                const historial = await this._getHistorialManager();
-                if (historial) {
-                    await historial.registrarActividad({
-                        usuario: usuarioActual,
-                        tipo: 'crear',
-                        modulo: 'incidencias',
-                        descripcion: `Agregó seguimiento a incidencia ${incidenciaId}`,
-                        detalles: {
-                            incidenciaId,
-                            seguimientoId,
-                            totalEvidencias: evidenciasUrls.length
-                        }
-                    });
-                }
-            }
-
-            return seguimientoId;
-
-        } catch (error) {
-            console.error('Error agregando seguimiento:', error);
-            throw error;
+ async agregarSeguimiento(incidenciaId, usuarioId, usuarioNombre, descripcion, archivos = [], organizacionCamelCase, evidenciasConComentarios = [], fechaSeleccionada, usuarioActual = null) {
+    try {
+        const incidencia = await this.getIncidenciaById(incidenciaId, organizacionCamelCase);
+        if (!incidencia) {
+            throw new Error('Incidencia no encontrada');
         }
-    }
 
+        const seguimientoCount = Object.keys(incidencia.seguimiento || {}).length;
+        const seguimientoId = `SEG${seguimientoCount + 1}`;
+
+        const evidenciasUrls = [];
+        if (archivos.length > 0) {
+            for (let i = 0; i < archivos.length; i++) {
+                const file = archivos[i];
+                const comentario = evidenciasConComentarios[i]?.comentario || '';
+
+                const timestamp = Date.now();
+                const nombreArchivo = `${timestamp}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+                const rutaStorage = `incidencias_${organizacionCamelCase}/${incidenciaId}/seguimiento/${seguimientoId}/${nombreArchivo}`;
+
+                const resultado = await this.subirArchivo(file, rutaStorage);
+
+                evidenciasUrls.push({
+                    url: resultado.url,
+                    comentario: comentario
+                });
+            }
+        }
+
+        const fechaSeguimiento = fechaSeleccionada || new Date();
+
+        // 🔥 MODIFICACIÓN: Guardar también el código del usuario
+        const nuevoSeguimiento = {
+            usuarioId,
+            usuarioNombre,
+            usuarioCodigo: usuarioActual?.codigoColaborador || '',  // ← ESTA LÍNEA ES CLAVE
+            descripcion,
+            evidencias: evidenciasUrls,
+            fecha: fechaSeguimiento
+        };
+
+        const collectionName = this._getCollectionName(organizacionCamelCase);
+        const incidenciaRef = doc(db, collectionName, incidenciaId);
+
+        const seguimientoActualizado = {
+            ...incidencia.seguimiento,
+            [seguimientoId]: nuevoSeguimiento
+        };
+
+        await consumo.registrarFirestoreActualizacion(collectionName, incidenciaId);
+        await updateDoc(incidenciaRef, {
+            seguimiento: seguimientoActualizado,
+            fechaActualizacion: serverTimestamp(),
+            actualizadoPor: usuarioId,
+            actualizadoPorNombre: usuarioNombre
+        });
+
+        const incidenciaIndex = this.incidencias.findIndex(i => i.id === incidenciaId);
+        if (incidenciaIndex !== -1) {
+            this.incidencias[incidenciaIndex].seguimiento = seguimientoActualizado;
+            this.incidencias[incidenciaIndex].fechaActualizacion = new Date();
+            this.incidencias[incidenciaIndex].actualizadoPor = usuarioId;
+            this.incidencias[incidenciaIndex].actualizadoPorNombre = usuarioNombre;
+        }
+
+        if (usuarioActual) {
+            const historial = await this._getHistorialManager();
+            if (historial) {
+                await historial.registrarActividad({
+                    usuario: usuarioActual,
+                    tipo: 'crear',
+                    modulo: 'incidencias',
+                    descripcion: `Agregó seguimiento a incidencia ${incidenciaId}`,
+                    detalles: {
+                        incidenciaId,
+                        seguimientoId,
+                        totalEvidencias: evidenciasUrls.length
+                    }
+                });
+            }
+        }
+
+        return seguimientoId;
+
+    } catch (error) {
+        console.error('Error agregando seguimiento:', error);
+        throw error;
+    }
+}
     async finalizarIncidencia(incidenciaId, usuarioId, usuarioNombre, organizacionCamelCase, usuarioActual = null) {
         try {
             const incidencia = await this.getIncidenciaById(incidenciaId, organizacionCamelCase);
