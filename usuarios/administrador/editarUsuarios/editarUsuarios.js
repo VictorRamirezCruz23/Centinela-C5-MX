@@ -529,7 +529,6 @@ function obtenerElementosDOM() {
         creationTime: document.getElementById('creationTime'),
         lastUpdateDate: document.getElementById('lastUpdateDate'),
         lastUpdateTime: document.getElementById('lastUpdateTime'),
-        lastLoginTime: document.getElementById('lastLoginTime'),
 
         saveChangesBtn: document.getElementById('saveChangesBtn'),
         cancelBtn: document.getElementById('cancelBtn'),
@@ -1336,10 +1335,12 @@ async function guardarTodosLosCambios(elements, userManager) {
 }
 
 // Guardar cambios - INCLUYE TELÉFONO Y CÓDIGO
+// Guardar cambios - VERSIÓN CORREGIDA CON SOPORTE PARA FOTO
 function configurarGuardado(elements, userManager) {
     if (!elements.saveChangesBtn || !window.currentCollaborator) return;
 
     elements.saveChangesBtn.addEventListener('click', async () => {
+        // Validaciones básicas
         if (!elements.fullName || !elements.fullName.value.trim()) {
             mostrarMensaje(elements.mainMessage, 'error', 'El nombre completo es obligatorio');
             if (elements.fullName) elements.fullName.focus();
@@ -1350,83 +1351,13 @@ function configurarGuardado(elements, userManager) {
         const colaboradorOriginal = window.colaboradorOriginal;
         const usuarioActual = window.usuarioActual;
 
-        let areaNombre = 'No asignada';
-        let cargoNombre = 'No asignado';
-        let cargoDescripcion = '';
-        let cargoObjeto = null;
-
-        const areas = elements.areaSelect._areasData || [];
-        const areaSeleccionada = areas.find(a => a.id === elements.areaSelect?.value);
-        if (areaSeleccionada) {
-            areaNombre = areaSeleccionada.nombreArea;
-        }
-
-        const cargosData = elements.cargoEnAreaSelect._cargosData || {};
-        const cargoSeleccionado = cargosData[elements.cargoEnAreaSelect?.value];
-        if (cargoSeleccionado) {
-            cargoNombre = cargoSeleccionado.nombre || 'Cargo sin nombre';
-            cargoDescripcion = cargoSeleccionado.descripcion || '';
-            cargoObjeto = {
-                id: cargoSeleccionado.id || elements.cargoEnAreaSelect.value,
-                nombre: cargoNombre,
-                descripcion: cargoDescripcion
-            };
-        }
-
-        let sucursalId = null;
-        let sucursalNombre = null;
-        let sucursalCiudad = null;
-        let esAreaSucursales = false;
-
-        const areaSeleccionadaElement = elements.areaSelect.options[elements.areaSelect.selectedIndex];
-        const areaSeleccionadaNombre = areaSeleccionadaElement?.getAttribute('data-nombre') || '';
-        esAreaSucursales = areaSeleccionadaNombre.toLowerCase() === 'sucursales' || areaSeleccionadaNombre.toLowerCase() === 'sucursal';
-
-        if (esAreaSucursales && elements.sucursalSelect && elements.sucursalSelect.value) {
-            sucursalId = elements.sucursalSelect.value;
-
-            const sucursalesData = elements.sucursalSelect._sucursalesData || [];
-            const sucursalSeleccionada = sucursalesData.find(s => s.id === sucursalId);
-            if (sucursalSeleccionada) {
-                sucursalNombre = sucursalSeleccionada.nombre;
-                sucursalCiudad = sucursalSeleccionada.ciudad;
-            }
-
-            if (sucursalId && usuarioActual.organizacionCamelCase) {
-                const limiteOk = await verificarLimiteSucursal(sucursalId, usuarioActual.organizacionCamelCase, collaborator.id);
-                if (!limiteOk) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Límite de colaboradores alcanzado',
-                        html: `La sucursal seleccionada ya tiene 2 colaboradores asignados.<br>
-                               No se pueden asignar más colaboradores a esta sucursal.`,
-                        confirmButtonText: 'ENTENDIDO'
-                    });
-                    return;
-                }
-            }
-        }
-
+        // Obtener valores actuales del formulario
+        const nuevoNombre = elements.fullName.value.trim();
         const nuevoTelefono = elements.telefono?.value.trim() || '';
-        const telefonoOriginal = colaboradorOriginal.telefono || '';
-        
         const nuevoCodigo = elements.codigoColaborador?.value.trim() || '';
-        const codigoOriginal = colaboradorOriginal.codigoColaborador || '';
-
-        const cambios = [];
-        const nuevosDatos = {
-            nombreCompleto: elements.fullName.value.trim(),
-            telefono: nuevoTelefono,
-            codigoColaborador: nuevoCodigo,
-            status: elements.statusInput.value === 'active',
-            areaAsignadaId: elements.areaSelect?.value || null,
-            cargo: cargoObjeto,
-            sucursalAsignadaId: sucursalId,
-            sucursalAsignadaNombre: sucursalNombre,
-            sucursalAsignadaCiudad: sucursalCiudad
-        };
-
-        // VALIDAR UNICIDAD DEL CÓDIGO
+        const nuevoEstado = elements.statusInput.value === 'active';
+        
+        // Validar código
         const codigoValidacion = await validarCodigoColaboradorEdicion(
             nuevoCodigo,
             collaborator.organizacionCamelCase || usuarioActual.organizacionCamelCase,
@@ -1443,65 +1374,104 @@ function configurarGuardado(elements, userManager) {
             return;
         }
 
-        if (colaboradorOriginal.nombreCompleto !== nuevosDatos.nombreCompleto) {
-            cambios.push({
-                campo: 'nombre',
-                anterior: colaboradorOriginal.nombreCompleto,
-                nuevo: nuevosDatos.nombreCompleto
-            });
+        // Obtener área seleccionada
+        let areaNombre = 'No asignada';
+        let areaId = null;
+        const areas = elements.areaSelect._areasData || [];
+        const areaSeleccionada = areas.find(a => a.id === elements.areaSelect?.value);
+        if (areaSeleccionada) {
+            areaNombre = areaSeleccionada.nombreArea;
+            areaId = areaSeleccionada.id;
         }
 
-        if (telefonoOriginal !== nuevoTelefono) {
-            cambios.push({
-                campo: 'teléfono',
-                anterior: telefonoOriginal || 'No registrado',
-                nuevo: nuevoTelefono || 'No registrado'
-            });
+        // Obtener cargo seleccionado
+        let cargoNombre = 'No asignado';
+        let cargoDescripcion = '';
+        let cargoObjeto = null;
+        const cargosData = elements.cargoEnAreaSelect._cargosData || {};
+        const cargoSeleccionado = cargosData[elements.cargoEnAreaSelect?.value];
+        if (cargoSeleccionado) {
+            cargoNombre = cargoSeleccionado.nombre || 'Cargo sin nombre';
+            cargoDescripcion = cargoSeleccionado.descripcion || '';
+            cargoObjeto = {
+                id: cargoSeleccionado.id || elements.cargoEnAreaSelect.value,
+                nombre: cargoNombre,
+                descripcion: cargoDescripcion
+            };
         }
 
-        if (codigoOriginal !== nuevoCodigo) {
-            cambios.push({
-                campo: 'código',
-                anterior: codigoOriginal || 'Sin código',
-                nuevo: nuevoCodigo || 'Sin código'
-            });
+        // Obtener sucursal (solo si el área es Sucursales)
+        let sucursalId = null;
+        let sucursalNombre = null;
+        let sucursalCiudad = null;
+        let esAreaSucursales = false;
+
+        const areaSeleccionadaElement = elements.areaSelect.options[elements.areaSelect.selectedIndex];
+        const areaSeleccionadaNombre = areaSeleccionadaElement?.getAttribute('data-nombre') || '';
+        esAreaSucursales = areaSeleccionadaNombre.toLowerCase() === 'sucursales' || areaSeleccionadaNombre.toLowerCase() === 'sucursal';
+
+        if (esAreaSucursales && elements.sucursalSelect && elements.sucursalSelect.value) {
+            sucursalId = elements.sucursalSelect.value;
+            const sucursalesData = elements.sucursalSelect._sucursalesData || [];
+            const sucursalSeleccionada = sucursalesData.find(s => s.id === sucursalId);
+            if (sucursalSeleccionada) {
+                sucursalNombre = sucursalSeleccionada.nombre;
+                sucursalCiudad = sucursalSeleccionada.ciudad;
+            }
+
+            // Verificar límite de sucursal
+            if (sucursalId && usuarioActual.organizacionCamelCase) {
+                const limiteOk = await verificarLimiteSucursal(sucursalId, usuarioActual.organizacionCamelCase, collaborator.id);
+                if (!limiteOk) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Límite de colaboradores alcanzado',
+                        html: `La sucursal seleccionada ya tiene 2 colaboradores asignados.<br>
+                               No se pueden asignar más colaboradores a esta sucursal.`,
+                        confirmButtonText: 'ENTENDIDO'
+                    });
+                    return;
+                }
+            }
         }
 
+        // Detectar cambios
+        const cambios = [];
+        
+        const telefonoOriginal = colaboradorOriginal.telefono || '';
+        const codigoOriginal = colaboradorOriginal.codigoColaborador || '';
         const estadoOriginal = colaboradorOriginal.status === true || colaboradorOriginal.status === 'active';
-        if (estadoOriginal !== nuevosDatos.status) {
-            cambios.push({
-                campo: 'estado',
-                anterior: estadoOriginal ? 'activo' : 'inactivo',
-                nuevo: nuevosDatos.status ? 'activo' : 'inactivo'
-            });
-        }
-
-        if (colaboradorOriginal.areaAsignadaId !== nuevosDatos.areaAsignadaId) {
-            cambios.push({
-                campo: 'área',
-                anterior: colaboradorOriginal.areaAsignadaNombre || 'No asignada',
-                nuevo: areaNombre
-            });
-        }
-
+        const areaOriginalId = colaboradorOriginal.areaAsignadaId || null;
         const cargoOriginalNombre = colaboradorOriginal.cargo?.nombre || 'No asignado';
-        if (cargoOriginalNombre !== cargoNombre) {
-            cambios.push({
-                campo: 'cargo',
-                anterior: cargoOriginalNombre,
-                nuevo: cargoNombre
-            });
-        }
-
         const sucursalOriginalNombre = colaboradorOriginal.sucursalAsignadaNombre || 'No asignada';
+        const hayCambioFoto = pendingPhotoBase64 !== null;
+
+        if (colaboradorOriginal.nombreCompleto !== nuevoNombre) {
+            cambios.push({ campo: 'nombre', anterior: colaboradorOriginal.nombreCompleto, nuevo: nuevoNombre });
+        }
+        if (telefonoOriginal !== nuevoTelefono) {
+            cambios.push({ campo: 'teléfono', anterior: telefonoOriginal || 'No registrado', nuevo: nuevoTelefono || 'No registrado' });
+        }
+        if (codigoOriginal !== nuevoCodigo) {
+            cambios.push({ campo: 'código', anterior: codigoOriginal || 'Sin código', nuevo: nuevoCodigo || 'Sin código' });
+        }
+        if (estadoOriginal !== nuevoEstado) {
+            cambios.push({ campo: 'estado', anterior: estadoOriginal ? 'activo' : 'inactivo', nuevo: nuevoEstado ? 'activo' : 'inactivo' });
+        }
+        if (areaOriginalId !== areaId) {
+            cambios.push({ campo: 'área', anterior: colaboradorOriginal.areaAsignadaNombre || 'No asignada', nuevo: areaNombre });
+        }
+        if (cargoOriginalNombre !== cargoNombre) {
+            cambios.push({ campo: 'cargo', anterior: cargoOriginalNombre, nuevo: cargoNombre });
+        }
         if (sucursalOriginalNombre !== (sucursalNombre || 'No asignada')) {
-            cambios.push({
-                campo: 'sucursal',
-                anterior: sucursalOriginalNombre,
-                nuevo: sucursalNombre || 'No asignada'
-            });
+            cambios.push({ campo: 'sucursal', anterior: sucursalOriginalNombre, nuevo: sucursalNombre || 'No asignada' });
+        }
+        if (hayCambioFoto) {
+            cambios.push({ campo: 'foto de perfil', anterior: 'Anterior', nuevo: 'Nueva foto' });
         }
 
+        // Si no hay cambios, mostrar mensaje
         if (cambios.length === 0) {
             Swal.fire({
                 icon: 'info',
@@ -1513,9 +1483,10 @@ function configurarGuardado(elements, userManager) {
             return;
         }
 
+        // Mostrar confirmación
         let confirmHtml = `
-            <div>
-                <p><strong>Nombre:</strong> ${elements.fullName.value}</p>
+            <div style="text-align: left;">
+                <p><strong>Nombre:</strong> ${nuevoNombre}</p>
                 <p><strong>Código:</strong> ${nuevoCodigo || 'Sin código'}</p>
                 <p><strong>Teléfono:</strong> ${nuevoTelefono || 'No especificado'}</p>
                 <p><strong>Área asignada:</strong> ${areaNombre}</p>
@@ -1527,8 +1498,9 @@ function configurarGuardado(elements, userManager) {
         }
 
         confirmHtml += `
-                <p><strong>Status:</strong> ${elements.statusInput.value === 'active' ? 'Activo' : 'Inactivo'}</p>
-                <div style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: left;">
+                <p><strong>Status:</strong> ${nuevoEstado ? 'Activo' : 'Inactivo'}</p>
+                ${hayCambioFoto ? '<p><strong>📷 Foto de perfil:</strong> Será actualizada</p>' : ''}
+                <div style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px;">
                     <strong>Cambios detectados:</strong>
                     ${cambios.map(c => `<p style="margin: 5px 0; font-size: 0.9rem;">• ${c.campo}: ${c.anterior} → ${c.nuevo}</p>`).join('')}
                 </div>
@@ -1546,6 +1518,7 @@ function configurarGuardado(elements, userManager) {
 
         if (!result.isConfirmed) return;
 
+        // Mostrar loading
         Swal.fire({
             title: 'Guardando cambios...',
             allowOutsideClick: false,
@@ -1553,149 +1526,28 @@ function configurarGuardado(elements, userManager) {
         });
 
         try {
-            const collaborator = window.currentCollaborator;
-            const colaboradorOriginal = window.colaboradorOriginal;
-            const usuarioActual = window.usuarioActual;
-
-            let areaNombre = 'No asignada';
-            let cargoNombre = 'No asignado';
-            let cargoDescripcion = '';
-            let cargoObjeto = null;
-
-            const areas = elements.areaSelect._areasData || [];
-            const areaSeleccionada = areas.find(a => a.id === elements.areaSelect?.value);
-            if (areaSeleccionada) {
-                areaNombre = areaSeleccionada.nombreArea;
-            }
-
-            const cargosData = elements.cargoEnAreaSelect._cargosData || {};
-            const cargoSeleccionado = cargosData[elements.cargoEnAreaSelect?.value];
-            if (cargoSeleccionado) {
-                cargoNombre = cargoSeleccionado.nombre || 'Cargo sin nombre';
-                cargoDescripcion = cargoSeleccionado.descripcion || '';
-                cargoObjeto = {
-                    id: cargoSeleccionado.id || elements.cargoEnAreaSelect.value,
-                    nombre: cargoNombre,
-                    descripcion: cargoDescripcion
-                };
-            }
-
-            let sucursalId = null;
-            let sucursalNombre = null;
-            let sucursalCiudad = null;
-            let esAreaSucursales = false;
-
-            const areaSeleccionadaElement = elements.areaSelect.options[elements.areaSelect.selectedIndex];
-            const areaSeleccionadaNombre = areaSeleccionadaElement?.getAttribute('data-nombre') || '';
-            esAreaSucursales = areaSeleccionadaNombre.toLowerCase() === 'sucursales' || areaSeleccionadaNombre.toLowerCase() === 'sucursal';
-
-            if (esAreaSucursales && elements.sucursalSelect && elements.sucursalSelect.value) {
-                sucursalId = elements.sucursalSelect.value;
-                const sucursalesData = elements.sucursalSelect._sucursalesData || [];
-                const sucursalSeleccionada = sucursalesData.find(s => s.id === sucursalId);
-                if (sucursalSeleccionada) {
-                    sucursalNombre = sucursalSeleccionada.nombre;
-                    sucursalCiudad = sucursalSeleccionada.ciudad;
-                }
-            }
-
-            const nuevoTelefono = elements.telefono?.value.trim() || '';
-            const telefonoOriginal = colaboradorOriginal.telefono || '';
-
-            const cambios = [];
-            const nuevosDatos = {
-                nombreCompleto: elements.fullName.value.trim(),
-                telefono: nuevoTelefono,
-                status: elements.statusInput.value === 'active',
-                areaAsignadaId: elements.areaSelect?.value || null,
-                cargo: cargoObjeto,
-                sucursalAsignadaId: sucursalId,
-                sucursalAsignadaNombre: sucursalNombre,
-                sucursalAsignadaCiudad: sucursalCiudad
-            };
-
-            if (pendingPhotoBase64) {
-                nuevosDatos.fotoUsuario = pendingPhotoBase64;
-            }
-
-            if (colaboradorOriginal.nombreCompleto !== nuevosDatos.nombreCompleto) {
-                cambios.push({
-                    campo: 'nombre',
-                    anterior: colaboradorOriginal.nombreCompleto,
-                    nuevo: nuevosDatos.nombreCompleto
-                });
-            }
-
-            if (telefonoOriginal !== nuevoTelefono) {
-                cambios.push({
-                    campo: 'teléfono',
-                    anterior: telefonoOriginal || 'No registrado',
-                    nuevo: nuevoTelefono || 'No registrado'
-                });
-            }
-
-            const estadoOriginal = colaboradorOriginal.status === true || colaboradorOriginal.status === 'active';
-            if (estadoOriginal !== nuevosDatos.status) {
-                cambios.push({
-                    campo: 'estado',
-                    anterior: estadoOriginal ? 'activo' : 'inactivo',
-                    nuevo: nuevosDatos.status ? 'activo' : 'inactivo'
-                });
-            }
-
-            if (colaboradorOriginal.areaAsignadaId !== nuevosDatos.areaAsignadaId) {
-                cambios.push({
-                    campo: 'área',
-                    anterior: colaboradorOriginal.areaAsignadaNombre || 'No asignada',
-                    nuevo: areaNombre
-                });
-            }
-
-            const cargoOriginalNombre = colaboradorOriginal.cargo?.nombre || 'No asignado';
-            if (cargoOriginalNombre !== cargoNombre) {
-                cambios.push({
-                    campo: 'cargo',
-                    anterior: cargoOriginalNombre,
-                    nuevo: cargoNombre
-                });
-            }
-
-            const sucursalOriginalNombre = colaboradorOriginal.sucursalAsignadaNombre || 'No asignada';
-            if (sucursalOriginalNombre !== (sucursalNombre || 'No asignada')) {
-                cambios.push({
-                    campo: 'sucursal',
-                    anterior: sucursalOriginalNombre,
-                    nuevo: sucursalNombre || 'No asignada'
-                });
-            }
-
-            const hayCambioFoto = pendingPhotoBase64 !== null;
-            if (hayCambioFoto) {
-                cambios.push({
-                    campo: 'foto de perfil',
-                    anterior: 'Anterior',
-                    nuevo: 'Nueva foto'
-                });
-            }
-
+            // Preparar datos para actualizar
             const updateData = {
-                nombreCompleto: elements.fullName.value.trim(),
+                nombreCompleto: nuevoNombre,
                 telefono: nuevoTelefono,
                 codigoColaborador: nuevoCodigo,
-                status: elements.statusInput.value === 'active',
+                status: nuevoEstado,
                 cargo: cargoObjeto,
-                areaAsignadaId: elements.areaSelect?.value || null
+                areaAsignadaId: areaId
             };
 
-            if (hayCambioFoto) {
+            // ✅ AGREGAR FOTO PENDIENTE si existe
+            if (hayCambioFoto && pendingPhotoBase64) {
                 updateData.fotoUsuario = pendingPhotoBase64;
+                console.log('📷 Incluyendo foto pendiente en la actualización');
             }
 
+            // Manejar sucursal
             if (esAreaSucursales) {
                 updateData.sucursalAsignadaId = sucursalId;
                 updateData.sucursalAsignadaNombre = sucursalNombre;
                 updateData.sucursalAsignadaCiudad = sucursalCiudad;
-                console.log('💾 Guardando sucursal:', { sucursalId, sucursalNombre, sucursalCiudad });
+                console.log('💾 Guardando sucursal:', { sucursalId, sucursalNombre });
             } else {
                 updateData.sucursalAsignadaId = null;
                 updateData.sucursalAsignadaNombre = null;
@@ -1703,6 +1555,7 @@ function configurarGuardado(elements, userManager) {
                 console.log('🗑️ Limpiando sucursal (área no es sucursales)');
             }
 
+            // Ejecutar actualización
             await userManager.updateUser(
                 collaborator.id,
                 updateData,
@@ -1710,8 +1563,10 @@ function configurarGuardado(elements, userManager) {
                 collaborator.organizacionCamelCase || usuarioActual.organizacionCamelCase
             );
 
-            await registrarEdicionColaborador(colaboradorOriginal, nuevosDatos, cambios, usuarioActual);
+            // Registrar cambios en bitácora
+            await registrarEdicionColaborador(colaboradorOriginal, updateData, cambios, usuarioActual);
 
+            // Registrar cambios específicos
             const telefonoCambio = cambios.find(c => c.campo === 'teléfono');
             if (telefonoCambio) {
                 await registrarCambioTelefono(colaboradorOriginal, telefonoCambio.anterior, telefonoCambio.nuevo, usuarioActual);
@@ -1731,6 +1586,7 @@ function configurarGuardado(elements, userManager) {
                 await registrarCambioFotoPerfil(colaboradorOriginal, usuarioActual);
             }
 
+            // Actualizar objeto local
             Object.assign(collaborator, updateData);
             if (cargoObjeto) {
                 collaborator.cargo = cargoObjeto;
@@ -1739,10 +1595,11 @@ function configurarGuardado(elements, userManager) {
 
             // ✅ Limpiar foto pendiente después de guardar
             pendingPhotoBase64 = null;
-            
+
             // Actualizar colaboradorOriginal con los nuevos datos
             window.colaboradorOriginal = JSON.parse(JSON.stringify(collaborator));
 
+            // Actualizar fechas en UI
             const now = new Date();
             if (elements.lastUpdateDate) {
                 elements.lastUpdateDate.textContent = now.toLocaleDateString('es-MX');
@@ -1754,11 +1611,8 @@ function configurarGuardado(elements, userManager) {
                 });
             }
 
-           // En configurarGuardado, reemplaza esta parte:
-
             Swal.close();
-            
-            // ✅ Mostrar mensaje de éxito
+
             await Swal.fire({
                 icon: 'success',
                 title: '¡Éxito!',
@@ -1766,10 +1620,8 @@ function configurarGuardado(elements, userManager) {
                 timer: 2000,
                 showConfirmButton: false
             });
-            
-            // ✅ Redirigir a la página anterior después del mensaje
+
             window.history.back();
-            
 
         } catch (error) {
             console.error('❌ Error guardando cambios:', error);
@@ -1778,12 +1630,12 @@ function configurarGuardado(elements, userManager) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'No se pudieron guardar los cambios: ' + error.message
+                text: 'No se pudieron guardar los cambios: ' + error.message,
+                confirmButtonText: 'ENTENDIDO'
             });
         }
     });
 }
-
 // Cambiar contraseña
 function configurarCambioPassword(elements, userManager) {
     if (!elements.changePasswordBtn) return;
