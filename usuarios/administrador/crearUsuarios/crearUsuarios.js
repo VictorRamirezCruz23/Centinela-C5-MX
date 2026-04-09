@@ -312,16 +312,12 @@ function mostrarMensajeInfoUsuario(element, usuario) {
 
     element.innerHTML = `
         <div class="message-container info" style="display: block;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                <i class="fas fa-user"></i>
-                <strong>Creando colaborador</strong>
-            </div>
+            
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem;">
-                <div><strong>Usuario:</strong> ${usuario.nombreCompleto}</div>
+                <div><strong>Creado por:</strong> ${usuario.nombreCompleto}</div>
                 <div><strong>Organización:</strong> ${usuario.organizacion}</div>
-                <div><strong>Plan:</strong> ${usuario.plan ? usuario.plan.toUpperCase() : 'GRATIS'}</div>
             </div>
-            <div style="margin-top: 8px; padding: 8px; background: var(--color-bg-secondary); border-radius: 4px; font-size: 0.8rem;">
+            <div style="margin-top: 8px; padding: 8px; border-radius: 4px; font-size: 0.8rem;">
                 <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
                 El colaborador heredará estos datos de la organización.
             </div>
@@ -331,7 +327,6 @@ function mostrarMensajeInfoUsuario(element, usuario) {
 }
 
 // ========== FUNCIONES PARA CARGAR ÁREAS Y CARGOS ==========
-
 async function cargarAreas(elements, usuario) {
     if (!elements.areaSelect) return;
 
@@ -344,18 +339,21 @@ async function cargarAreas(elements, usuario) {
         elements.cargoEnAreaSelect.disabled = true;
 
         const areas = await areaManager.getAreasByOrganizacion(usuario.organizacionCamelCase);
+        
+        // ✅ FILTRAR: Solo áreas ACTIVAS (estado === 'activa')
+        const areasActivas = areas.filter(area => area.estado === 'activa');
 
-        // Guardar las áreas en el elemento select para usarlas después
-        elements.areaSelect._areasData = areas;
+        // Guardar las áreas activas en el elemento select para usarlas después
+        elements.areaSelect._areasData = areasActivas;
 
-        if (areas.length === 0) {
-            elements.areaSelect.innerHTML = '<option value="">No hay áreas disponibles</option>';
+        if (areasActivas.length === 0) {
+            elements.areaSelect.innerHTML = '<option value="">No hay áreas activas disponibles</option>';
             elements.areaSelect.disabled = false;
             return;
         }
 
         let options = '<option value="">Selecciona un área</option>';
-        areas.forEach(area => {
+        areasActivas.forEach(area => {
             options += `<option value="${area.id}" data-nombre="${area.nombreArea}">${area.nombreArea}</option>`;
         });
         elements.areaSelect.innerHTML = options;
@@ -401,13 +399,17 @@ function cargarCargosPorArea(elements) {
         return;
     }
 
-    const cargos = areaSeleccionada.getCargosAsArray ? areaSeleccionada.getCargosAsArray() : [];
+    // Obtener todos los cargos del área
+    const todosLosCargos = areaSeleccionada.getCargosAsArray ? areaSeleccionada.getCargosAsArray() : [];
+    
+    // ✅ FILTRAR: Solo cargos ACTIVOS (estado === 'activo')
+    const cargosActivos = todosLosCargos.filter(cargo => cargo.estado === 'activo');
 
-    if (cargos.length === 0) {
-        elements.cargoEnAreaSelect.innerHTML = '<option value="">Esta área no tiene cargos</option>';
+    if (cargosActivos.length === 0) {
+        elements.cargoEnAreaSelect.innerHTML = '<option value="">Esta área no tiene cargos activos</option>';
     } else {
         let options = '<option value="">Selecciona un cargo</option>';
-        cargos.forEach((cargo, index) => {
+        cargosActivos.forEach((cargo, index) => {
             const cargoId = cargo.id || `cargo_${index}_${Date.now()}`;
             options += `<option value="${cargoId}">${cargo.nombre || 'Cargo sin nombre'}</option>`;
 
@@ -421,11 +423,12 @@ function cargarCargosPorArea(elements) {
 
     elements.cargoEnAreaSelect.disabled = false;
 
-    // ✅ NUEVO: Verificar si el área seleccionada es "sucursales" para mostrar el campo de sucursal
+    // ✅ Verificar si el área seleccionada es "sucursales" para mostrar el campo de sucursal
     if (areaNombre.toLowerCase() === 'sucursales' || areaNombre.toLowerCase() === 'sucursal') {
         cargarSucursales(elements);
     }
 }
+
 
 // ✅ NUEVO: Cargar sucursales para asociar al colaborador
 async function cargarSucursales(elements) {
