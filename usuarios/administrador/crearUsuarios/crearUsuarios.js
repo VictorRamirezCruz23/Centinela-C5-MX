@@ -130,14 +130,21 @@ async function validarCodigoColaborador(codigo, organizacionCamelCase, idActual 
 async function configurarCodigoColaborador(elements, organizacionCamelCase) {
     if (!elements.codigoColaborador) return;
     
-    // Generar código automáticamente (solo si está vacío)
-    if (!elements.codigoColaborador.value) {
-        const codigoGenerado = await generarSiguienteCodigoColaborador(organizacionCamelCase);
-        elements.codigoColaborador.value = codigoGenerado;
+    // Solo generar código si el contenedor está visible
+    const codigoContainer = elements.codigoNormalContainer;
+    if (codigoContainer && codigoContainer.style.display !== 'none') {
+        // Generar código automáticamente (solo si está vacío)
+        if (!elements.codigoColaborador.value) {
+            const codigoGenerado = await generarSiguienteCodigoColaborador(organizacionCamelCase);
+            elements.codigoColaborador.value = codigoGenerado;
+        }
     }
     
-    // Validación en tiempo real
+    // Validación en tiempo real (solo si el campo es visible)
     elements.codigoColaborador.addEventListener('input', async function(e) {
+        // Verificar si el contenedor está visible
+        if (codigoContainer && codigoContainer.style.display === 'none') return;
+        
         // Limitar a solo números
         this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3);
         
@@ -182,6 +189,8 @@ async function configurarCodigoColaborador(elements, organizacionCamelCase) {
     
     // Evento blur para validar al salir del campo
     elements.codigoColaborador.addEventListener('blur', async function() {
+        if (codigoContainer && codigoContainer.style.display === 'none') return;
+        
         if (this.value.length > 0 && this.value.length !== 3) {
             this.value = '';
             this.style.borderColor = '';
@@ -282,7 +291,6 @@ async function registrarCreacionColaborador(colaboradorData, usuarioActual) {
                 colaboradorCodigo: colaboradorData.codigoColaborador || 'Sin código',
                 colaboradorRol: 'colaborador',
                 areaAsignadaId: colaboradorData.areaAsignadaId || null,
-                sucursalAsignadaId: colaboradorData.sucursalAsignadaId || null,
                 fechaCreacion: new Date().toISOString()
             }
         });
@@ -361,6 +369,7 @@ function obtenerElementosDOM() {
             // Campos del formulario
             organization: document.getElementById('organization'),
             codigoColaborador: document.getElementById('codigoColaborador'),
+            codigoNormalContainer: document.getElementById('codigoNormalContainer'), // ← NUEVO
             nombreCompleto: document.getElementById('nombreCompleto'),
             correoElectronico: document.getElementById('correoElectronico'),
             telefono: document.getElementById('telefono'),
@@ -509,8 +518,12 @@ function cargarCargosPorArea(elements) {
     elements.cargoEnAreaSelect.innerHTML = '';
     elements.cargoEnAreaSelect.disabled = true;
 
+    // Ocultar ambos contenedores primero
     if (elements.sucursalContainer) {
         elements.sucursalContainer.style.display = 'none';
+    }
+    if (elements.codigoNormalContainer) {
+        elements.codigoNormalContainer.style.display = 'block';
     }
 
     if (!areaId) {
@@ -549,8 +562,26 @@ function cargarCargosPorArea(elements) {
 
     elements.cargoEnAreaSelect.disabled = false;
 
-    if (areaNombre.toLowerCase() === 'sucursales' || areaNombre.toLowerCase() === 'sucursal') {
-        cargarSucursales(elements);
+    // ⭐ VERIFICAR SI EL ÁREA ES "SUCURSALES" PARA MOSTRAR EL SELECTOR DE SUCURSAL
+    const esAreaSucursales = areaNombre.toLowerCase() === 'sucursales' || areaNombre.toLowerCase() === 'sucursal';
+    
+    if (esAreaSucursales) {
+        // Ocultar campo de código normal y mostrar selector de sucursal
+        if (elements.codigoNormalContainer) {
+            elements.codigoNormalContainer.style.display = 'none';
+        }
+        if (elements.sucursalContainer) {
+            elements.sucursalContainer.style.display = 'block';
+            cargarSucursales(elements);
+        }
+    } else {
+        // Mostrar campo de código normal y ocultar selector de sucursal
+        if (elements.codigoNormalContainer) {
+            elements.codigoNormalContainer.style.display = 'block';
+        }
+        if (elements.sucursalContainer) {
+            elements.sucursalContainer.style.display = 'none';
+        }
     }
 }
 
@@ -812,12 +843,20 @@ function configurarValidacionTiempoReal(elements) {
 function validarFormulario(elements) {
     const errores = [];
 
-    // Código del colaborador (opcional - solo validar si tiene valor)
-    if (elements.codigoColaborador.value.trim()) {
-        if (!/^\d{3}$/.test(elements.codigoColaborador.value.trim())) {
-            errores.push('El código debe tener exactamente 3 dígitos (001-999)');
+    const areaSeleccionadaElement = elements.areaSelect.options[elements.areaSelect.selectedIndex];
+    const areaSeleccionadaNombre = areaSeleccionadaElement?.getAttribute('data-nombre') || '';
+    const esAreaSucursales = areaSeleccionadaNombre.toLowerCase() === 'sucursales' || areaSeleccionadaNombre.toLowerCase() === 'sucursal';
+
+    // Validación de código - solo si NO es área sucursales
+    if (!esAreaSucursales) {
+        if (elements.codigoColaborador.value.trim()) {
+            if (!/^\d{3}$/.test(elements.codigoColaborador.value.trim())) {
+                errores.push('El código debe tener exactamente 3 dígitos (001-999)');
+            }
         }
     }
+    // Si es área sucursales, el código se asignará automáticamente con el ID de la sucursal
+    // y no necesita validación de formato
 
     // Nombre completo
     if (!elements.nombreCompleto.value.trim()) {
@@ -856,7 +895,6 @@ function validarFormulario(elements) {
 
     return errores;
 }
-
 function validarContrasena(password) {
     const minLength = 8;
     const hasUpperCase = /[A-Z]/.test(password);
@@ -873,6 +911,8 @@ function validarContrasena(password) {
 
 // ========== REGISTRO DE COLABORADOR ==========
 
+// ========== REGISTRO DE COLABORADOR ==========
+
 async function registrarColaborador(event, elements, userManager, usuario) {
     event.preventDefault();
 
@@ -885,23 +925,6 @@ async function registrarColaborador(event, elements, userManager, usuario) {
             confirmButtonText: 'CORREGIR'
         });
         return;
-    }
-
-    // Validar unicidad del código SOLO si se ingresó un valor
-    if (elements.codigoColaborador.value.trim()) {
-        const codigoValidacion = await validarCodigoColaborador(
-            elements.codigoColaborador.value.trim(),
-            usuario.organizacionCamelCase
-        );
-        if (!codigoValidacion.valido) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Código inválido',
-                text: codigoValidacion.mensaje,
-                confirmButtonText: 'CORREGIR'
-            });
-            return;
-        }
     }
 
     let areaNombre = 'No asignada';
@@ -942,7 +965,11 @@ async function registrarColaborador(event, elements, userManager, usuario) {
     const areaSeleccionadaNombre = areaSeleccionadaElement?.getAttribute('data-nombre') || '';
     esAreaSucursales = areaSeleccionadaNombre.toLowerCase() === 'sucursales' || areaSeleccionadaNombre.toLowerCase() === 'sucursal';
 
+    // Variables para el código del colaborador
+    let codigoFinal = '';
+
     if (esAreaSucursales && elements.sucursalSelect && elements.sucursalSelect.value) {
+        // Si es área sucursales y se seleccionó una sucursal
         sucursalId = elements.sucursalSelect.value;
 
         const sucursalesData = elements.sucursalSelect._sucursalesData || [];
@@ -951,6 +978,9 @@ async function registrarColaborador(event, elements, userManager, usuario) {
             sucursalNombre = sucursalSeleccionada.nombre;
             sucursalCiudad = sucursalSeleccionada.ciudad;
         }
+
+        // ⭐ IMPORTANTE: El código del colaborador será el ID de la sucursal
+        codigoFinal = sucursalId;
 
         if (sucursalId && usuario.organizacionCamelCase) {
             const limiteOk = await verificarLimiteSucursal(sucursalId, usuario.organizacionCamelCase);
@@ -965,11 +995,33 @@ async function registrarColaborador(event, elements, userManager, usuario) {
                 return;
             }
         }
+    } else {
+        // Si NO es área sucursales, usar el código ingresado o generar uno
+        if (elements.codigoColaborador.value.trim()) {
+            // Validar unicidad del código SOLO si se ingresó un valor
+            const codigoValidacion = await validarCodigoColaborador(
+                elements.codigoColaborador.value.trim(),
+                usuario.organizacionCamelCase
+            );
+            if (!codigoValidacion.valido) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Código inválido',
+                    text: codigoValidacion.mensaje,
+                    confirmButtonText: 'CORREGIR'
+                });
+                return;
+            }
+            codigoFinal = elements.codigoColaborador.value.trim();
+        } else {
+            // Generar código automáticamente si está vacío
+            codigoFinal = await generarSiguienteCodigoColaborador(usuario.organizacionCamelCase);
+        }
     }
 
     let confirmHtml = `
         <div style="text-align: left; padding: 10px 0;">
-            <p><strong>Código:</strong> ${elements.codigoColaborador.value.trim() || '(Sin código)'}</p>
+            <p><strong>Código:</strong> ${codigoFinal || '(Sin código)'}</p>
             <p><strong>Nombre:</strong> ${elements.nombreCompleto.value.trim()}</p>
             <p><strong>Email:</strong> ${elements.correoElectronico.value.trim()}</p>
             <p><strong>Teléfono:</strong> ${elements.telefono?.value.trim() || 'No especificado'}</p>
@@ -980,6 +1032,7 @@ async function registrarColaborador(event, elements, userManager, usuario) {
 
     if (esAreaSucursales) {
         confirmHtml += `<p><strong>Sucursal asignada:</strong> ${sucursalNombre ? `${sucursalNombre}${sucursalCiudad ? ` (${sucursalCiudad})` : ''}` : 'No asignada'}</p>`;
+        confirmHtml += `<p><strong>Nota:</strong> El código del colaborador será el ID de la sucursal: <strong>${codigoFinal}</strong></p>`;
     }
 
     confirmHtml += `
@@ -1012,7 +1065,7 @@ async function registrarColaborador(event, elements, userManager, usuario) {
 
     try {
         const colaboradorData = {
-            codigoColaborador: elements.codigoColaborador.value.trim() || '',
+            codigoColaborador: codigoFinal,  // ← Usar el código final calculado
             nombreCompleto: elements.nombreCompleto.value.trim(),
             correoElectronico: elements.correoElectronico.value.trim(),
             telefono: elements.telefono?.value.trim() || '',
@@ -1026,10 +1079,6 @@ async function registrarColaborador(event, elements, userManager, usuario) {
 
             cargo: cargoObjeto,
             areaAsignadaId: areaId,
-
-            sucursalAsignadaId: sucursalId,
-            sucursalAsignadaNombre: sucursalNombre,
-            sucursalAsignadaCiudad: sucursalCiudad,
 
             rol: 'colaborador',
             status: true,
@@ -1060,7 +1109,7 @@ async function registrarColaborador(event, elements, userManager, usuario) {
         }
 
         Swal.close();
-        await mostrarExitoRegistro(colaboradorData, esAreaSucursales, sucursalNombre);
+        await mostrarExitoRegistro(colaboradorData, esAreaSucursales, sucursalNombre, codigoFinal);
 
     } catch (error) {
         Swal.close();
@@ -1068,10 +1117,15 @@ async function registrarColaborador(event, elements, userManager, usuario) {
     }
 }
 
-async function mostrarExitoRegistro(colaboradorData, esAreaSucursales = false, sucursalNombre = null) {
+async function mostrarExitoRegistro(colaboradorData, esAreaSucursales = false, sucursalNombre = null, codigoFinal = null) {
     let mensajeSucursal = '';
+    let mensajeCodigo = '';
+
     if (esAreaSucursales && sucursalNombre) {
         mensajeSucursal = `<p><strong>Sucursal:</strong> ${sucursalNombre}</p>`;
+        mensajeCodigo = `<p><strong>Código asignado (ID Sucursal):</strong> ${codigoFinal || colaboradorData.codigoColaborador}</p>`;
+    } else {
+        mensajeCodigo = `<p><strong>Código:</strong> ${colaboradorData.codigoColaborador || '(Sin código)'}</p>`;
     }
 
     const result = await Swal.fire({
@@ -1079,7 +1133,7 @@ async function mostrarExitoRegistro(colaboradorData, esAreaSucursales = false, s
         title: '¡Colaborador creado!',
         html: `
             <div style="text-align: center;">
-                <p><strong>Código:</strong> ${colaboradorData.codigoColaborador || '(Sin código)'}</p>
+                ${mensajeCodigo}
                 <p><strong>Nombre:</strong> ${colaboradorData.nombreCompleto}</p>
                 <p><strong>Email:</strong> ${colaboradorData.correoElectronico}</p>
                 <p><strong>Teléfono:</strong> ${colaboradorData.telefono || 'No especificado'}</p>

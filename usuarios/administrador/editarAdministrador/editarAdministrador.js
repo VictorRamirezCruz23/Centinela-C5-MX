@@ -73,20 +73,7 @@ async function iniciarEditor(userManager) {
     selectedFile = null;
     currentPhotoType = '';
 
-    if (!userManager.currentUser) {
-        console.warn('⚠️ Usuario no autenticado según UserManager');
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Sesión expirada',
-            text: 'Debes iniciar sesión para acceder al editor de perfil',
-            timer: 4000,
-            showConfirmButton: false
-        }).then(() => {
-            window.location.href = '/usuarios/visitantes/inicioSesion/inicioSesion.html';
-        });
-        return;
-    }
+    
 
     // Obtener elementos del DOM
     const elements = getElements();
