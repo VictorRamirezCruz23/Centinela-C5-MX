@@ -1,4 +1,4 @@
-// user.js - VERSIÓN COMPLETA CON SUCURSALES
+// user.js - VERSIÓN COMPLETA SIN SUCURSALES
 // CON REGISTRO DE CONSUMO FIREBASE
 
 import { db, auth } from '/config/firebase-config.js';
@@ -42,7 +42,7 @@ class User {
         this.nombreCompleto = data.nombreCompleto || '';
         this.correoElectronico = data.correoElectronico || '';
         this.telefono = data.telefono || ''; // Nuevo campo teléfono
-    this.codigoColaborador = data.codigoColaborador || ''; // Código del colaborador (opcional)
+        this.codigoColaborador = data.codigoColaborador || ''; // Código del colaborador (opcional)
         this.status = data.status !== undefined ? data.status : true;
         this.idAuth = data.idAuth || '';
         this.fotoUsuario = data.fotoUsuario || data.fotoURL || data.foto || '';
@@ -54,11 +54,6 @@ class User {
         this.areaAsignadaId = data.areaAsignadaId || null;
         this.areaAsignadaNombre = data.areaAsignadaNombre || '';
         this.cargoId = data.cargoId || null;
-
-        // ✅ CAMPOS DE SUCURSAL
-        this.sucursalAsignadaId = data.sucursalAsignadaId || null;
-        this.sucursalAsignadaNombre = data.sucursalAsignadaNombre || null;
-        this.sucursalAsignadaCiudad = data.sucursalAsignadaCiudad || null;
 
         this.dispositivos = data.dispositivos || [];
 
@@ -376,11 +371,7 @@ class UserManager {
                         creadoPorEmail: data.creadoPorEmail,
                         creadoPorNombre: data.creadoPorNombre,
                         actualizadoPor: data.actualizadoPor,
-                        telefono: data.telefono || '', // Nuevo campo
-                        // ✅ CAMPOS DE SUCURSAL
-                        sucursalAsignadaId: data.sucursalAsignadaId || null,
-                        sucursalAsignadaNombre: data.sucursalAsignadaNombre || null,
-                        sucursalAsignadaCiudad: data.sucursalAsignadaCiudad || null
+                        telefono: data.telefono || '' // Nuevo campo
                     });
 
                     this.currentUser = user;
@@ -660,7 +651,7 @@ class UserManager {
             const colabFirestoreData = {
                 ...colaboradorData,
                 idAuth: uid,
-                 codigoColaborador: colaboradorData.codigoColaborador || '', // ← NUEVA LÍNEA
+                codigoColaborador: colaboradorData.codigoColaborador || '', // ← NUEVA LÍNEA
                 rol: 'colaborador',
                 cargo: colaboradorData.cargo || null,
                 cargoId: colaboradorData.cargoId || (colaboradorData.cargo && colaboradorData.cargo.id) || null,
@@ -685,11 +676,7 @@ class UserManager {
                 fechaCreacion: serverTimestamp(),
                 fechaActualizacion: serverTimestamp(),
                 ultimoLogin: null,
-                telefono: colaboradorData.telefono || '', // Nuevo campo
-                // ✅ CAMPOS DE SUCURSAL
-                sucursalAsignadaId: colaboradorData.sucursalAsignadaId || null,
-                sucursalAsignadaNombre: colaboradorData.sucursalAsignadaNombre || null,
-                sucursalAsignadaCiudad: colaboradorData.sucursalAsignadaCiudad || null
+                telefono: colaboradorData.telefono || '' // Nuevo campo
             };
 
             // [MODIFICACIÓN]: Registrar ESCRITURA
@@ -1418,17 +1405,6 @@ class UserManager {
                 actualizadoPor: this.currentUser?.id || 'sistema'
             };
 
-            // ✅ ASEGURAR QUE LOS CAMPOS DE SUCURSAL SE GUARDEN
-            if (data.sucursalAsignadaId !== undefined) {
-                updateData.sucursalAsignadaId = data.sucursalAsignadaId;
-            }
-            if (data.sucursalAsignadaNombre !== undefined) {
-                updateData.sucursalAsignadaNombre = data.sucursalAsignadaNombre;
-            }
-            if (data.sucursalAsignadaCiudad !== undefined) {
-                updateData.sucursalAsignadaCiudad = data.sucursalAsignadaCiudad;
-            }
-
             // [MODIFICACIÓN]: Registrar ACTUALIZACIÓN
             await consumo.registrarFirestoreActualizacion(coleccion, id);
 
@@ -1455,9 +1431,6 @@ class UserManager {
                     }
                     if (data.telefono && data.telefono !== usuarioAntes?.telefono) {
                         cambios.push(`teléfono: "${usuarioAntes?.telefono || 'No registrado'}" → "${data.telefono}"`);
-                    }
-                    if (data.sucursalAsignadaNombre !== undefined && data.sucursalAsignadaNombre !== usuarioAntes?.sucursalAsignadaNombre) {
-                        cambios.push(`sucursal: "${usuarioAntes?.sucursalAsignadaNombre || 'No asignada'}" → "${data.sucursalAsignadaNombre || 'No asignada'}"`);
                     }
 
                     await historial.registrarActividad({
@@ -1614,11 +1587,7 @@ class UserManager {
                 colaboradores.push(new User(doc.id, {
                     ...data,
                     cargo: 'colaborador',
-                    // ✅ CAMPOS DE SUCURSAL
-                    codigoColaborador: data.codigoColaborador || '', // NUEVO CAMPO
-                    sucursalAsignadaId: data.sucursalAsignadaId || null,
-                    sucursalAsignadaNombre: data.sucursalAsignadaNombre || null,
-                    sucursalAsignadaCiudad: data.sucursalAsignadaCiudad || null
+                    codigoColaborador: data.codigoColaborador || '' // NUEVO CAMPO
                 }));
             });
 
@@ -1665,11 +1634,7 @@ class UserManager {
                 const data = doc.data();
                 colaboradores.push(new User(doc.id, {
                     ...data,
-                    cargo: 'colaborador',
-                    // ✅ CAMPOS DE SUCURSAL
-                    sucursalAsignadaId: data.sucursalAsignadaId || null,
-                    sucursalAsignadaNombre: data.sucursalAsignadaNombre || null,
-                    sucursalAsignadaCiudad: data.sucursalAsignadaCiudad || null
+                    cargo: 'colaborador'
                 }));
             });
 
@@ -1787,11 +1752,7 @@ class UserManager {
                 const data = doc.data();
                 usuariosInactivos.push(new User(doc.id, {
                     ...data,
-                    cargo: 'colaborador',
-                    // ✅ CAMPOS DE SUCURSAL
-                    sucursalAsignadaId: data.sucursalAsignadaId || null,
-                    sucursalAsignadaNombre: data.sucursalAsignadaNombre || null,
-                    sucursalAsignadaCiudad: data.sucursalAsignadaCiudad || null
+                    cargo: 'colaborador'
                 }));
             });
 
@@ -1803,7 +1764,7 @@ class UserManager {
         }
     }
 
-    // ========== MÉTODO GETUSERBYID (ACTUALIZADO CON MASTER Y SUCURSAL) ==========
+    // ========== MÉTODO GETUSERBYID (ACTUALIZADO CON MASTER) ==========
     async getUserById(id) {
         const userInMemory = this.users.find(user => user.id === id);
         if (userInMemory) {
@@ -1905,11 +1866,7 @@ class UserManager {
                             creadoPorEmail: data.creadoPorEmail,
                             creadoPorNombre: data.creadoPorNombre,
                             actualizadoPor: data.actualizadoPor,
-                            telefono: data.telefono || '', // Nuevo campo
-                            // ✅ CAMPOS DE SUCURSAL
-                            sucursalAsignadaId: data.sucursalAsignadaId || null,
-                            sucursalAsignadaNombre: data.sucursalAsignadaNombre || null,
-                            sucursalAsignadaCiudad: data.sucursalAsignadaCiudad || null
+                            telefono: data.telefono || '' // Nuevo campo
                         });
 
                         this.users.push(user);

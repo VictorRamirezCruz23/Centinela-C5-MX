@@ -768,8 +768,7 @@ async function obtenerDatosOrganizacion() {
             organizacionActual = {
                 nombre: usuario.organizacion || 'Mi Empresa',
                 camelCase: usuario.organizacionCamelCase || ''
-            };
-            console.log('', organizacionActual);
+            };            
             return;
         }
 
