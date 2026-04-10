@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoreo Multi-Panel | Centinela</title>
+
+    <link rel="stylesheet" href="/components/personalization/personalization.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="monitoreoPanel.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-chart-line"></i> Monitoreo Multi-Panel
+        </h1>
+        <div class="header-description" id="panelInfoHeader">
+            Cargando información de paneles...
+        </div>
+    </div>
+
+    <div class="monitoreo-container">
+        <!-- Selector de panel activo -->
+        <div class="panel-selector">
+            <label><i class="fas fa-microchip"></i> Filtrar por panel:</label>
+            <select id="activePanelSelect" class="panel-select-dropdown">
+                <option value="all">Todos los paneles</option>
+            </select>
+            <button class="btn-refresh-all" id="btnRefreshAll">
+                <i class="fas fa-sync-alt"></i> Refrescar todos
+            </button>
+        </div>
+
+        <!-- Barra de estado -->
+        <div class="status-bar">
+            <div class="status-item">
+                <i class="fas fa-layer-group"></i>
+                <span class="status-label">Paneles monitoreados:</span>
+                <span class="status-value" id="totalPanelesCount">0</span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-clock"></i>
+                <span class="status-label">Última actualización:</span>
+                <span class="status-value" id="lastUpdate">-</span>
+            </div>
+        </div>
+
+        <!-- Pestañas de navegación -->
+        <div class="tabs-container">
+            <button class="tab-btn active" data-tab="events">
+                <i class="fas fa-history"></i> Eventos
+            </button>
+            <button class="tab-btn" data-tab="alarms">
+                <i class="fas fa-bell"></i> Alarmas
+            </button>
+            <button class="tab-btn" data-tab="alerts">
+                <i class="fas fa-exclamation-triangle"></i> Alertas
+            </button>
+            <button class="tab-btn" data-tab="troubles">
+                <i class="fas fa-wrench"></i> Problemas
+            </button>
+            <button class="tab-btn" data-tab="devices">
+                <i class="fas fa-microchip"></i> Dispositivos
+            </button>
+        </div>
+
+        <!-- Contenido de Eventos -->
+        <div class="tab-content active" id="tab-events">
+            <div class="section-header">
+                <h3><i class="fas fa-history"></i> Historial de Eventos</h3>
+                <button class="btn-refresh-tab" data-tab="events">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="events-list" id="eventsList">
+                <div class="loading-data">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Cargando eventos...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido de Alarmas -->
+        <div class="tab-content" id="tab-alarms">
+            <div class="section-header">
+                <h3><i class="fas fa-bell"></i> Alarmas</h3>
+                <button class="btn-refresh-tab" data-tab="alarms">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="alarms-list" id="alarmsList">
+                <div class="loading-data">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Cargando alarmas...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido de Alertas -->
+        <div class="tab-content" id="tab-alerts">
+            <div class="section-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Alertas</h3>
+                <button class="btn-refresh-tab" data-tab="alerts">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="alerts-list" id="alertsList">
+                <div class="loading-data">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Cargando alertas...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido de Problemas -->
+        <div class="tab-content" id="tab-troubles">
+            <div class="section-header">
+                <h3><i class="fas fa-wrench"></i> Problemas del Sistema</h3>
+                <button class="btn-refresh-tab" data-tab="troubles">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="troubles-list" id="troublesList">
+                <div class="loading-data">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Cargando problemas...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido de Dispositivos -->
+        <div class="tab-content" id="tab-devices">
+            <div class="section-header">
+                <h3><i class="fas fa-microchip"></i> Dispositivos/Zonas</h3>
+                <button class="btn-refresh-tab" data-tab="devices">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="panel-filter">
+                <label><i class="fas fa-filter"></i> Filtrar por panel:</label>
+                <select id="devicePanelFilter" class="filter-select">
+                    <option value="all">Todos los paneles</option>
+                </select>
+            </div>
+            <div class="devices-list" id="devicesList">
+                <div class="loading-data">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Cargando dispositivos...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="back-btn-container">
+        <a href="javascript:history.back()" class="back-btn">
+            <i class="fas fa-arrow-left"></i> VOLVER A PANELES
+        </a>
+    </footer>
+
+    <script type="module" src="/components/cargadorTemas.js"></script>
+    <script src="/components/navbarAdministrador.js"></script>
+    <script src="/components/footerAdministrador.js"></script>
+    <script type="module" src="/components/particulas.js"></script>
+    <script type="module" src="monitoreoPanel.js"></script>
+
+    <script src="/components/protector-admin.js" data-modulo="monitoreo"></script>
+</body>
+
+</html>

@@ -67,3 +67,9 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+# datos para el backend
+/worker/serviceAccountKey.json
+
+# conexion a los servicios de firebase
+/config/firebase-config.js
