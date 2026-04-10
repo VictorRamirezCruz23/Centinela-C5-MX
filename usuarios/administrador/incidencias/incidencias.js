@@ -346,7 +346,7 @@ window.compartirIncidencia = async function (incidenciaId, event) {
             // Mostrar diálogo de compartir
                // Mostrar diálogo de compartir
         const resultado = await Swal.fire({
-            title: '📤 Compartir incidencia',
+            title: ' Compartir incidencia',
             html: `
                 <div style="text-align: center;">
                     <i class="fas fa-file-pdf" style="font-size: 48px; color: #e74c3c; margin-bottom: 15px; display: inline-block;"></i>
@@ -362,7 +362,7 @@ window.compartirIncidencia = async function (incidenciaId, event) {
                             <i class="fas fa-link" style="color: var(--color-accent-primary); font-size: 18px;"></i> Copiar Enlace
                         </button>
                         <button id="shareCancelBtn" class="btn-compartir" style="background: linear-gradient(145deg, #0f0f0f, #1a1a1a); border: 1px solid var(--color-border-light); border-radius: 8px; padding: 12px; color: #aaa; font-weight: 600; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 5px; transition: all 0.3s ease;">
-                            <i class="fas fa-times" style="color: #aaa; font-size: 18px;"></i> No Compartir
+                            <i class="fas fa-times" style="color: #aaa; font-size: 18px;"></i> Cerrar
                         </button>
                     </div>
                 </div>
@@ -380,11 +380,11 @@ window.compartirIncidencia = async function (incidenciaId, event) {
                         new Date(incidencia.fechaInicio).toLocaleDateString('es-MX')) : 
                     'Fecha no disponible';
                 
-                const mensajeTexto = `📋 *${tituloIncidencia}*\n\n` +
-                    `📍 *Sucursal:* ${obtenerNombreSucursal(incidencia.sucursalId)}\n` +
-                    `⚠️ *Riesgo:* ${riesgoTexto}\n` +
-                    `📅 *Fecha:* ${fechaInicio}\n` +
-                    `📄 *Informe completo (PDF):* ${pdfUrl}`;
+                const mensajeTexto = ` *${tituloIncidencia}*\n\n` +
+                    ` *Sucursal:* ${obtenerNombreSucursal(incidencia.sucursalId)}\n` +
+                    ` *Riesgo:* ${riesgoTexto}\n` +
+                    ` *Fecha:* ${fechaInicio}\n` +
+                    ` *Informe (PDF):* ${pdfUrl}`;
                 
                 document.getElementById('shareWhatsAppBtn').onclick = () => {
                     Swal.close();
@@ -392,7 +392,7 @@ window.compartirIncidencia = async function (incidenciaId, event) {
                     window.open(urlWhatsapp, '_blank');
                     Swal.fire({
                         icon: 'success',
-                        title: '📱 WhatsApp abierto',
+                        title: ' WhatsApp abierto',
                         text: 'Se abrirá WhatsApp con el enlace del PDF.',
                         timer: 2500,
                         showConfirmButton: false
@@ -409,14 +409,14 @@ window.compartirIncidencia = async function (incidenciaId, event) {
                         `Sucursal: ${obtenerNombreSucursal(incidencia.sucursalId)}\n` +
                         `Riesgo: ${riesgoTexto}\n` +
                         `Fecha: ${fechaInicio}\n\n` +
-                        `📄 PDF de la incidencia:\n${pdfUrl}\n\n` +
+                        ` PDF de la incidencia:\n${pdfUrl}\n\n` +
                         `--\nEste informe ha sido generado automáticamente por el sistema Centinela.`;
                     
                     window.location.href = `mailto:?subject=${asunto}&body=${encodeURIComponent(cuerpoTexto)}`;
                     
                     Swal.fire({
                         icon: 'success',
-                        title: '📧 Cliente de correo abierto',
+                        title: ' Cliente de correo abierto',
                         text: 'Se abrió tu cliente de correo con el enlace del PDF.',
                         timer: 2500,
                         showConfirmButton: false
@@ -429,7 +429,7 @@ window.compartirIncidencia = async function (incidenciaId, event) {
                         await navigator.clipboard.writeText(pdfUrl);
                         Swal.fire({
                             icon: 'success',
-                            title: '✅ Enlace copiado',
+                            title: 'Enlace copiado',
                             text: 'El enlace del PDF ha sido copiado al portapapeles',
                             timer: 2000,
                             showConfirmButton: false
