@@ -31,7 +31,7 @@ class CuentaPM {
         this._panelTokens = data.panelTokens || [];
     }
 
-    // ========== GETTERS Y SETTERS EXISTENTES v2==========
+    // ========== GETTERS Y SETTERS EXISTENTES v2 comentario para validar==========
     get id() { return this._id; }
     set id(value) { this._id = value; }
 
