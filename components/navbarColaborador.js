@@ -1770,15 +1770,15 @@ class NavbarComplete {
                         
                         <a href="../incidenciasRecuperacion/incidenciasRecuperacion.html" class="incidencias-dropdown-option" id="incidenciasRecuperacionBtn">
                             <i class="fa-solid fa-list"></i>
-                            <span>Lista de extravíos</span>
+                            <span>Incidencias de Recuperación</span>
                         </a>
                         <a href="../crearIncidenciasRecuperacion/crearIncidenciasRecuperacion.html" class="incidencias-dropdown-option" id="crearIncidenciasRecuperacionBtn">
                             <i class="fa-solid fa-plus-circle"></i>
-                            <span>Crear extravío</span>
+                            <span>Crear Incidencia de Recuperación</span>
                         </a>
                         <a href="../estadisticasIncidenciasRecuperacion/estadisticasIncidenciasRecuperacion.html" class="incidencias-dropdown-option" id="estadisticasIncidenciasRecuperacionBtn">
                             <i class="fa-solid fa-chart-line"></i>
-                            <span>Estadísticas de extravío</span>
+                            <span>Estadísticas de Recuperación</span>
                         </a>
                     </div>
                 </div>

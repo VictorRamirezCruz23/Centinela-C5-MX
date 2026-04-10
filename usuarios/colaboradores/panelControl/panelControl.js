@@ -108,14 +108,14 @@ const ACCESO_RAPIDO_CONFIG = [
 const COLUMNAS_CONFIG = [
     // PRIMERO: MÓDULO MERCANCÍA PERDIDA
     {
-        titulo: 'SECCION DE EXTRAVIO',
+        titulo: 'SECCION DE RECUPERACIONES',
         icono: 'fa-box-open',
         color: '#ff8c00',
         permisos: ['incidenciasRecuperacion', 'incidencias'],
         tarjetas: [
             {
                 modulo: 'incidenciasRecuperacionLista',
-                titulo: 'Lista de extravíos',
+                titulo: 'Lista de recuperaciones',
                 descripcion: 'Ver todos los registros de mercancía perdida',
                 icono: 'fa-list',
                 color: 'orange',
@@ -124,7 +124,7 @@ const COLUMNAS_CONFIG = [
             },
             {
                 modulo: 'crearIncidenciasRecuperacion',
-                titulo: 'Crear extravío',
+                titulo: 'Crear recuperación',
                 descripcion: 'Registrar nueva mercancía perdida',
                 icono: 'fa-plus-circle',
                 color: 'orange',
@@ -133,7 +133,7 @@ const COLUMNAS_CONFIG = [
             },
             {
                 modulo: 'estadisticasIncidenciasRecuperacion',
-                titulo: 'Estadísticas de extravío',
+                titulo: 'Estadísticas de recuperaciones',
                 descripcion: 'Análisis de pérdidas y recuperaciones',
                 icono: 'fa-chart-line',
                 color: 'orange',
