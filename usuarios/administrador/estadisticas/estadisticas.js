@@ -1,6 +1,6 @@
 // =============================================
-// estadisticas.js - VERSIÓN CORREGIDA
-// CON TIEMPO PROMEDIO DE RESOLUCIÓN FUNCIONAL
+// estadisticas.js - VERSIÓN COMPLETA SIN MODALES INTERMEDIOS
+// CLIC DIRECTO EN GRÁFICAS → INCIDENCIAS DIRECTAMENTE
 // =============================================
 
 // =============================================
@@ -39,6 +39,21 @@ let filtrosActivos = {
     sucursalId: 'todas',
     colaboradorId: 'todos',
     busqueda: ''
+};
+
+// Colores para gráficas
+const COLORS = {
+    critico: '#ef4444',
+    alto: '#f97316',
+    medio: '#eab308',
+    bajo: '#10b981',
+    pendiente: '#f59e0b',
+    finalizada: '#10b981',
+    azul: '#3b82f6',
+    morado: '#8b5cf6',
+    turquesa: '#14b8a6',
+    naranja: '#f97316',
+    verde: '#10b981'
 };
 
 // =============================================
@@ -580,6 +595,11 @@ async function cargarIncidencias() {
         actualizarMetricasPrincipales(datos.metricas);
         renderizarTodasLasGraficas(datos);
 
+        // Configurar KPI cards como clickeables
+        setTimeout(() => {
+            configurarKpiCardsClickeables();
+        }, 100);
+
         if (datos.colaboradores && datos.colaboradores.length > 0) {
             renderizarTablaColaboradores(datos.colaboradores);
         } else {
@@ -601,9 +621,6 @@ async function cargarIncidencias() {
             fechaEl.textContent = new Date().toLocaleString('es-MX');
         }
 
-        // Debug: Verificar que los tiempos promedio se cargaron correctamente
-
-
     } catch (error) {
         console.error('Error al cargar incidencias:', error);
         mostrarError('Error al cargar estadísticas: ' + error.message);
@@ -611,10 +628,807 @@ async function cargarIncidencias() {
 }
 
 // =============================================
+// CONFIGURAR CLICS EN KPI CARDS
+// =============================================
+function configurarKpiCardsClickeables() {
+    // Card de Incidencias Críticas
+    const criticasCard = document.querySelector('.metric-card.criticas');
+    if (criticasCard) {
+        criticasCard.style.cursor = 'pointer';
+        criticasCard.addEventListener('click', () => {
+            const incidenciasCriticas = datosGraficas.incidenciasFiltradas?.filter(i => i.nivelRiesgo === 'critico') || [];
+            if (incidenciasCriticas.length === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Sin registros',
+                    text: 'No hay incidencias críticas para mostrar',
+                    background: 'var(--color-bg-primary)',
+                    color: 'white'
+                });
+                return;
+            }
+            mostrarRegistrosEnSweet(incidenciasCriticas, 'Incidencias Críticas', '<i class="fas fa-exclamation-triangle"></i>');
+        });
+    }
+
+    // Card de Incidencias Altas
+    const altasCard = document.querySelector('.metric-card.altas');
+    if (altasCard) {
+        altasCard.style.cursor = 'pointer';
+        altasCard.addEventListener('click', () => {
+            const incidenciasAltas = datosGraficas.incidenciasFiltradas?.filter(i => i.nivelRiesgo === 'alto') || [];
+            if (incidenciasAltas.length === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Sin registros',
+                    text: 'No hay incidencias altas para mostrar',
+                    background: 'var(--color-bg-primary)',
+                    color: 'white'
+                });
+                return;
+            }
+            mostrarRegistrosEnSweet(incidenciasAltas, 'Incidencias Altas', '<i class="fas fa-exclamation-circle"></i>');
+        });
+    }
+
+    // Card de Incidencias Pendientes
+    const pendientesCard = document.querySelector('.metric-card.pendientes');
+    if (pendientesCard) {
+        pendientesCard.style.cursor = 'pointer';
+        pendientesCard.addEventListener('click', () => {
+            const incidenciasPendientes = datosGraficas.incidenciasFiltradas?.filter(i => i.estado === 'pendiente') || [];
+            if (incidenciasPendientes.length === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Sin registros',
+                    text: 'No hay incidencias pendientes para mostrar',
+                    background: 'var(--color-bg-primary)',
+                    color: 'white'
+                });
+                return;
+            }
+            mostrarRegistrosEnSweet(incidenciasPendientes, 'Incidencias Pendientes', '<i class="fas fa-clock"></i>');
+        });
+    }
+
+    // Card de Total Incidencias
+    const totalCard = document.querySelector('.metric-card.total');
+    if (totalCard) {
+        totalCard.style.cursor = 'pointer';
+        totalCard.addEventListener('click', () => {
+            const incidencias = datosGraficas.incidenciasFiltradas || [];
+            if (incidencias.length === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Sin registros',
+                    text: 'No hay incidencias para mostrar',
+                    background: 'var(--color-bg-primary)',
+                    color: 'white'
+                });
+                return;
+            }
+            mostrarRegistrosEnSweet(incidencias, 'Todas las Incidencias', '<i class="fas fa-chart-bar"></i>');
+        });
+    }
+}
+
+// =============================================
+// FUNCIONES PARA ALERTAS DE GRÁFICAS - CLIC DIRECTO SIN MODAL INTERMEDIO
+// =============================================
+
+function mostrarAlertActualizadores() {
+    const data = datosGraficas.topActualizadores;
+    if (!data || data.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin datos',
+            text: 'No hay información de actualizaciones para mostrar',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+
+    // Tomar el primer colaborador y mostrar sus incidencias DIRECTAMENTE
+    const colaborador = data[0];
+    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.actualizadoPorNombre === colaborador.nombre) || [];
+    
+    if (incidencias.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin registros',
+            text: `No hay incidencias actualizadas por ${colaborador.nombre}`,
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+    
+    mostrarRegistrosEnSweet(incidencias, `Incidencias actualizadas por ${colaborador.nombre}`, `<i class="fas fa-edit"></i>`);
+}
+
+function mostrarAlertReportadores() {
+    const data = datosGraficas.topReportadores;
+    if (!data || data.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin datos',
+            text: 'No hay información de reportes para mostrar',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+
+    // Tomar el primer colaborador y mostrar sus incidencias DIRECTAMENTE
+    const colaborador = data[0];
+    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.creadoPorNombre === colaborador.nombre) || [];
+    
+    if (incidencias.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin registros',
+            text: `No hay incidencias reportadas por ${colaborador.nombre}`,
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+    
+    mostrarRegistrosEnSweet(incidencias, `Incidencias reportadas por ${colaborador.nombre}`, `<i class="fas fa-flag"></i>`);
+}
+
+function mostrarAlertSeguimientos() {
+    const data = datosGraficas.topSeguimientos;
+    if (!data || data.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin datos',
+            text: 'No hay información de seguimientos para mostrar',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+
+    // Tomar el primer colaborador y mostrar sus incidencias DIRECTAMENTE
+    const colaborador = data[0];
+    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => {
+        if (i.seguimiento) {
+            return Object.values(i.seguimiento).some(seg => seg.usuarioNombre === colaborador.nombre);
+        }
+        return false;
+    }) || [];
+    
+    if (incidencias.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin registros',
+            text: `No hay incidencias con seguimiento de ${colaborador.nombre}`,
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+    
+    mostrarRegistrosEnSweet(incidencias, `Incidencias con seguimiento de ${colaborador.nombre}`, `<i class="fas fa-history"></i>`);
+}
+
+function mostrarAlertEstado() {
+    const data = datosGraficas.estadoData;
+    const total = (data.pendientes || 0) + (data.finalizadas || 0);
+    
+    if (total === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin datos',
+            text: 'No hay incidencias para mostrar',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+
+    // Mostrar directamente las incidencias pendientes (o se puede cambiar a finalizadas)
+    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.estado === 'pendiente') || [];
+    if (incidencias.length > 0) {
+        mostrarRegistrosEnSweet(incidencias, 'Incidencias Pendientes', '<i class="fas fa-clock"></i>');
+    } else {
+        const incidenciasFinalizadas = datosGraficas.incidenciasFiltradas?.filter(i => i.estado === 'finalizada') || [];
+        mostrarRegistrosEnSweet(incidenciasFinalizadas, 'Incidencias Finalizadas', '<i class="fas fa-check-circle"></i>');
+    }
+}
+
+function mostrarAlertRiesgo() {
+    const data = datosGraficas.riesgoData;
+    const total = (data.critico || 0) + (data.alto || 0) + (data.medio || 0) + (data.bajo || 0);
+    
+    if (total === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin datos',
+            text: 'No hay incidencias para mostrar',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+
+    // Mostrar directamente las incidencias críticas
+    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.nivelRiesgo === 'critico') || [];
+    if (incidencias.length > 0) {
+        mostrarRegistrosEnSweet(incidencias, 'Incidencias Críticas', '<i class="fas fa-exclamation-triangle"></i>');
+    } else {
+        const incidenciasAltas = datosGraficas.incidenciasFiltradas?.filter(i => i.nivelRiesgo === 'alto') || [];
+        mostrarRegistrosEnSweet(incidenciasAltas, 'Incidencias Altas', '<i class="fas fa-exclamation-circle"></i>');
+    }
+}
+
+function mostrarAlertCategorias() {
+    const data = datosGraficas.categoriasData;
+    if (!data || data.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin datos',
+            text: 'No hay información de categorías para mostrar',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+
+    // Tomar la primera categoría y mostrar sus incidencias DIRECTAMENTE
+    const categoriaNombre = data[0].nombre;
+    const categoria = categoriasCache.find(c => c.nombre === categoriaNombre);
+    
+    if (!categoria) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se encontró la categoría',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+
+    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.categoriaId === categoria.id) || [];
+    
+    if (incidencias.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin registros',
+            text: `No hay incidencias en la categoría ${categoriaNombre}`,
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+    
+    mostrarRegistrosEnSweet(incidencias, `Incidencias: ${categoriaNombre} (Top 1)`, '<i class="fas fa-tag"></i>');
+}
+
+function mostrarAlertSucursales() {
+    const data = datosGraficas.sucursalesData;
+    if (!data || data.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin datos',
+            text: 'No hay información de sucursales para mostrar',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+
+    // Tomar la primera sucursal y mostrar sus incidencias DIRECTAMENTE
+    const sucursalNombre = data[0].nombre;
+    const sucursal = sucursalesCache.find(s => s.nombre === sucursalNombre);
+    
+    if (!sucursal) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se encontró la sucursal',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+
+    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.sucursalId === sucursal.id) || [];
+    
+    if (incidencias.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin registros',
+            text: `No hay incidencias en la sucursal ${sucursalNombre}`,
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+    
+    mostrarRegistrosEnSweet(incidencias, `Incidencias: ${sucursalNombre} (Top 1)`, '<i class="fas fa-store"></i>');
+}
+
+function mostrarAlertTiempoResolucion() {
+    const data = datosGraficas.tiemposPromedio;
+    if (!data || data.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin datos',
+            text: 'No hay información de tiempos de resolución para mostrar. Asegúrate de tener incidencias finalizadas.',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+
+    // Tomar el primer colaborador y mostrar sus incidencias DIRECTAMENTE
+    const colaborador = data[0];
+    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.actualizadoPorNombre === colaborador.nombre) || [];
+    
+    if (incidencias.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin registros',
+            text: `No hay incidencias actualizadas por ${colaborador.nombre}`,
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+    
+    mostrarRegistrosEnSweet(incidencias, `Incidencias resueltas por ${colaborador.nombre} (Promedio: ${colaborador.promedio} horas)`, `<i class="fas fa-clock"></i>`);
+}
+
+// =============================================
+// FUNCIÓN PARA MOSTRAR REGISTROS EN SWEETALERT - VERSIÓN MEJORADA PARA INCIDENCIAS
+// =============================================
+function mostrarRegistrosEnSweet(incidencias, titulo, icono = '<i class="fas fa-chart-simple"></i>') {
+    if (!incidencias || incidencias.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin registros',
+            text: 'No hay incidencias para mostrar',
+            background: 'var(--color-bg-primary)',
+            color: 'white',
+            customClass: {
+                popup: 'swal2-popup-custom'
+            }
+        });
+        return;
+    }
+
+    const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+    
+    // Calcular estadísticas resumen
+    const totalCriticas = incidencias.filter(i => i.nivelRiesgo === 'critico').length;
+    const totalAltas = incidencias.filter(i => i.nivelRiesgo === 'alto').length;
+    const totalPendientes = incidencias.filter(i => i.estado === 'pendiente').length;
+    const totalFinalizadas = incidencias.filter(i => i.estado === 'finalizada').length;
+
+    // Limitar a los primeros 15 registros
+    const incidenciasMostrar = incidencias.slice(0, 15);
+    const hayMas = incidencias.length > 15;
+
+    let registrosHtml = `
+        <div class="swal-resumen-stats">
+            <div class="swal-stats-grid">
+                <div class="swal-stat-item" style="border-left-color: #8b5cf6;">
+                    <span class="swal-stat-label">Total incidencias</span>
+                    <span class="swal-stat-value">${incidencias.length}</span>
+                </div>
+                <div class="swal-stat-item" style="border-left-color: #ef4444;">
+                    <span class="swal-stat-label">Críticas + Altas</span>
+                    <span class="swal-stat-value" style="color: #ef4444;">${totalCriticas + totalAltas}</span>
+                </div>
+                <div class="swal-stat-item" style="border-left-color: #f59e0b;">
+                    <span class="swal-stat-label">Pendientes</span>
+                    <span class="swal-stat-value" style="color: #f59e0b;">${totalPendientes}</span>
+                </div>
+                <div class="swal-stat-item" style="border-left-color: #10b981;">
+                    <span class="swal-stat-label">Finalizadas</span>
+                    <span class="swal-stat-value" style="color: #10b981;">${totalFinalizadas}</span>
+                </div>
+            </div>
+        </div>
+        <div class="swal-registros-list">
+    `;
+
+    incidenciasMostrar.forEach(inc => {
+        const fecha = inc.fechaInicio instanceof Date ? inc.fechaInicio.toLocaleDateString('es-MX') :
+            (inc.fechaInicio ? new Date(inc.fechaInicio).toLocaleDateString('es-MX') : 'N/A');
+
+        let estadoColor = '#6c757d';
+        let estadoIcon = 'fa-circle';
+        if (inc.estado === 'finalizada') {
+            estadoColor = '#10b981';
+            estadoIcon = 'fa-check-circle';
+        } else if (inc.estado === 'pendiente') {
+            estadoColor = '#f59e0b';
+            estadoIcon = 'fa-clock';
+        }
+
+        let riesgoColor = '#6c757d';
+        let riesgoIcon = 'fa-chart-line';
+        let riesgoTexto = inc.nivelRiesgo ? inc.nivelRiesgo.charAt(0).toUpperCase() + inc.nivelRiesgo.slice(1) : 'N/A';
+        if (inc.nivelRiesgo === 'critico') {
+            riesgoColor = '#ef4444';
+            riesgoIcon = 'fa-exclamation-triangle';
+        } else if (inc.nivelRiesgo === 'alto') {
+            riesgoColor = '#f97316';
+            riesgoIcon = 'fa-exclamation-circle';
+        } else if (inc.nivelRiesgo === 'medio') {
+            riesgoColor = '#eab308';
+            riesgoIcon = 'fa-chart-simple';
+        } else if (inc.nivelRiesgo === 'bajo') {
+            riesgoColor = '#10b981';
+            riesgoIcon = 'fa-check';
+        }
+
+        const detalles = inc.detalles ? (inc.detalles.length > 80 ? inc.detalles.substring(0, 80) + '...' : inc.detalles) : 'Sin detalles';
+
+        // Verificar si tiene PDF asociado
+        const tienePDF = inc.pdfUrl && inc.pdfUrl.trim() !== '';
+        const pdfEstado = inc.estadoGeneracion || 'pendiente';
+        let pdfIcono = '';
+        let pdfTexto = '';
+        let pdfColor = '';
+        
+        if (tienePDF) {
+            pdfIcono = '<i class="fas fa-file-pdf" style="color: #c0392b;"></i>';
+            pdfTexto = 'Ver PDF';
+            pdfColor = '#c0392b';
+        } else if (pdfEstado === 'generando') {
+            pdfIcono = '<i class="fas fa-spinner fa-spin"></i>';
+            pdfTexto = 'Generando PDF...';
+            pdfColor = '#f59e0b';
+        } else {
+            pdfIcono = '<i class="fas fa-file-pdf" style="color: #6c757d;"></i>';
+            pdfTexto = 'PDF no disponible';
+            pdfColor = '#6c757d';
+        }
+
+        registrosHtml += `
+            <div class="swal-registro-card" data-incidencia-id="${inc.id}">
+                <div class="swal-card-header">
+                    <span class="swal-id"><i class="fas fa-hashtag"></i> ${escapeHTML(inc.id.substring(0, 12))}...</span>
+                    <span class="swal-fecha"><i class="fas fa-calendar-alt"></i> ${fecha}</span>
+                </div>
+                <div class="swal-card-body">
+                    <div class="swal-info-principal">
+                        <div class="swal-sucursal">
+                            <i class="fas fa-store"></i> ${escapeHTML(obtenerNombreSucursal(inc.sucursalId) || 'Sin asignar')}
+                        </div>
+                        <div class="swal-tipo-evento">
+                            <i class="fas ${riesgoIcon}" style="color: ${riesgoColor};"></i> ${riesgoTexto}
+                            <span class="swal-estado-badge" style="margin-left: 8px; color: ${estadoColor};">
+                                <i class="fas ${estadoIcon}"></i> ${inc.estado ? inc.estado.charAt(0).toUpperCase() + inc.estado.slice(1) : 'N/A'}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="swal-montos">
+                        <span class="swal-monto-perdido"><i class="fas fa-user"></i> ${escapeHTML(inc.creadoPorNombre || 'N/A')}</span>
+                        ${inc.actualizadoPorNombre ? `<span class="swal-monto-recuperado"><i class="fas fa-edit"></i> ${escapeHTML(inc.actualizadoPorNombre)}</span>` : ''}
+                    </div>
+                </div>
+                <div class="swal-card-footer">
+                    <div class="swal-narracion">
+                        <i class="fas fa-file-alt"></i>
+                        <span>${escapeHTML(detalles)}</span>
+                    </div>
+                </div>
+                <div class="swal-card-actions" style="display: flex; justify-content: flex-end; gap: 8px; padding: 8px 14px 12px 14px; border-top: 1px solid rgba(255,255,255,0.05);">
+                    <button class="swal-pdf-btn" data-incidencia-id="${inc.id}" data-pdf-url="${inc.pdfUrl || ''}" data-pdf-estado="${pdfEstado}" style="background: rgba(0,0,0,0.5); border: none; border-radius: 8px; padding: 6px 12px; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem; transition: all 0.2s ease;">
+                        ${pdfIcono}
+                        <span style="color: ${pdfColor};">${pdfTexto}</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+
+    if (hayMas) {
+        registrosHtml += `
+            <div class="swal-mas-registros">
+                <i class="fas fa-ellipsis-h"></i> y ${incidencias.length - 15} incidencias más. Haz clic en un registro para ver detalles completos.
+            </div>
+        `;
+    }
+
+    registrosHtml += `</div>`;
+
+    Swal.fire({
+        title: `${icono} ${titulo}`,
+        html: registrosHtml,
+        width: '880px',
+        background: 'transparent',
+        showConfirmButton: true,
+        confirmButtonText: '<i class="fas fa-check"></i> Cerrar',
+        confirmButtonColor: '#28a745',
+        customClass: {
+            popup: 'swal2-popup-custom',
+            title: 'swal2-title-custom',
+            confirmButton: 'swal2-confirm'
+        },
+        backdrop: `
+            rgba(0,0,0,0.8)
+            left top
+            no-repeat
+        `,
+        didOpen: () => {
+            // Agregar event listeners a los botones de PDF
+            document.querySelectorAll('.swal-pdf-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const incidenciaId = btn.dataset.incidenciaId;
+                    const pdfUrl = btn.dataset.pdfUrl;
+                    const pdfEstado = btn.dataset.pdfEstado;
+                    
+                    abrirPDFDesdeSweet(incidenciaId, pdfUrl, pdfEstado);
+                });
+            });
+            
+            // Agregar click en las tarjetas para ver detalles
+            document.querySelectorAll('.swal-registro-card').forEach(card => {
+                const incidenciaId = card.dataset.incidenciaId;
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.swal-pdf-btn')) {
+                        window.verDetalleIncidenciaDesdeSweet(incidenciaId);
+                    }
+                });
+            });
+        }
+    });
+}
+
+// =============================================
+// FUNCIÓN PARA ABRIR PDF DESDE SWEETALERT
+// =============================================
+function abrirPDFDesdeSweet(incidenciaId, pdfUrl, pdfEstado) {
+    const incidencia = datosGraficas.incidenciasFiltradas?.find(i => i.id === incidenciaId);
+    
+    if (!incidencia) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se encontró la incidencia',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+        return;
+    }
+    
+    const urlActual = incidencia.pdfUrl || pdfUrl;
+    const estadoActual = incidencia.estadoGeneracion || pdfEstado;
+    
+    if (urlActual && urlActual.trim() !== '') {
+        window.open(urlActual, '_blank');
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'Abriendo PDF',
+            text: 'El PDF se abrirá en el visor del navegador',
+            timer: 1500,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-end',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+    } else if (estadoActual === 'generando') {
+        Swal.fire({
+            icon: 'info',
+            title: 'Generando PDF',
+            text: 'El PDF se está generando en segundo plano. Recibirás una notificación cuando esté listo.',
+            confirmButtonText: 'Entendido',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+    } else {
+        Swal.fire({
+            icon: 'info',
+            title: 'PDF no disponible',
+            text: 'Este registro aún no tiene un PDF generado.',
+            confirmButtonText: 'Entendido',
+            background: 'var(--color-bg-primary)',
+            color: 'white'
+        });
+    }
+}
+
+// =============================================
+// FUNCIÓN GLOBAL PARA VER DETALLE DE INCIDENCIA - VERSIÓN MEJORADA
+// =============================================
+window.verDetalleIncidenciaDesdeSweet = function (incidenciaId) {
+    Swal.close();
+
+    const incidencia = datosGraficas.incidenciasFiltradas?.find(i => i.id === incidenciaId);
+
+    if (!incidencia) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Incidencia no encontrada',
+            text: 'No se pudo encontrar la incidencia seleccionada',
+            background: 'var(--color-bg-primary)',
+            color: 'white',
+            customClass: {
+                popup: 'swal2-popup-custom'
+            }
+        });
+        return;
+    }
+
+    const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+    const fecha = incidencia.fechaInicio instanceof Date ? incidencia.fechaInicio.toLocaleDateString('es-MX') :
+        (incidencia.fechaInicio ? new Date(incidencia.fechaInicio).toLocaleDateString('es-MX') : 'N/A');
+
+    let estadoColor = '#6c757d';
+    let estadoIcon = 'fa-circle';
+    if (incidencia.estado === 'finalizada') {
+        estadoColor = '#10b981';
+        estadoIcon = 'fa-check-circle';
+    } else if (incidencia.estado === 'pendiente') {
+        estadoColor = '#f59e0b';
+        estadoIcon = 'fa-clock';
+    }
+
+    let riesgoColor = '#6c757d';
+    let riesgoIcon = 'fa-chart-line';
+    let riesgoTexto = incidencia.nivelRiesgo ? incidencia.nivelRiesgo.charAt(0).toUpperCase() + incidencia.nivelRiesgo.slice(1) : 'N/A';
+    if (incidencia.nivelRiesgo === 'critico') {
+        riesgoColor = '#ef4444';
+        riesgoIcon = 'fa-exclamation-triangle';
+    } else if (incidencia.nivelRiesgo === 'alto') {
+        riesgoColor = '#f97316';
+        riesgoIcon = 'fa-exclamation-circle';
+    } else if (incidencia.nivelRiesgo === 'medio') {
+        riesgoColor = '#eab308';
+        riesgoIcon = 'fa-chart-simple';
+    } else if (incidencia.nivelRiesgo === 'bajo') {
+        riesgoColor = '#10b981';
+        riesgoIcon = 'fa-check';
+    }
+
+    // Verificar estado del PDF
+    const tienePDF = incidencia.pdfUrl && incidencia.pdfUrl.trim() !== '';
+    const pdfEstado = incidencia.estadoGeneracion || 'pendiente';
+    let pdfIcono = '';
+    let pdfTexto = '';
+    let pdfColor = '';
+    
+    if (tienePDF) {
+        pdfIcono = '<i class="fas fa-file-pdf" style="color: #c0392b;"></i>';
+        pdfTexto = 'Ver PDF';
+        pdfColor = '#c0392b';
+    } else if (pdfEstado === 'generando') {
+        pdfIcono = '<i class="fas fa-spinner fa-spin"></i>';
+        pdfTexto = 'Generando PDF...';
+        pdfColor = '#f59e0b';
+    } else {
+        pdfIcono = '<i class="fas fa-file-pdf" style="color: #6c757d;"></i>';
+        pdfTexto = 'PDF no disponible';
+        pdfColor = '#6c757d';
+    }
+
+    // Construir HTML de seguimientos si existen
+    let seguimientosHtml = '';
+    if (incidencia.seguimiento && Object.keys(incidencia.seguimiento).length > 0) {
+        const seguimientosList = Object.values(incidencia.seguimiento);
+        seguimientosHtml = `
+            <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 16px;">
+                <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; margin-bottom: 12px;"><i class="fas fa-history"></i> Seguimientos (${seguimientosList.length})</div>
+                <div style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;">
+                    ${seguimientosList.map(seg => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 10px;">
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="color: #3b82f6; font-weight: 600;">${escapeHTML(seg.usuarioNombre || 'Usuario')}</span>
+                                <span style="font-size: 0.65rem; color: #9ca3af;">${seg.fecha ? new Date(seg.fecha).toLocaleString('es-MX') : 'Fecha no disponible'}</span>
+                            </div>
+                            <span style="font-size: 0.7rem; color: #d1d5db;">${escapeHTML(seg.comentario ? (seg.comentario.substring(0, 50) + (seg.comentario.length > 50 ? '...' : '')) : 'Sin comentario')}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    const detallesHtml = `
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="swal-resumen-stats" style="margin-bottom: 0;">
+                <div class="swal-stats-grid">
+                    <div class="swal-stat-item" style="border-left-color: #8b5cf6;">
+                        <span class="swal-stat-label">ID Incidencia</span>
+                        <span class="swal-stat-value" style="font-size: 0.8rem; word-break: break-all;">${escapeHTML(incidencia.id)}</span>
+                    </div>
+                    <div class="swal-stat-item" style="border-left-color: #3b82f6;">
+                        <span class="swal-stat-label">Fecha</span>
+                        <span class="swal-stat-value" style="font-size: 0.9rem;">${fecha}</span>
+                    </div>
+                    <div class="swal-stat-item" style="border-left-color: ${estadoColor};">
+                        <span class="swal-stat-label">Estado</span>
+                        <span class="swal-stat-value" style="color: ${estadoColor};"><i class="fas ${estadoIcon}"></i> ${incidencia.estado ? incidencia.estado.charAt(0).toUpperCase() + incidencia.estado.slice(1) : 'N/A'}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: rgba(0,0,0,0.4); border-radius: 16px; padding: 16px; border: 1px solid rgba(255,255,255,0.08);">
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
+                    <div>
+                        <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; letter-spacing: 1px;">Sucursal</div>
+                        <div style="font-size: 1rem; font-weight: 600; margin-top: 4px;"><i class="fas fa-store" style="color: var(--color-accent-primary);"></i> ${escapeHTML(obtenerNombreSucursal(incidencia.sucursalId) || 'N/A')}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; letter-spacing: 1px;">Categoría</div>
+                        <div style="font-size: 1rem; font-weight: 600; margin-top: 4px;"><i class="fas fa-tag"></i> ${escapeHTML(obtenerNombreCategoria(incidencia.categoriaId) || 'N/A')}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; letter-spacing: 1px;">Nivel de riesgo</div>
+                        <div style="font-size: 1rem; font-weight: 600; margin-top: 4px; color: ${riesgoColor};"><i class="fas ${riesgoIcon}"></i> ${riesgoTexto}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+                <div style="flex: 1; background: rgba(59, 130, 246, 0.1); border-radius: 16px; padding: 16px; border-left: 3px solid #3b82f6;">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af;">Creado por</div>
+                    <div style="font-size: 1rem; font-weight: 600; margin-top: 4px;"><i class="fas fa-user-plus"></i> ${escapeHTML(incidencia.creadoPorNombre || 'N/A')}</div>
+                </div>
+                <div style="flex: 1; background: rgba(245, 158, 11, 0.1); border-radius: 16px; padding: 16px; border-left: 3px solid #f59e0b;">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af;">Actualizado por</div>
+                    <div style="font-size: 1rem; font-weight: 600; margin-top: 4px;"><i class="fas fa-user-edit"></i> ${escapeHTML(incidencia.actualizadoPorNombre || 'N/A')}</div>
+                </div>
+            </div>
+            
+            ${incidencia.detalles ? `
+            <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 16px;">
+                <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; margin-bottom: 8px;"><i class="fas fa-file-alt"></i> Detalles</div>
+                <div style="font-size: 0.85rem; line-height: 1.5; color: #d1d5db;">${escapeHTML(incidencia.detalles)}</div>
+            </div>
+            ` : ''}
+            
+            ${seguimientosHtml}
+            
+            <!-- Botón de PDF -->
+            <div style="display: flex; justify-content: center; gap: 12px; margin-top: 8px;">
+                <button id="btnPdfDesdeSweetDetalle" style="background: linear-gradient(145deg, #0f0f0f, #1a1a1a); border: 1px solid ${tienePDF ? '#c0392b' : '#6c757d'}; border-radius: 12px; padding: 10px 24px; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-family: var(--font-family-primary, 'Orbitron', sans-serif); transition: all 0.2s ease;">
+                    ${pdfIcono}
+                    <span style="color: ${pdfColor};">${pdfTexto}</span>
+                </button>
+            </div>
+        </div>
+    `;
+
+    Swal.fire({
+        title: `<i class="fas fa-info-circle" style="color: var(--color-accent-primary);"></i> Detalles de la incidencia`,
+        html: detallesHtml,
+        width: '750px',
+        background: 'transparent',
+        showConfirmButton: true,
+        confirmButtonText: '<i class="fas fa-check"></i> Cerrar',
+        customClass: {
+            popup: 'swal2-popup-custom',
+            title: 'swal2-title-custom',
+            confirmButton: 'swal2-confirm'
+        },
+        didOpen: () => {
+            const btnPdf = document.getElementById('btnPdfDesdeSweetDetalle');
+            if (btnPdf) {
+                btnPdf.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    abrirPDFDesdeSweet(incidencia.id, incidencia.pdfUrl, incidencia.estadoGeneracion);
+                });
+            }
+        }
+    });
+};
+
+// =============================================
 // PROCESAR DATOS PARA LAS 8 GRÁFICAS
 // =============================================
 function procesarDatosGraficas(incidencias) {
-
     const metricas = {
         total: incidencias.length,
         pendientes: incidencias.filter(i => i.estado === 'pendiente').length,
@@ -706,12 +1520,8 @@ function procesarDatosGraficas(incidencias) {
         .sort((a, b) => b.cantidad - a.cantidad)
         .slice(0, 5);
 
-    // =============================================
-    // CÁLCULO CORREGIDO DEL TIEMPO PROMEDIO DE RESOLUCIÓN
-    // =============================================
+    // Cálculo del tiempo promedio de resolución
     const tiemposResolucion = new Map();
-
-    // Filtrar solo incidencias finalizadas que tienen fecha de finalización
     const incidenciasFinalizadas = incidencias.filter(i =>
         i.estado === 'finalizada' && i.fechaFinalizacion && i.fechaInicio
     );
@@ -720,12 +1530,9 @@ function procesarDatosGraficas(incidencias) {
         if (inc.actualizadoPorNombre) {
             const inicio = inc.fechaInicio instanceof Date ? inc.fechaInicio : new Date(inc.fechaInicio);
             const fin = inc.fechaFinalizacion instanceof Date ? inc.fechaFinalizacion : new Date(inc.fechaFinalizacion);
-
-            // Calcular diferencia en horas
             const diferenciaMs = fin - inicio;
             const tiempoHoras = Math.round(diferenciaMs / (1000 * 60 * 60));
 
-            // Solo considerar tiempos positivos y razonables (menos de 720 horas = 30 días)
             if (tiempoHoras > 0 && tiempoHoras < 720) {
                 if (!tiemposResolucion.has(inc.actualizadoPorNombre)) {
                     tiemposResolucion.set(inc.actualizadoPorNombre, {
@@ -740,22 +1547,16 @@ function procesarDatosGraficas(incidencias) {
         }
     });
 
-    // Calcular promedios y filtrar colaboradores con al menos una incidencia resuelta
     const tiemposPromedio = Array.from(tiemposResolucion.entries())
         .map(([nombre, data]) => ({
             nombre: nombre,
             promedio: data.count > 0 ? Math.round(data.total / data.count) : 0
         }))
         .filter(t => t.promedio > 0)
-        .sort((a, b) => a.promedio - b.promedio)  // Ordenar de menor a mayor (mejores tiempos primero)
-        .slice(0, 8);  // Mostrar hasta 8 colaboradores
+        .sort((a, b) => a.promedio - b.promedio)
+        .slice(0, 8);
 
-    // Debug: Verificar resultados
-
-
-    // =============================================
-    // DATOS DE COLABORADORES PARA LA TABLA
-    // =============================================
+    // Datos de colaboradores para la tabla
     const colaboradoresMap = new Map();
 
     incidencias.forEach(inc => {
@@ -811,7 +1612,6 @@ function procesarDatosGraficas(incidencias) {
         }
     });
 
-    // Calcular tiempo total por colaborador para incidencias resueltas
     incidenciasFinalizadas.forEach(inc => {
         if (inc.actualizadoPorNombre && colaboradoresMap.has(inc.actualizadoPorNombre)) {
             const inicio = inc.fechaInicio instanceof Date ? inc.fechaInicio : new Date(inc.fechaInicio);
@@ -855,703 +1655,6 @@ function actualizarMetricasPrincipales(metricas) {
     setElementText('metricAltasPorcentaje', `${Math.round((metricas.altas / total) * 100)}% del total`);
     setElementText('metricPendientesPorcentaje', `${Math.round((metricas.pendientes / total) * 100)}% pendientes`);
     setElementText('metricFinalizadasPorcentaje', `${Math.round((metricas.finalizadas / total) * 100)}% resueltas`);
-}
-
-// =============================================
-// FUNCIONES PARA SWEETALERT DE CADA GRÁFICA
-// =============================================
-
-function mostrarRegistrosEnSweet(incidencias, titulo, iconoHtml) {
-    if (!incidencias || incidencias.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin registros',
-            text: 'No hay incidencias para mostrar',
-            background: '#1a1a1a',
-            color: '#fff',
-            customClass: {
-                popup: 'swal2-popup-custom'
-            }
-        });
-        return;
-    }
-
-    const totalIncidencias = incidencias.length;
-    const pendientes = incidencias.filter(i => i.estado === 'pendiente').length;
-    const finalizadas = incidencias.filter(i => i.estado === 'finalizada').length;
-    const criticas = incidencias.filter(i => i.nivelRiesgo === 'critico').length;
-    const altas = incidencias.filter(i => i.nivelRiesgo === 'alto').length;
-
-    const incidenciasMostrar = incidencias.slice(0, 15);
-    const hayMas = incidencias.length > 15;
-
-    let registrosHtml = `
-        <div class="swal-resumen-stats">
-            <div class="swal-stats-grid">
-                <div class="swal-stat-item" style="border-left-color: #8b5cf6;">
-                    <span class="swal-stat-label">Total incidencias</span>
-                    <span class="swal-stat-value">${totalIncidencias}</span>
-                </div>
-                <div class="swal-stat-item" style="border-left-color: #f59e0b;">
-                    <span class="swal-stat-label">Pendientes</span>
-                    <span class="swal-stat-value" style="color: #f59e0b;">${pendientes}</span>
-                </div>
-                <div class="swal-stat-item" style="border-left-color: #10b981;">
-                    <span class="swal-stat-label">Finalizadas</span>
-                    <span class="swal-stat-value" style="color: #10b981;">${finalizadas}</span>
-                </div>
-                <div class="swal-stat-item" style="border-left-color: #ef4444;">
-                    <span class="swal-stat-label">Críticas + Altas</span>
-                    <span class="swal-stat-value" style="color: #ef4444;">${criticas + altas}</span>
-                </div>
-            </div>
-        </div>
-        <div class="swal-registros-list">
-    `;
-
-    incidenciasMostrar.forEach(inc => {
-        const fecha = inc.fechaInicio instanceof Date ? inc.fechaInicio.toLocaleDateString('es-MX') :
-            (inc.fechaInicio ? new Date(inc.fechaInicio).toLocaleDateString('es-MX') : 'N/A');
-
-        let estadoColor = '#6c757d';
-        let estadoIcon = 'fa-circle';
-        if (inc.estado === 'finalizada') {
-            estadoColor = '#10b981';
-            estadoIcon = 'fa-check-circle';
-        } else if (inc.estado === 'pendiente') {
-            estadoColor = '#f59e0b';
-            estadoIcon = 'fa-clock';
-        }
-
-        let riesgoColor = '#6c757d';
-        let riesgoIcon = 'fa-chart-line';
-        if (inc.nivelRiesgo === 'critico') {
-            riesgoColor = '#ef4444';
-            riesgoIcon = 'fa-exclamation-triangle';
-        } else if (inc.nivelRiesgo === 'alto') {
-            riesgoColor = '#f97316';
-            riesgoIcon = 'fa-exclamation-circle';
-        } else if (inc.nivelRiesgo === 'medio') {
-            riesgoColor = '#eab308';
-            riesgoIcon = 'fa-chart-simple';
-        } else if (inc.nivelRiesgo === 'bajo') {
-            riesgoColor = '#10b981';
-            riesgoIcon = 'fa-check';
-        }
-
-        const detalles = inc.detalles ? (inc.detalles.length > 80 ? inc.detalles.substring(0, 80) + '...' : inc.detalles) : 'Sin detalles';
-
-        registrosHtml += `
-            <div class="swal-registro-card" onclick="window.verDetalleIncidenciaDesdeSweet('${inc.id}')">
-                <div class="swal-card-header">
-                    <span class="swal-id"><i class="fas fa-hashtag"></i> ${escapeHTML(inc.id.substring(0, 12))}...</span>
-                    <span class="swal-fecha"><i class="fas fa-calendar-alt"></i> ${fecha}</span>
-                </div>
-                <div class="swal-card-body">
-                    <div class="swal-info-principal">
-                        <div class="swal-sucursal">
-                            <i class="fas fa-store"></i> ${escapeHTML(obtenerNombreSucursal(inc.sucursalId) || 'Sin asignar')}
-                        </div>
-                        <div class="swal-tipo-evento">
-                            <i class="fas ${riesgoIcon}" style="color: ${riesgoColor};"></i> ${inc.nivelRiesgo ? inc.nivelRiesgo.charAt(0).toUpperCase() + inc.nivelRiesgo.slice(1) : 'N/A'}
-                            <span class="swal-estado-badge" style="margin-left: 8px; color: ${estadoColor};">
-                                <i class="fas ${estadoIcon}"></i> ${inc.estado ? inc.estado.charAt(0).toUpperCase() + inc.estado.slice(1) : 'N/A'}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="swal-montos">
-                        <span class="swal-monto-perdido"><i class="fas fa-user"></i> ${escapeHTML(inc.creadoPorNombre || 'N/A')}</span>
-                        ${inc.actualizadoPorNombre ? `<span class="swal-monto-recuperado"><i class="fas fa-edit"></i> ${escapeHTML(inc.actualizadoPorNombre)}</span>` : ''}
-                    </div>
-                </div>
-                <div class="swal-card-footer">
-                    <div class="swal-narracion">
-                        <i class="fas fa-file-alt"></i>
-                        <span>${escapeHTML(detalles)}</span>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-
-    if (hayMas) {
-        registrosHtml += `
-            <div class="swal-mas-registros">
-                <i class="fas fa-ellipsis-h"></i> y ${incidencias.length - 15} incidencias más. Haz clic en un registro para ver detalles completos.
-            </div>
-        `;
-    }
-
-    registrosHtml += `</div>`;
-
-    Swal.fire({
-        title: `${iconoHtml} ${titulo}`,
-        html: registrosHtml,
-        width: '880px',
-        background: 'transparent',
-        showConfirmButton: true,
-        confirmButtonText: '<i class="fas fa-check"></i> Cerrar',
-        confirmButtonColor: '#28a745',
-        customClass: {
-            popup: 'swal2-popup-custom',
-            title: 'swal2-title-custom',
-            confirmButton: 'swal2-confirm'
-        },
-        backdrop: `
-            rgba(0,0,0,0.8)
-            left top
-            no-repeat
-        `
-    });
-}
-
-window.verDetalleIncidenciaDesdeSweet = function (incidenciaId) {
-    Swal.close();
-
-    const incidencia = datosGraficas.incidenciasFiltradas?.find(i => i.id === incidenciaId);
-
-    if (!incidencia) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Incidencia no encontrada',
-            text: 'No se pudo encontrar la incidencia seleccionada',
-            background: '#1a1a1a',
-            color: '#fff',
-            customClass: {
-                popup: 'swal2-popup-custom'
-            }
-        });
-        return;
-    }
-
-    const fecha = incidencia.fechaInicio instanceof Date ? incidencia.fechaInicio.toLocaleDateString('es-MX') :
-        (incidencia.fechaInicio ? new Date(incidencia.fechaInicio).toLocaleDateString('es-MX') : 'N/A');
-
-    let estadoColor = '#6c757d';
-    let estadoIcon = 'fa-circle';
-    if (incidencia.estado === 'finalizada') {
-        estadoColor = '#10b981';
-        estadoIcon = 'fa-check-circle';
-    } else if (incidencia.estado === 'pendiente') {
-        estadoColor = '#f59e0b';
-        estadoIcon = 'fa-clock';
-    }
-
-    let riesgoColor = '#6c757d';
-    let riesgoIcon = 'fa-chart-line';
-    let riesgoTexto = incidencia.nivelRiesgo ? incidencia.nivelRiesgo.charAt(0).toUpperCase() + incidencia.nivelRiesgo.slice(1) : 'N/A';
-    if (incidencia.nivelRiesgo === 'critico') {
-        riesgoColor = '#ef4444';
-        riesgoIcon = 'fa-exclamation-triangle';
-    } else if (incidencia.nivelRiesgo === 'alto') {
-        riesgoColor = '#f97316';
-        riesgoIcon = 'fa-exclamation-circle';
-    } else if (incidencia.nivelRiesgo === 'medio') {
-        riesgoColor = '#eab308';
-        riesgoIcon = 'fa-chart-simple';
-    } else if (incidencia.nivelRiesgo === 'bajo') {
-        riesgoColor = '#10b981';
-        riesgoIcon = 'fa-check';
-    }
-
-    const detallesHtml = `
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-            <div class="swal-resumen-stats" style="margin-bottom: 0;">
-                <div class="swal-stats-grid">
-                    <div class="swal-stat-item" style="border-left-color: #8b5cf6;">
-                        <span class="swal-stat-label">ID Incidencia</span>
-                        <span class="swal-stat-value" style="font-size: 0.8rem; word-break: break-all;">${escapeHTML(incidencia.id)}</span>
-                    </div>
-                    <div class="swal-stat-item" style="border-left-color: #3b82f6;">
-                        <span class="swal-stat-label">Fecha</span>
-                        <span class="swal-stat-value" style="font-size: 0.9rem;">${fecha}</span>
-                    </div>
-                    <div class="swal-stat-item" style="border-left-color: ${estadoColor};">
-                        <span class="swal-stat-label">Estado</span>
-                        <span class="swal-stat-value" style="color: ${estadoColor};"><i class="fas ${estadoIcon}"></i> ${incidencia.estado ? incidencia.estado.charAt(0).toUpperCase() + incidencia.estado.slice(1) : 'N/A'}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="background: rgba(0,0,0,0.4); border-radius: 16px; padding: 16px; border: 1px solid rgba(255,255,255,0.08);">
-                <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
-                    <div>
-                        <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; letter-spacing: 1px;">Sucursal</div>
-                        <div style="font-size: 1rem; font-weight: 600; margin-top: 4px;"><i class="fas fa-store" style="color: var(--color-accent-primary);"></i> ${escapeHTML(obtenerNombreSucursal(incidencia.sucursalId) || 'N/A')}</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; letter-spacing: 1px;">Categoría</div>
-                        <div style="font-size: 1rem; font-weight: 600; margin-top: 4px;"><i class="fas fa-tag"></i> ${escapeHTML(obtenerNombreCategoria(incidencia.categoriaId) || 'N/A')}</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; letter-spacing: 1px;">Nivel de riesgo</div>
-                        <div style="font-size: 1rem; font-weight: 600; margin-top: 4px; color: ${riesgoColor};"><i class="fas ${riesgoIcon}"></i> ${riesgoTexto}</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="display: flex; flex-wrap: wrap; gap: 16px;">
-                <div style="flex: 1; background: rgba(59, 130, 246, 0.1); border-radius: 16px; padding: 16px; border-left: 3px solid #3b82f6;">
-                    <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af;">Creado por</div>
-                    <div style="font-size: 1rem; font-weight: 600; margin-top: 4px;"><i class="fas fa-user-plus"></i> ${escapeHTML(incidencia.creadoPorNombre || 'N/A')}</div>
-                </div>
-                <div style="flex: 1; background: rgba(245, 158, 11, 0.1); border-radius: 16px; padding: 16px; border-left: 3px solid #f59e0b;">
-                    <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af;">Actualizado por</div>
-                    <div style="font-size: 1rem; font-weight: 600; margin-top: 4px;"><i class="fas fa-user-edit"></i> ${escapeHTML(incidencia.actualizadoPorNombre || 'N/A')}</div>
-                </div>
-            </div>
-            
-            ${incidencia.detalles ? `
-            <div style="background: rgba(0,0,0,0.3); border-radius: 16px; padding: 16px;">
-                <div style="font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; margin-bottom: 8px;"><i class="fas fa-file-alt"></i> Detalles</div>
-                <div style="font-size: 0.85rem; line-height: 1.5; color: #d1d5db;">${escapeHTML(incidencia.detalles)}</div>
-            </div>
-            ` : ''}
-        </div>
-    `;
-
-    Swal.fire({
-        title: `<i class="fas fa-info-circle" style="color: var(--color-accent-primary);"></i> Detalles de la incidencia`,
-        html: detallesHtml,
-        width: '700px',
-        background: 'transparent',
-        confirmButtonText: '<i class="fas fa-check"></i> Cerrar',
-        customClass: {
-            popup: 'swal2-popup-custom',
-            title: 'swal2-title-custom',
-            confirmButton: 'swal2-confirm'
-        }
-    });
-};
-
-function mostrarAlertActualizadores() {
-    const data = datosGraficas.topActualizadores;
-    if (!data || data.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin datos',
-            text: 'No hay información de actualizaciones para mostrar',
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    let html = '<div style="text-align: left;">';
-    html += '<p><strong>📊 Top colaboradores que más actualizan incidencias</strong></p>';
-    html += '<ul style="margin-top: 10px;">';
-    data.forEach((item, index) => {
-        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '📌';
-        html += `<li style="margin: 8px 0;">${medal} <strong>${escapeHTML(item.nombre)}</strong>: ${item.cantidad} incidencias actualizadas</li>`;
-    });
-    html += '</ul></div>';
-
-    Swal.fire({
-        title: 'Colaboradores que más actualizan',
-        html: html,
-        icon: 'info',
-        background: '#1a1a1a',
-        color: '#fff',
-        confirmButtonColor: '#3b82f6',
-        confirmButtonText: 'Cerrar'
-    });
-}
-
-function mostrarAlertReportadores() {
-    const data = datosGraficas.topReportadores;
-    if (!data || data.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin datos',
-            text: 'No hay información de reportes para mostrar',
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    let html = '<div style="text-align: left;">';
-    html += '<p><strong>📝 Top colaboradores que más reportan incidencias</strong></p>';
-    html += '<ul style="margin-top: 10px;">';
-    data.forEach((item, index) => {
-        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '📌';
-        html += `<li style="margin: 8px 0;">${medal} <strong>${escapeHTML(item.nombre)}</strong>: ${item.cantidad} incidencias reportadas</li>`;
-    });
-    html += '</ul></div>';
-
-    Swal.fire({
-        title: 'Colaboradores con más reportes',
-        html: html,
-        icon: 'info',
-        background: '#1a1a1a',
-        color: '#fff',
-        confirmButtonColor: '#10b981',
-        confirmButtonText: 'Cerrar'
-    });
-}
-
-function mostrarAlertSeguimientos() {
-    const data = datosGraficas.topSeguimientos;
-    if (!data || data.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin datos',
-            text: 'No hay información de seguimientos para mostrar',
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    let html = '<div style="text-align: left;">';
-    html += '<p><strong>🔄 Top colaboradores con más seguimientos</strong></p>';
-    html += '<ul style="margin-top: 10px;">';
-    data.forEach((item, index) => {
-        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '📌';
-        html += `<li style="margin: 8px 0;">${medal} <strong>${escapeHTML(item.nombre)}</strong>: ${item.cantidad} seguimientos realizados</li>`;
-    });
-    html += '</ul></div>';
-
-    Swal.fire({
-        title: 'Colaboradores con más seguimientos',
-        html: html,
-        icon: 'info',
-        background: '#1a1a1a',
-        color: '#fff',
-        confirmButtonColor: '#f97316',
-        confirmButtonText: 'Cerrar'
-    });
-}
-
-function mostrarAlertEstado() {
-    const data = datosGraficas.estadoData;
-    const total = (data.pendientes || 0) + (data.finalizadas || 0);
-    const pendientesPorc = total > 0 ? Math.round((data.pendientes / total) * 100) : 0;
-    const finalizadasPorc = total > 0 ? Math.round((data.finalizadas / total) * 100) : 0;
-
-    let html = '<div style="text-align: left;">';
-    html += '<p><strong>📈 Distribución de estados de incidencias</strong></p>';
-    html += '<div style="margin-top: 15px;">';
-    html += `<div style="margin-bottom: 10px; cursor: pointer;" onclick="window.mostrarRegistrosPorEstado('pendiente')">
-                <span style="display: inline-block; width: 12px; height: 12px; background: #f97316; border-radius: 50%; margin-right: 8px;"></span> 
-                <strong>Pendientes:</strong> ${data.pendientes} (${pendientesPorc}%) 
-                <span style="font-size: 11px; color: #3b82f6;"><i class="fas fa-mouse-pointer"></i> Haz clic para ver</span>
-            </div>`;
-    html += `<div style="margin-bottom: 10px; cursor: pointer;" onclick="window.mostrarRegistrosPorEstado('finalizada')">
-                <span style="display: inline-block; width: 12px; height: 12px; background: #10b981; border-radius: 50%; margin-right: 8px;"></span> 
-                <strong>Finalizadas:</strong> ${data.finalizadas} (${finalizadasPorc}%)
-                <span style="font-size: 11px; color: #3b82f6;"><i class="fas fa-mouse-pointer"></i> Haz clic para ver</span>
-            </div>`;
-    html += '</div>';
-    html += `<p style="margin-top: 15px; color: #6c757d; font-size: 12px;">Total de incidencias: ${total}</p>`;
-    html += '</div>';
-
-    Swal.fire({
-        title: 'Estado de Incidencias',
-        html: html,
-        icon: 'info',
-        background: '#1a1a1a',
-        color: '#fff',
-        confirmButtonColor: '#f97316',
-        confirmButtonText: 'Cerrar'
-    });
-}
-
-window.mostrarRegistrosPorEstado = function (estado) {
-    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.estado === estado) || [];
-    const titulo = estado === 'pendiente' ? 'Incidencias Pendientes' : 'Incidencias Finalizadas';
-    const icono = estado === 'pendiente' ? '<i class="fas fa-clock"></i>' : '<i class="fas fa-check-circle"></i>';
-
-    if (incidencias.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin registros',
-            text: `No hay incidencias ${estado === 'pendiente' ? 'pendientes' : 'finalizadas'} para mostrar`,
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    Swal.close();
-    mostrarRegistrosEnSweet(incidencias, titulo, icono);
-};
-
-function mostrarAlertRiesgo() {
-    const data = datosGraficas.riesgoData;
-    const total = (data.critico || 0) + (data.alto || 0) + (data.medio || 0) + (data.bajo || 0);
-    const criticoPorc = total > 0 ? Math.round((data.critico / total) * 100) : 0;
-    const altoPorc = total > 0 ? Math.round((data.alto / total) * 100) : 0;
-    const medioPorc = total > 0 ? Math.round((data.medio / total) * 100) : 0;
-    const bajoPorc = total > 0 ? Math.round((data.bajo / total) * 100) : 0;
-
-    let html = '<div style="text-align: left;">';
-    html += '<p><strong>⚠️ Distribución de niveles de riesgo</strong></p>';
-    html += '<div style="margin-top: 15px;">';
-    html += `<div style="margin-bottom: 8px; cursor: pointer;" onclick="window.mostrarRegistrosPorRiesgo('critico')">
-                <span style="display: inline-block; width: 12px; height: 12px; background: #ef4444; border-radius: 50%; margin-right: 8px;"></span> 
-                <strong>Crítico:</strong> ${data.critico} (${criticoPorc}%)
-                <span style="font-size: 11px; color: #3b82f6;"><i class="fas fa-mouse-pointer"></i> Haz clic</span>
-            </div>`;
-    html += `<div style="margin-bottom: 8px; cursor: pointer;" onclick="window.mostrarRegistrosPorRiesgo('alto')">
-                <span style="display: inline-block; width: 12px; height: 12px; background: #f97316; border-radius: 50%; margin-right: 8px;"></span> 
-                <strong>Alto:</strong> ${data.alto} (${altoPorc}%)
-                <span style="font-size: 11px; color: #3b82f6;"><i class="fas fa-mouse-pointer"></i> Haz clic</span>
-            </div>`;
-    html += `<div style="margin-bottom: 8px; cursor: pointer;" onclick="window.mostrarRegistrosPorRiesgo('medio')">
-                <span style="display: inline-block; width: 12px; height: 12px; background: #eab308; border-radius: 50%; margin-right: 8px;"></span> 
-                <strong>Medio:</strong> ${data.medio} (${medioPorc}%)
-                <span style="font-size: 11px; color: #3b82f6;"><i class="fas fa-mouse-pointer"></i> Haz clic</span>
-            </div>`;
-    html += `<div style="margin-bottom: 8px; cursor: pointer;" onclick="window.mostrarRegistrosPorRiesgo('bajo')">
-                <span style="display: inline-block; width: 12px; height: 12px; background: #10b981; border-radius: 50%; margin-right: 8px;"></span> 
-                <strong>Bajo:</strong> ${data.bajo} (${bajoPorc}%)
-                <span style="font-size: 11px; color: #3b82f6;"><i class="fas fa-mouse-pointer"></i> Haz clic</span>
-            </div>`;
-    html += '</div>';
-    html += `<p style="margin-top: 15px; color: #6c757d; font-size: 12px;">Total de incidencias: ${total}</p>`;
-    html += '</div>';
-
-    Swal.fire({
-        title: 'Niveles de Riesgo',
-        html: html,
-        icon: 'warning',
-        background: '#1a1a1a',
-        color: '#fff',
-        confirmButtonColor: '#ef4444',
-        confirmButtonText: 'Cerrar'
-    });
-}
-
-window.mostrarRegistrosPorRiesgo = function (nivelRiesgo) {
-    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.nivelRiesgo === nivelRiesgo) || [];
-    const nivelesTexto = {
-        critico: 'Críticas',
-        alto: 'Altas',
-        medio: 'Medias',
-        bajo: 'Bajas'
-    };
-    const iconos = {
-        critico: '<i class="fas fa-exclamation-triangle"></i>',
-        alto: '<i class="fas fa-exclamation-circle"></i>',
-        medio: '<i class="fas fa-chart-simple"></i>',
-        bajo: '<i class="fas fa-check"></i>'
-    };
-
-    if (incidencias.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin registros',
-            text: `No hay incidencias de nivel ${nivelesTexto[nivelRiesgo]} para mostrar`,
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    Swal.close();
-    mostrarRegistrosEnSweet(incidencias, `Incidencias ${nivelesTexto[nivelRiesgo]}`, iconos[nivelRiesgo]);
-};
-
-function mostrarAlertCategorias() {
-    const data = datosGraficas.categoriasData;
-    if (!data || data.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin datos',
-            text: 'No hay información de categorías para mostrar',
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    const total = data.reduce((sum, item) => sum + item.cantidad, 0);
-
-    let html = '<div style="text-align: left;">';
-    html += '<p><strong>🏷️ Incidencias por categoría</strong></p>';
-    html += '<div style="margin-top: 15px;">';
-    data.forEach(item => {
-        const porcentaje = Math.round((item.cantidad / total) * 100);
-        html += `<div style="margin-bottom: 10px; cursor: pointer;" onclick="window.mostrarRegistrosPorCategoria('${escapeHTML(item.nombre)}')">`;
-        html += `<div style="display: flex; justify-content: space-between; margin-bottom: 4px;">`;
-        html += `<span><strong>${escapeHTML(item.nombre)}</strong></span>`;
-        html += `<span>${item.cantidad} (${porcentaje}%) <span style="font-size: 11px; color: #3b82f6;"><i class="fas fa-mouse-pointer"></i></span></span>`;
-        html += `</div>`;
-        html += `<div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;">`;
-        html += `<div style="width: ${porcentaje}%; height: 100%; background: #8b5cf6; border-radius: 3px;"></div>`;
-        html += `</div>`;
-        html += `</div>`;
-    });
-    html += `<p style="margin-top: 15px; color: #6c757d; font-size: 12px;">Total de incidencias: ${total}</p>`;
-    html += '</div>';
-
-    Swal.fire({
-        title: 'Incidencias por Categoría',
-        html: html,
-        icon: 'info',
-        background: '#1a1a1a',
-        color: '#fff',
-        confirmButtonColor: '#8b5cf6',
-        confirmButtonText: 'Cerrar'
-    });
-}
-
-window.mostrarRegistrosPorCategoria = function (categoriaNombre) {
-    const categoria = categoriasCache.find(c => c.nombre === categoriaNombre);
-    if (!categoria) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se encontró la categoría',
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.categoriaId === categoria.id) || [];
-
-    if (incidencias.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin registros',
-            text: `No hay incidencias en la categoría ${categoriaNombre} para mostrar`,
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    Swal.close();
-    mostrarRegistrosEnSweet(incidencias, `Incidencias: ${categoriaNombre}`, '<i class="fas fa-tag"></i>');
-};
-
-function mostrarAlertSucursales() {
-    const data = datosGraficas.sucursalesData;
-    if (!data || data.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin datos',
-            text: 'No hay información de sucursales para mostrar',
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    const total = data.reduce((sum, item) => sum + item.cantidad, 0);
-
-    let html = '<div style="text-align: left;">';
-    html += '<p><strong>🏢 Incidencias por sucursal</strong></p>';
-    html += '<div style="margin-top: 15px;">';
-    data.forEach(item => {
-        const porcentaje = Math.round((item.cantidad / total) * 100);
-        html += `<div style="margin-bottom: 10px; cursor: pointer;" onclick="window.mostrarRegistrosPorSucursal('${escapeHTML(item.nombre)}')">`;
-        html += `<div style="display: flex; justify-content: space-between; margin-bottom: 4px;">`;
-        html += `<span><strong>${escapeHTML(item.nombre)}</strong></span>`;
-        html += `<span>${item.cantidad} (${porcentaje}%) <span style="font-size: 11px; color: #3b82f6;"><i class="fas fa-mouse-pointer"></i></span></span>`;
-        html += `</div>`;
-        html += `<div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;">`;
-        html += `<div style="width: ${porcentaje}%; height: 100%; background: #14b8a6; border-radius: 3px;"></div>`;
-        html += `</div>`;
-        html += `</div>`;
-    });
-    html += `<p style="margin-top: 15px; color: #6c757d; font-size: 12px;">Total de incidencias: ${total}</p>`;
-    html += '</div>';
-
-    Swal.fire({
-        title: 'Incidencias por Sucursal',
-        html: html,
-        icon: 'info',
-        background: '#1a1a1a',
-        color: '#fff',
-        confirmButtonColor: '#14b8a6',
-        confirmButtonText: 'Cerrar'
-    });
-}
-
-window.mostrarRegistrosPorSucursal = function (sucursalNombre) {
-    const sucursal = sucursalesCache.find(s => s.nombre === sucursalNombre);
-    if (!sucursal) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se encontró la sucursal',
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    const incidencias = datosGraficas.incidenciasFiltradas?.filter(i => i.sucursalId === sucursal.id) || [];
-
-    if (incidencias.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin registros',
-            text: `No hay incidencias en la sucursal ${sucursalNombre} para mostrar`,
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    Swal.close();
-    mostrarRegistrosEnSweet(incidencias, `Incidencias: ${sucursalNombre}`, '<i class="fas fa-store"></i>');
-};
-
-function mostrarAlertTiempoResolucion() {
-    const data = datosGraficas.tiemposPromedio;
-    if (!data || data.length === 0) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Sin datos',
-            text: 'No hay información de tiempos de resolución para mostrar. Asegúrate de tener incidencias finalizadas.',
-            background: '#1a1a1a',
-            color: '#fff'
-        });
-        return;
-    }
-
-    let html = '<div style="text-align: left;">';
-    html += '<p><strong>⏱️ Tiempo promedio de resolución por colaborador</strong></p>';
-    html += '<p style="font-size: 12px; color: #6c757d; margin-bottom: 10px;">*Basado en incidencias finalizadas</p>';
-    html += '<div style="margin-top: 10px;">';
-    data.forEach((item, index) => {
-        const medal = index === 0 ? '🏆' : '📌';
-        // Determinar color según el tiempo (verde para rápido, rojo para lento)
-        let tiempoColor = '#10b981';
-        if (item.promedio > 72) tiempoColor = '#ef4444';
-        else if (item.promedio > 24) tiempoColor = '#f97316';
-        else if (item.promedio > 8) tiempoColor = '#eab308';
-
-        html += `<div style="margin-bottom: 12px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 8px;">`;
-        html += `<div style="display: flex; justify-content: space-between; align-items: center;">`;
-        html += `<span>${medal} <strong>${escapeHTML(item.nombre)}</strong></span>`;
-        html += `<span style="color: ${tiempoColor}; font-weight: bold;">${item.promedio} horas</span>`;
-        html += `</div>`;
-        html += `<div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 6px;">`;
-        // Barra de progreso inversa (menor tiempo es mejor)
-        const maxTiempo = Math.max(...data.map(t => t.promedio));
-        const porcentaje = maxTiempo > 0 ? Math.min(100, Math.round((item.promedio / maxTiempo) * 100)) : 0;
-        html += `<div style="width: ${porcentaje}%; height: 100%; background: ${tiempoColor}; border-radius: 2px;"></div>`;
-        html += `</div>`;
-        html += `</div>`;
-    });
-    html += '</div>';
-    html += '<p style="margin-top: 15px; color: #6c757d; font-size: 12px;">*Menor tiempo = mejor eficiencia</p>';
-    html += '</div>';
-
-    Swal.fire({
-        title: 'Tiempo de Resolución',
-        html: html,
-        icon: 'info',
-        background: '#1a1a1a',
-        color: '#fff',
-        confirmButtonColor: '#ec4899',
-        confirmButtonText: 'Cerrar'
-    });
 }
 
 // =============================================
@@ -1619,7 +1722,7 @@ function crearGraficoActualizadores(actualizadores) {
             datasets: [{
                 label: 'Incidencias actualizadas',
                 data: actualizadores.map(a => a.cantidad),
-                backgroundColor: '#3b82f6',
+                backgroundColor: COLORS.azul,
                 borderRadius: 4
             }]
         },
@@ -1667,7 +1770,7 @@ function crearGraficoReportadores(reportadores) {
             datasets: [{
                 label: 'Incidencias reportadas',
                 data: reportadores.map(r => r.cantidad),
-                backgroundColor: '#10b981',
+                backgroundColor: COLORS.verde,
                 borderRadius: 4
             }]
         },
@@ -1710,7 +1813,7 @@ function crearGraficoSeguimientos(seguimientos) {
             datasets: [{
                 label: 'Seguimientos realizados',
                 data: seguimientos.map(s => s.cantidad),
-                backgroundColor: '#f97316',
+                backgroundColor: COLORS.naranja,
                 borderRadius: 4
             }]
         },
@@ -1752,7 +1855,7 @@ function crearGraficoEstado(estado) {
             labels: ['Pendientes', 'Finalizadas'],
             datasets: [{
                 data: [estado.pendientes || 0, estado.finalizadas || 0],
-                backgroundColor: ['#f97316', '#10b981'],
+                backgroundColor: [COLORS.pendiente, COLORS.finalizada],
                 borderWidth: 0,
                 hoverOffset: 15
             }]
@@ -1799,7 +1902,7 @@ function crearGraficoRiesgo(riesgo) {
             labels: ['Crítico', 'Alto', 'Medio', 'Bajo'],
             datasets: [{
                 data: [riesgo.critico || 0, riesgo.alto || 0, riesgo.medio || 0, riesgo.bajo || 0],
-                backgroundColor: ['#ef4444', '#f97316', '#eab308', '#10b981'],
+                backgroundColor: [COLORS.critico, COLORS.alto, COLORS.medio, COLORS.bajo],
                 borderWidth: 0,
                 hoverOffset: 15
             }]
@@ -1844,7 +1947,7 @@ function crearGraficoCategorias(categorias) {
             datasets: [{
                 label: 'Incidencias',
                 data: categorias.map(c => c.cantidad),
-                backgroundColor: '#8b5cf6',
+                backgroundColor: COLORS.morado,
                 borderRadius: 4
             }]
         },
@@ -1887,7 +1990,7 @@ function crearGraficoSucursales(sucursales) {
             datasets: [{
                 label: 'Incidencias',
                 data: sucursales.map(s => s.cantidad),
-                backgroundColor: '#14b8a6',
+                backgroundColor: COLORS.turquesa,
                 borderRadius: 4
             }]
         },
@@ -1923,15 +2026,13 @@ function crearGraficoTiempoResolucion(tiempos) {
         return;
     }
 
-    // Limitar nombres para mejor visualización
     const nombres = tiempos.map(t => t.nombre.length > 15 ? t.nombre.substring(0, 12) + '...' : t.nombre);
     const promedios = tiempos.map(t => t.promedio);
 
-    // Colores basados en el tiempo (verde para rápido, rojo para lento)
     const colores = tiempos.map(t => {
-        if (t.promedio <= 24) return '#10b981';      // Verde: menos de 24 horas
-        if (t.promedio <= 72) return '#f59e0b';      // Naranja: entre 24 y 72 horas
-        return '#ef4444';                             // Rojo: más de 72 horas
+        if (t.promedio <= 24) return COLORS.bajo;
+        if (t.promedio <= 72) return COLORS.alto;
+        return COLORS.critico;
     });
 
     charts.tiempo = new Chart(ctx, {
@@ -1948,7 +2049,7 @@ function crearGraficoTiempoResolucion(tiempos) {
         options: {
             responsive: true,
             maintainAspectRatio: true,
-            indexAxis: 'y', // Barras horizontales para mejor lectura de nombres largos
+            indexAxis: 'y',
             plugins: {
                 legend: { labels: { color: 'white' } },
                 tooltip: {
@@ -2016,15 +2117,14 @@ function renderizarTablaColaboradores(colaboradores) {
             Math.max(...colaboradores.map(c => (c.reportados || 0) + (c.actualizados || 0) + (c.seguimientos || 0))) : 1;
         const eficiencia = Math.min(100, Math.round((totalActividad / maxActividad) * 100));
 
-        // Color para el tiempo promedio
-        let tiempoColor = '#10b981';
-        if (tiempoPromedio > 72) tiempoColor = '#ef4444';
-        else if (tiempoPromedio > 24) tiempoColor = '#f97316';
-        else if (tiempoPromedio > 0) tiempoColor = '#eab308';
+        let tiempoColor = COLORS.bajo;
+        if (tiempoPromedio > 72) tiempoColor = COLORS.critico;
+        else if (tiempoPromedio > 24) tiempoColor = COLORS.alto;
+        else if (tiempoPromedio > 0) tiempoColor = COLORS.medio;
 
         return `
             <tr>
-                <td><i class="fas fa-user-circle" style="color: #3b82f6; margin-right: 8px;"></i> ${escapeHTML(col.nombre)}</td>
+                <td><i class="fas fa-user-circle" style="color: ${COLORS.azul}; margin-right: 8px;"></i> ${escapeHTML(col.nombre)}</td>
                 <td><span class="badge-value badge-info">${col.reportados || 0}</span></td>
                 <td><span class="badge-value badge-warning">${col.actualizados || 0}</span></td>
                 <td><span class="badge-value badge-success">${col.seguimientos || 0}</span></td>
@@ -2032,12 +2132,12 @@ function renderizarTablaColaboradores(colaboradores) {
                 <td>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <div class="eficiencia-bar" style="flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;">
-                            <div class="eficiencia-fill" style="width: ${eficiencia}%; height: 100%; background: linear-gradient(90deg, #10b981, #3b82f6); border-radius: 3px;"></div>
+                            <div class="eficiencia-fill" style="width: ${eficiencia}%; height: 100%; background: linear-gradient(90deg, ${COLORS.verde}, ${COLORS.azul}); border-radius: 3px;"></div>
                         </div>
                         <span style="color: white; min-width: 40px;">${eficiencia}%</span>
                     </div>
-                  </td>
-              </tr>
+                    </td>
+            </tr>
         `;
     }).join('');
 }
@@ -2202,4 +2302,5 @@ function mostrarErrorInicializacion() {
             </div>
         `;
     }
-}
+} 
+1
