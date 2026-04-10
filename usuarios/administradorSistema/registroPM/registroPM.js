@@ -2,7 +2,7 @@
 import { CuentaPM } from '/clases/cuentaPM.js';
 import { CLOUD_FUNCTION_BASE_URL, ACTIONS } from '/config/urlCloudFunction.js';
 
-// Nombre de la Cloud Function específica
+// Nombre de la Cloud Function específica v2
 const POWER_MANAGE_FUNCTION = 'proxyPowerManage';
 
 // Variables para almacenar datos temporales

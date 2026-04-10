@@ -1,5 +1,4 @@
 // monitoreo.js - Controlador de la vista de monitoreo
-// CORREGIDO: Obtiene paneles desde la colección "paneles_info"
 
 import { Evento } from '/clases/evento.js';
 import { CuentaPM } from '/clases/cuentaPM.js';

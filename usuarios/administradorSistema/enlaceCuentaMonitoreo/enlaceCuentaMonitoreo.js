@@ -2,7 +2,7 @@
 import { CuentaPM } from '/clases/cuentaPM.js';
 import { UserManager } from '/clases/user.js';
 
-// ==================== VARIABLES GLOBALES ====================
+// ==================== VARIABLES GLOBALES v2====================
 let cuentaAppId = null;
 let cuentaData = null;
 let organizaciones = [];

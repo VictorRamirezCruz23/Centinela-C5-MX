@@ -2,7 +2,7 @@
 import { CuentaPM } from '/clases/cuentaPM.js';
 import { CLOUD_FUNCTION_BASE_URL } from '/config/urlCloudFunction.js';
 
-// ==================== CONSTANTES ====================
+// ==================== CONSTANTES ====================--
 const POWER_MANAGE_FUNCTION = 'proxyPowerManage';
 
 // ==================== VARIABLES GLOBALES ====================

@@ -3,7 +3,7 @@ import { CLOUD_FUNCTION_BASE_URL } from '/config/urlCloudFunction.js';
 
 // ==================== CONSTANTES ====================
 const POWER_MANAGE_FUNCTION = 'proxyPowerManage';
-
+//*comentarios */
 // ==================== VARIABLES GLOBALES ====================
 let powerManageUserToken = null;
 let cuentaAppId = null;

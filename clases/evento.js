@@ -1,4 +1,4 @@
-// evento.js - Clase para manejar eventos de paneles de control
+// evento.js - Clase para manejar eventos de paneles de control v2
 // Versión CORREGIDA con campos reales de la colección
 
 import { db } from '/config/firebase-config.js';

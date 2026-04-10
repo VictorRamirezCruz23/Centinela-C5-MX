@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const panelsGrid = document.getElementById('panelsGrid');
     const form = document.getElementById('panelLinkForm');
 
-    // 1. OBTENER LISTA DE PANELES DE LA API
+    // 1. OBTENER LISTA DE PANELES DE LA API v2
     try {
         const cuenta = await CuentaPM.obtenerPorId(EMAIL_RSI);
         if (!cuenta || !cuenta.userToken) throw new Error("No hay un User-Token válido");

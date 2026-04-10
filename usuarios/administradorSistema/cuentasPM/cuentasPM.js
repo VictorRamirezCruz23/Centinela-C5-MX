@@ -1,4 +1,4 @@
-// ========== VARIABLES GLOBALES ==========
+// ========== VARIABLES GLOBALES v2 ==========
 import { CuentaPM } from '/clases/cuentaPM.js';
 
 // Configuración de paginación

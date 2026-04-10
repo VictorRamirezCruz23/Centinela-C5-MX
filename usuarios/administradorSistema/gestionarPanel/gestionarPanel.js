@@ -2,7 +2,7 @@
 import { CuentaPM } from '/clases/cuentaPM.js';
 import { CLOUD_FUNCTION_BASE_URL } from '/config/urlCloudFunction.js';
 
-// ==================== VARIABLES GLOBALES ====================
+// ==================== VARIABLES GLOBALES v2====================
 let cuentaAppId = null;
 let panelData = null;
 let powerManageUserToken = null;

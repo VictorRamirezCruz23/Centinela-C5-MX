@@ -4,7 +4,7 @@ import { CLOUD_FUNCTION_BASE_URL, ACTIONS } from '/config/urlCloudFunction.js';
 
 // ==================== CONSTANTES ====================
 const POWER_MANAGE_FUNCTION = 'proxyPowerManage';
-const AUTO_REFRESH_INTERVAL = 10000; // 10 segundos
+const AUTO_REFRESH_INTERVAL = 10000; // 10 segundos 10
 
 // ==================== VARIABLES GLOBALES ====================
 let cuentaAppId = null;
